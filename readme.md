@@ -3,11 +3,9 @@
 - [Upsteam SASS](https://bitbucket.org/ietwebdev/sitefarm-pattern-lab-one/src/redesign/)
 - [Patternlab](http://dev.webstyleguide.ucdavis.edu/redesign/)
 
-## Merging Campus Styles
+## Merging Campus (IET) Styles
 
-Our styles are built on top of campus's SiteFarm styles. When campus updates theirs, follow these steps to bring their changes into ours.
-
-You need git 2.38 or newer. Check with `git --version`; the scripts will tell you if it's too old.
+Our styles are built on top of [IET's SiteFarm styles](https://bitbucket.org/ietwebdev/sitefarm-pattern-lab-one/src/master/). When there are upstream changes, follow these steps to bring IET's changes into ours.
 
 ### 1. Check for updates
 
@@ -17,7 +15,7 @@ git pull
 ./devops/cmds/check-upstream-styles.sh
 ```
 
-This saves any new campus changes and prints a report. It is safe to run as often as you like, and it never changes our code.
+This saves any new campus changes to the dedicated vendor branch (`upstream-styles`) and prints a report. It is safe to run as often as you like, and it never changes our own code.
 
 If it says **Up to date**, you're done.
 
@@ -34,7 +32,7 @@ If it says **Up to date**, you're done.
 git push origin upstream-styles
 ```
 
-This saves the campus update for your teammates, so nobody has to fetch it again.
+This simply updates the vendor branch in Github. 
 
 ### 4. Merge
 
@@ -54,7 +52,7 @@ Rebuild the compiled CSS, and look over what changed in it. *(Build step coming 
 git push origin main
 ```
 
-### Good to know
+### Notes
 
 - When we change a campus style file, we wrap our edit in comments so it's easy to spot:
 
