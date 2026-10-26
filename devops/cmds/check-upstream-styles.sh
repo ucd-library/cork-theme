@@ -1,8 +1,9 @@
 #!/bin/bash
 
-# Checks campus for new SiteFarm style changes, and prints a plain-English summary of
-# everything not yet merged into main. Safe to run at any time: it only adds commits
-# to the upstream-styles branch, and never changes main or your working files.
+# Checks campus for new SiteFarm style changes, saves any to the upstream-styles branch
+# (with an entry in docs/upstream-styles-log.md), and prints a plain-English summary of
+# everything not yet merged into main. Safe to run at any time: it never changes main
+# or your working files.
 # Usage: ./devops/cmds/check-upstream-styles.sh [branch-or-tag]
 
 set -e
@@ -31,7 +32,7 @@ indent() {
 }
 
 echo "Step 1 of 2: checking campus for new style changes"
-"$SCRIPT_DIR/sync-upstream-styles.sh" "$@"
+sync_upstream_styles "$1"
 
 echo
 echo "Step 2 of 2: comparing campus styles with $MAIN_BRANCH"
