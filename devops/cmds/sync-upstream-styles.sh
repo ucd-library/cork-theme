@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Syncs campus SiteFarm source/sass into styles/sass on the upstream-styles branch.
+# Syncs campus SiteFarm source/sass into services/package/styles/sass on the upstream-styles branch.
 # Works in a temporary worktree, so the current checkout is never touched.
 # Does not merge into main; that is done manually after review.
 # Usage: ./devops/cmds/sync-upstream-styles.sh [branch-or-tag]
@@ -10,7 +10,7 @@ set -e
 UPSTREAM_REPO="https://bitbucket.org/ietwebdev/sitefarm-pattern-lab-one.git"
 UPSTREAM_REF="${1:-redesign}"
 VENDOR_BRANCH="upstream-styles"
-TARGET_DIR="styles/sass"
+TARGET_DIR="services/package/styles/sass"
 
 ROOT_DIR="$(git rev-parse --show-toplevel)"
 TMP_DIR="$(mktemp -d)"
