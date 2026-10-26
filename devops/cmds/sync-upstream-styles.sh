@@ -2,6 +2,7 @@
 
 # Syncs campus SiteFarm source/sass into the upstream-styles branch, and records the sync
 # in the upstream styles log (docs/upstream-styles-log.md) in the same commit.
+# First brings the local upstream-styles branch up to date with origin.
 # Works in a temporary worktree, so the current checkout is never touched.
 # Does not merge into main; use merge-upstream-styles.sh for that.
 # Usage: ./devops/cmds/sync-upstream-styles.sh [branch-or-tag]
@@ -21,6 +22,43 @@ cleanup() {
   rm -rf "$TMP_DIR"
 }
 trap cleanup EXIT
+
+# Brings the local vendor branch up to date with origin, so teammates build on the same imports.
+# Fast-forwards if behind; exits with instructions if local and origin have diverged.
+update_vendor_branch() {
+  if ! git -C "$ROOT_DIR" ls-remote --exit-code --heads origin "$VENDOR_BRANCH" > /dev/null 2>&1; then
+    echo "Note: origin has no $VENDOR_BRANCH branch yet, so skipping the update from origin."
+    return
+  fi
+
+  git -C "$ROOT_DIR" fetch --quiet origin "$VENDOR_BRANCH"
+  local local_sha remote_sha
+  local_sha="$(git -C "$ROOT_DIR" rev-parse "$VENDOR_BRANCH")"
+  remote_sha="$(git -C "$ROOT_DIR" rev-parse "origin/$VENDOR_BRANCH")"
+
+  if [[ "$local_sha" == "$remote_sha" ]]; then
+    return
+  elif git -C "$ROOT_DIR" merge-base --is-ancestor "$local_sha" "$remote_sha"; then
+    if git -C "$ROOT_DIR" worktree list --porcelain | grep -qx "branch refs/heads/$VENDOR_BRANCH"; then
+      echo "$VENDOR_BRANCH is checked out somewhere, so it can't be updated. Switch away from it and try again."
+      exit 1
+    fi
+    git -C "$ROOT_DIR" update-ref "refs/heads/$VENDOR_BRANCH" "$remote_sha" "$local_sha"
+    echo "Updated $VENDOR_BRANCH from origin."
+  elif git -C "$ROOT_DIR" merge-base --is-ancestor "$remote_sha" "$local_sha"; then
+    echo "Note: your $VENDOR_BRANCH has syncs that are not pushed yet. Push them with:"
+    echo "  git push origin $VENDOR_BRANCH"
+  else
+    cat <<EOF
+Your $VENDOR_BRANCH branch and the one on origin have diverged. This usually means
+you and someone else both synced the same campus changes. To use origin's version,
+discarding your local syncs (they contain only campus code, so nothing of ours is lost):
+  git branch -f $VENDOR_BRANCH origin/$VENDOR_BRANCH
+Then run this again. If you already merged your local syncs into $MAIN_BRANCH, ask for help first.
+EOF
+    exit 1
+  fi
+}
 
 # Prints the campus commit messages that touched source/sass since the previous sync.
 campus_commits() {
@@ -77,6 +115,8 @@ EOF
   fi
 }
 
+update_vendor_branch
+
 # blobless, sparse clone: full commit history (for the log), but only source/sass contents
 echo "Fetching $UPSTREAM_REPO at $UPSTREAM_REF"
 git clone --quiet --filter=blob:none --sparse --single-branch --branch "$UPSTREAM_REF" \
@@ -107,3 +147,4 @@ Upstream-Ref: $UPSTREAM_REF
 EOF
 
 echo "Committed campus $UPSTREAM_REF ($UPSTREAM_SHORT_SHA) to $VENDOR_BRANCH."
+echo "Push it so teammates get the same import: git push origin $VENDOR_BRANCH"
