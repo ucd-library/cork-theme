@@ -1,0 +1,585 @@
+@use "sass:math";
+
+@use "../0_tools" as *;
+
+// Modifiers:
+// - .nav-drill--contain-scroll: adds overscroll-behavior: contain to submenus to enable scroll containment.
+// - .nav-drill--dark: dark mode styles for nav drill, used in footer.
+// - .nav-drill--auto-height: sets --nav-drill-height to automatically adjust to content height of the first menu level.
+.nav-drill {
+  $block: &;
+  // This can be adjusted to make the first level nav wider or narrower.
+  --nav-drill-level-1-base-width: 24cqw;
+  --nav-drill-level-1-width: max(var(--nav-drill-level-1-base-width), 325px);
+  --nav-drill-level-1-gutter: 1.5rem;
+  --nav-drill-col-gutter: 3rem;
+  --nav-drill-col-width: calc(90cqw - (var(--nav-drill-level-1-width)) - var(--nav-drill-col-gutter) * 2);
+  --nav-drill-min-height: 18rem;
+  --nav-drill-height: 100%;
+  // Used by javascript to set height of child submenus in mobile.
+  --nav-drill-child-height: auto;
+  --nav-drill-left-offset: -1rem;
+  --nav-drill-transition-duration: .3s;
+  --nav-drill-text-color: #{$black};
+  --nav-drill-link-color: #{$brand--primary};
+  --nav-drill-link-color2: color-mix(in oklch, #{$brand--primary-80} 90%, #{$white});
+  --nav-drill-link-color-hover: #{$black};
+  --nav-drill-icon-color1: #{$brand--primary-80};
+  --nav-drill-icon-color1-hover: #{$black};
+  --nav-drill-icon-color2: #{$brand--primary-80};
+  --nav-drill-icon-color3: #{$brand--secondary};
+  --nav-drill-border: oklch(from #{$brand--primary-70} l c h / .5);
+  --nav-scrollbar-color: rgba(0, 0, 0, .2) rgba(0, 0, 0, .025);
+  // For future use once browser support lands.
+  --nav-drill-bp-small: 1000px;
+  --nav-drill-bp-small-down: calc(var(--nav-drill-bp-small) - 1px);
+  --nav-drill-bp-medium: 1200px;
+  --nav-drill-bp-medium-down: calc(var(--nav-drill-bp-medium) - 1px);
+  container-name: nav-drill;
+  container-type: inline-size;
+
+  @media (prefers-reduced-motion: reduce) {
+    --nav-drill-transition-duration: 0s;
+  }
+
+  :focus-visible {
+    box-shadow: inset 0 0 0 4px #022851;
+    outline-offset: -1px;
+  }
+
+  &--dark {
+    --nav-drill-text-color: #{$white};
+    --nav-drill-link-color: #{$white};
+    --nav-drill-link-color2: #{$white};
+    --nav-drill-link-color-hover: #{$brand--secondary};
+    --nav-drill-icon-color1: #{$white};
+    --nav-drill-icon-color1-hover: #{$brand--secondary};
+    --nav-drill-icon-color2: #{$brand--secondary};
+    --nav-drill-icon-color3: #{$brand--secondary};
+    --nav-drill-border: rgb(255 255 255 / .5);
+    --nav-scrollbar-color: rgba(255, 255, 255, .2) rgba(255, 255, 255, .025);
+  }
+
+  &__inner {
+    position: relative;
+    overflow: clip;
+    height: var(--nav-drill-height);
+    min-height: var(--nav-drill-min-height);
+    color: var(--nav-drill-text-color);
+    contain: layout; // Create a new stacking context for fixed submenus.
+    margin-inline: var(--nav-drill-left-offset); // Offsets the padding of buttons.
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    // The very first list is the top-level menu.
+    #{$block}__inner > & {
+      width: 100%;
+      max-height: var(--nav-drill-height);
+      padding-bottom: 1rem;
+      font-size: 1.5rem;
+
+      @container nav-drill (min-width: 1000px) {
+        padding-inline: var(--nav-drill-level-1-gutter);
+      }
+    }
+
+    // If description is not present, pull the menu up.
+    #{$block}__description:not(:has(#{$block}__description-content)) + & {
+      margin-top: -1.25rem;
+    }
+  }
+
+  a,
+  &__button,
+  &__nolink,
+  &__submenu-toggle {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 2.75rem;
+    padding: .25rem 0;
+    border: 0;
+    background: transparent;
+    color: var(--nav-drill-link-color);
+    font-size: inherit;
+    line-height: 1.5;
+    text-align: left;
+    text-decoration: none;
+
+    @container nav-drill (min-width: 1000px) {
+      min-height: 2rem;
+    }
+
+    &:hover,
+    &:focus-visible {
+      color: var(--nav-drill-link-color-hover);
+    }
+  }
+
+  &__top-link a,
+  &__top-link &__button,
+  &__top-link &__nolink,
+  &__top-link &__submenu-toggle {
+    position: relative;
+    padding: .75rem 1rem;
+    font-size: 1.25rem;
+    font-weight: $font-weight--bold;
+    line-height: 1.125;
+
+    @container nav-drill (min-width: 1000px) {
+      display: inline-flex;
+      width: auto;
+    }
+  }
+
+  &__top-link-line {
+    // the short underline
+    &::after {
+      position: absolute;
+      bottom: 0;
+      left: 1rem;
+      display: block;
+      width: 2.25rem;
+      height: 2px;
+      background-color: $brand--secondary;
+      content: "";
+      transform-origin: left;
+      transition: width var(--nav-drill-transition-duration) ease;
+
+      // grow to full width on hover
+      :where(a, .nav-drill__button, .nav-drill__nolink, .nav-drill__submenu-toggle):hover &,
+      li:has(.nav-drill__submenu--expanded) & {
+        width: calc(100% - 2rem);
+      }
+    }
+  }
+
+  &__submenu {
+    top: 0;
+    display: none;
+    font-size: 1rem;
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: opacity var(--nav-drill-transition-duration) ease, display .001s allow-discrete, transform var(--nav-drill-transition-duration) ease;
+
+    &--expanded {
+      display: block;
+      opacity: 1;
+      transform: none;
+
+      // Ensure starting style is applied when submenu is shown.
+      @starting-style {
+        & {
+          opacity: 0;
+          transform: translateX(-40px);
+        }
+      }
+    }
+
+    #{$block}__submenu & {
+      top: 0;
+    }
+
+    li + li {
+      @container nav-drill (max-width: 999px) {
+        border-top: 1px solid var(--nav-drill-border);
+      }
+    }
+
+    &--level-2 {
+      @container nav-drill (max-width: 999px) {
+        margin-left: 1.5rem;
+        padding-right: 3rem;
+      }
+    }
+  }
+
+  &__submenu-wrapper {
+    transition: transform var(--nav-drill-transition-duration) ease-out;
+  }
+
+  &__submenu-toggle {
+    align-items: center;
+    width: 100%;
+    gap: .5rem;
+
+    li:has(.nav-drill__submenu--expanded) > div > & {
+      opacity: 1;
+    }
+
+    &:after {
+      margin-right: 1rem;
+      margin-left: auto;
+      color: var(--nav-drill-icon-color1);
+      content: "\f054";
+      font-family: $font-family--icons;
+      font-size: .75em;
+      font-weight: $font-weight--icons;
+
+      @container nav-drill (min-width: 1000px) {
+        margin-left: 0;
+        transition: transform var(--nav-drill-transition-duration) ease;
+      }
+
+      li:has(.nav-drill__submenu--expanded) & {
+        color: var(--nav-drill-icon-color2);
+      }
+
+      .nav-drill__top-link & {
+        color: var(--nav-drill-icon-color1);
+
+        @container nav-drill (min-width: 1000px) {
+          margin-top: .4em;
+          font-size: .5em;
+        }
+
+        @container nav-drill (max-width: 999px) {
+          content: "\f078";
+        }
+      }
+    }
+
+    &:hover:after {
+      @container nav-drill (min-width: 1000px) {
+        transform: translateX(.25rem);
+      }
+    }
+  }
+
+  &__description {
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    padding-top: 1.35rem;
+    font-size: .875rem;
+    font-style: italic;
+    gap: .25rem;
+
+    @container nav-drill (min-width: 1000px) {
+      max-width: var(--nav-drill-col-width);
+      padding-right: var(--nav-drill-col-gutter);
+    }
+
+    &-title {
+      margin: 0;
+      font-size: 1.125rem;
+      font-style: normal;
+      font-weight: $font-weight--bold;
+      line-height: 1.125;
+
+      a {
+        display: inline;
+        color: var(--nav-drill-link-color2);
+        line-height: inherit;
+
+        &:after {
+          margin-top: .125em;
+          margin-left: .5rem;
+          color: var(--nav-drill-icon-color3);
+          content: "\f0a9";
+          font-family: $font-family--icons;
+          font-size: .75em;
+          font-weight: $font-weight--icons;
+        }
+      }
+    }
+
+    a {
+      min-height: auto;
+      padding: 0;
+    }
+
+    :last-child {
+      margin-bottom: 0;
+    }
+
+    &:has(p) {
+      @container nav-drill (min-width: 1000px) {
+        margin-bottom: 1rem;
+      }
+    }
+  }
+
+  &__submenu-close {
+    position: relative;
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-top: -.5rem;
+    margin-left: auto;
+    border: 0;
+    background-color: transparent;
+
+    &::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--nav-drill-icon-color1);
+      content: "";
+      mask: url("../images/icons/return.svg") no-repeat center;
+      mask-size: contain;
+      transition: background-color var(--nav-drill-transition-duration);
+    }
+
+    &:hover,
+    &:focus-visible {
+      &::before {
+        background-color: var(--nav-drill-icon-color1-hover);
+      }
+    }
+
+    .nav-drill__submenu--level-2 > div > div > & {
+      @container nav-drill (max-width: 999px) {
+        display: none;
+      }
+    }
+  }
+
+  // Scrollbars.
+  #{$block}__inner > #{$block}__list,
+  &__submenu {
+    overflow-x: clip;
+    overflow-y: auto;
+    scrollbar-color: var(--nav-scrollbar-color);
+    scrollbar-width: thin;
+
+    @container nav-drill (min-width: 1000px) {
+      .nav-drill--contain-scroll & {
+        overscroll-behavior: contain;
+      }
+    }
+  }
+
+}
+
+
+///
+// Start Mobile submenus
+///
+
+// Top level submenu in mobile slides down from top.
+@container nav-drill (max-width: 999px) {
+  .nav-drill__submenu--level-2 {
+    max-height: 0; // Hidden by default
+    transform: translateX(0);
+    transition: opacity var(--nav-drill-transition-duration) ease, display .001s allow-discrete, max-height 2.5s ease;
+
+    > .nav-drill__submenu-wrapper {
+      transform: translateY(-100%);
+      transition: transform var(--nav-drill-transition-duration) ease;
+    }
+
+    &.nav-drill__submenu--expanded {
+      display: block;
+      overflow: clip;
+      max-height: 10000px;
+      opacity: 1;
+
+      > .nav-drill__submenu-wrapper {
+        transform: translateY(0);
+
+        @starting-style {
+          & {
+            transform: translateY(-100%);
+          }
+        }
+      }
+
+      // Ensure starting style is applied when submenu is shown.
+      @starting-style {
+        & {
+          max-height: 0;
+          opacity: 0;
+        }
+      }
+    }
+  }
+}
+
+// Slide submenus in from side.
+@container nav-drill (max-width: 999px) {
+  .nav-drill__submenu:not(.nav-drill__submenu--level-2) {
+    position: absolute;
+  }
+
+  .nav-drill__submenu--expanded {
+    overflow-x: clip;
+    width: 100%;
+    height: var(--nav-drill-child-height, auto);
+  }
+
+  .nav-drill__submenu--expanded:has(.nav-drill__submenu--expanded) {
+    > .nav-drill__submenu-wrapper {
+      transform: translateX(-100%);
+    }
+
+    .nav-drill__submenu--expanded {
+      width: 100%;
+      transform: translateX(100%);
+    }
+  }
+
+  .nav-drill__submenu-wrapper {
+    height: 100%;
+    contain: layout; // prevent submenus from affecting each other's layout
+    transform: translateX(0);
+    transition: transform var(--nav-drill-transition-duration) ease-out;
+  }
+
+}
+
+///
+// End Mobile submenus
+///
+
+///
+// Start Column submenus
+///
+
+@mixin nav-drill-slide-from-left() {
+  & > .nav-drill__submenu-wrapper {
+    transform: translateX(-100%);
+  }
+
+  &.nav-drill__submenu--expanded > .nav-drill__submenu-wrapper {
+    transform: translateX(0);
+    transition: transform var(--nav-drill-transition-duration) ease-out;
+
+    @starting-style {
+      & {
+        transform: translateX(-100%);
+      }
+    }
+  }
+}
+
+@mixin nav-drill-fixed-column() {
+  position: fixed;
+  width: var(--nav-drill-col-width);
+  max-height: var(--nav-drill-height);
+  background: transparent;
+}
+
+@container nav-drill (min-width: 1000px) {
+  .nav-drill__submenu {
+    height: var(--nav-drill-height);
+  }
+
+  .nav-drill__list {
+    max-width: var(--nav-drill-col-width);
+
+    // First level.
+    .nav-drill__inner > & {
+      max-width: var(--nav-drill-level-1-width);
+    }
+  }
+
+  .nav-drill__submenu--expanded:where(:has(.nav-drill__submenu--expanded)) {
+    :where(
+    .nav-drill__description,
+    .nav-drill__list a,
+    .nav-drill__list button,
+    .nav-drill__nolink
+  ) {
+      opacity: .5;
+    }
+
+    // Fix double opacity on description links.
+    .nav-drill__description a {
+      opacity: 1;
+    }
+  }
+
+  .nav-drill__submenu--expanded:not(:has(.nav-drill__submenu--expanded)) :where(
+  .nav-drill__description,
+  .nav-drill__description a,
+  .nav-drill__list a,
+  .nav-drill__list button,
+  .nav-drill__nolink
+) {
+    opacity: 1;
+  }
+
+}
+
+// 2 Column layout
+@container nav-drill ((min-width: 1000px) and (max-width: 1199px)) {
+  // Level 2 submenu
+  .nav-drill__submenu--level-2 {
+    @include nav-drill-slide-from-left();
+  }
+
+  .nav-drill__submenu--level-2 {
+    @include nav-drill-fixed-column();
+    transform: translateX(var(--nav-drill-level-1-width));
+  }
+
+  .nav-drill__submenu--level-2 .nav-drill__submenu {
+    @include nav-drill-fixed-column();
+    transform: translateX(var(--nav-drill-col-width));
+  }
+
+  .nav-drill__submenu:has(.nav-drill__submenu--expanded) {
+    > .nav-drill__submenu-wrapper {
+      transform: translateX(calc(var(--nav-drill-col-width) * -1));
+    }
+  }
+
+  .nav-drill__submenu--expanded:has(.nav-drill__submenu--expanded) {
+    width: calc(var(--nav-drill-col-width) * 2);
+  }
+}
+
+// 3 Column layout
+@container nav-drill (min-width: 1200px) {
+  .nav-drill__inner {
+    // Adjust column width for 3 column layout.
+    --nav-drill-col-width: calc((100cqw - var(--nav-drill-level-1-width)) / 2);
+  }
+
+  .nav-drill__list {
+    padding-right: var(--nav-drill-col-gutter);
+  }
+
+  // Level 2 submenu
+  .nav-drill__submenu--level-2 {
+    @include nav-drill-fixed-column();
+    width: calc(var(--nav-drill-col-width) * 2);
+    transform: translateX(var(--nav-drill-level-1-width));
+    @include nav-drill-slide-from-left();
+  }
+
+  // Level 3 submenu
+  .nav-drill__submenu--level-3 {
+    @include nav-drill-slide-from-left();
+  }
+
+  .nav-drill__submenu--level-3,
+  .nav-drill__submenu--level-3 .nav-drill__submenu {
+    @include nav-drill-fixed-column();
+    transform: translateX(calc(var(--nav-drill-col-width) * 1));
+  }
+
+  .nav-drill__submenu:has(.nav-drill__submenu--expanded .nav-drill__submenu--expanded) {
+    > .nav-drill__submenu-wrapper {
+      transform: translateX(calc(var(--nav-drill-col-width) * -1));
+    }
+  }
+
+  .nav-drill__submenu--expanded:has(.nav-drill__submenu--expanded) {
+    overflow-x: clip;
+    width: calc(var(--nav-drill-col-width) * 2);
+  }
+
+}
+
+///
+// End Column submenus
+///

@@ -1,0 +1,116 @@
+@use "sass:list";
+@use "sass:color";
+@use "../0_tools" as *;
+
+// Branding colors for Taxonomy Categories
+
+// --category-brand - Color for the brand.
+// --category-brand-rgb--dark - A 50% darker shade of the color.
+// --category-brand-contrast-color - Contrast color to the brand.
+// --category-brand-bg-text - (string|null) Color of text when on a branded background.
+// --category-brand-filter - Brightness filter to force contrast.
+// --category-brand-featured - Color when a component is "featured".
+// --category-brand--on-white - (string|null) Color of branded text on a white background.
+
+$category-brand-bg-offset: -23px;
+$category-brand-default: $brand--primary-80;
+
+.category-brand {
+
+  // Text color.
+  &__text {
+    color: var(--category-brand);
+
+    // Invert the text color and background.
+    &--knock-out {
+      @include category-brand-knockout($category-brand-default);
+    }
+  }
+
+  &__background {
+    --category-brand-bg-text: var(--category-brand-contrast-color, inherit);
+    @include category-brand-background($category-brand-default);
+
+    // Make text black on elements sitting on a light colored background.
+    a {
+      color: var(--category-brand-bg-text);
+
+      &:hover {
+        color: var(--category-brand-bg-text);
+      }
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    figcaption {
+      color: var(--category-brand-bg-text);
+    }
+
+    li:before {
+      color: var(--category-brand-bg-text);
+    }
+  }
+
+  &__background--lighten {
+    @include category-brand-background--lighten();
+  }
+
+  &__arrow:before {
+    display: inline-block;
+    margin: 0 .5em 0 -1.5em;
+    color: var(--category-brand, inherit);
+    content: "\2192";
+    font-family: Arial;
+    font-size: 1.25em;
+    font-weight: normal;
+    line-height: 1;
+  }
+}
+
+// Abstracted mixin so we can support legacy branding.
+@mixin category-brand-wrapper($brand-color, $brand-contrast, $brand-on-white: "no") {
+  --category-brand: #{$brand-color};
+  --category-brand--dark: color-mix(in oklch, #{$brand-color} 50%, $black);
+  --category-brand-contrast-color: #{$brand-contrast};
+
+  @if ($brand-contrast != $white) {
+    --category-brand-featured: var(--category-brand-contrast-color, #{$brand--primary-80});
+    --category-brand-filter: brightness(0%);
+  }
+
+  @if ($brand-on-white == "yes") {
+    --category-brand--on-white: #{$brand-color};
+  }
+}
+
+// Abstracted mixin so we can support legacy branding.
+@mixin category-brand-text($brand-color) {
+  --category-brand: #{$brand-color};
+  color: var(--category-brand);
+}
+
+// Loop through each category brand color.
+@for $i from 1 through list.length($category-brands) {
+  // Get the first item
+  $item: list.nth($category-brands, $i);
+  // Now fetch the name and color from this first item
+  $brand-name: list.nth($item, 1);
+  $brand-color: list.nth($item, 2);
+  $brand-contrast: list.nth($item, 3);
+  $brand-on-white: list.nth($item, 4);
+
+  // Generic color classes
+  .#{$brand-name},
+  .#{$brand-name} a {
+    @include category-brand-text($brand-color);
+  }
+
+  // Brand wrapper
+  .category-brand--#{$brand-name} {
+    @include category-brand-wrapper($brand-color, $brand-contrast, $brand-on-white);
+  }
+}

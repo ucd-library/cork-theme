@@ -1,0 +1,51 @@
+// Slim Select styles for the javascript library
+@use "../0_tools" as *;
+@use "../1_base_html/forms-mixin" as *;
+
+// This overwrites the npm package css so we can not use BEM.
+wa-select {
+  --wa-form-control-activated-color: #{$brand--primary-80};
+
+  &::part(combobox) {
+    @include form-input();
+    min-height: $input-height;
+  }
+
+  &::part(tags) {
+    margin-left: -.5rem;
+  }
+
+  &::part(tag) {
+    height: calc(var(--wa-form-control-height) * .7);
+    border: 0;
+    background-color: $brand--primary-80;
+    color: $white;
+  }
+
+  &::part(tag__content) {
+    font-size: .875rem;
+  }
+
+}
+
+
+.ss-content {
+  .ss-search input:focus-visible {
+    box-shadow: inset 0 0 0 3px $brand--primary;
+    outline: 3px solid #ffbf00;
+    outline-offset: -6px;
+  }
+
+  .ss-list .ss-option {
+    border-left: 0 solid $brand--primary;
+    transition: border-left var(--ss-animation-timing) ease;
+
+    &.ss-highlighted {
+      border-left: 5px solid $brand--primary;
+    }
+    &:hover:not(.ss-disabled),
+    &:not(.ss-disabled).ss-selected {
+      border-left-color: $brand--primary;
+    }
+  }
+}

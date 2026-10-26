@@ -1,0 +1,66 @@
+@use "../0_tools" as *;
+@use "../2_base_class/buttons-mixin" as *;
+
+// Simple CSS drop down
+.dropdown {
+  position: relative;
+  display: inline-block;
+
+  &:hover .dropdown__btn:after {
+    transform: rotate(90deg);
+  }
+
+  &__btn {
+    @include btn--primary-input();
+
+    &:before {
+      content: "";
+    }
+
+    &:after {
+      margin-left: $spacer--small;
+      color: $white;
+      content: "\f054";
+      font-family: $font-family--icons;
+      font-size: .75em;
+      font-weight: $font-weight--icons;
+      transition: transform .2s ease-in-out;
+    }
+  }
+
+  &__content {
+    @include reset-list();
+    position: absolute;
+    z-index: $zindex-component-fg;
+    overflow: hidden;
+    visibility: hidden;
+    width: 100%;
+    min-width: 10em;
+    max-height: 0;
+    margin: 0;
+    border: 1px solid $brand--secondary;
+    transition: max-height $transition-time ease-in-out;
+  }
+
+  &:focus-within &__content,
+  &:hover &__content {
+    visibility: visible;
+    max-height: 500px;
+  }
+
+  &__item {
+    display: block;
+    border-bottom: 2px solid rgba(0, 0, 0, .1);
+    background-color: $white;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    a {
+      display: block;
+      padding: $spacer--small $spacer;
+      line-height: $line-height--small;
+    }
+  }
+}

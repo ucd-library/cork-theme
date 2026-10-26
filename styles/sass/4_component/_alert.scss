@@ -1,0 +1,110 @@
+@use "sass:color";
+@use "../0_tools" as *;
+@use "../2_base_class/highlight-mixin" as *;
+
+// alert message
+.alert {
+  @include highlight-info();
+  margin: 0 0 $spacer;
+  padding: $spacer--large;
+  container-name: alert;
+  container-type: inline-size;
+  font-size: 1rem;
+  @include container-content-padding();
+
+  // remove the extra padding when placed inside a container
+  .l-container & {
+    padding: $spacer--large;
+    border-radius: 8px;
+  }
+
+  // Container queries lose their width in tables so we should remove the
+  // container type in tables. https://codepen.io/mrkmiller/pen/bNbVLKJ
+  td & {
+    container-type: normal;
+  }
+
+  &__inner {
+    // Remove the bottom margin from the last child.
+    :last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &--icon {
+    display: flex;
+    align-items: center;
+    gap: $spacer;
+
+    &::before {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 1.5em;
+      margin-left: -$spacer;
+      border-radius: 50%;
+      aspect-ratio: 1;
+      background: $white;
+      color: $tahoe;
+      content: "\f0f3";
+      font-family: $font-family--icons;
+      font-size: 2.5rem;
+      font-style: normal;
+      font-weight: $font-weight--icons;
+
+      @container alert (width < 400px) {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  &--success {
+    @include highlight-success();
+
+    &.alert--icon::before {
+      color: $redwood;
+      content: "\f00c";
+    }
+  }
+
+  &--warning {
+    @include highlight-warning();
+
+    &.alert--icon::before {
+      color: $poppy;
+      content: "\f0a1";
+    }
+  }
+
+  &--error {
+    @include highlight-danger();
+
+    &.alert--icon::before {
+      color: $strawberry;
+      content: "\21";
+    }
+  }
+
+  // Remove bottom margin
+  &--flush {
+    margin-bottom: 0;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  .button {
+    margin-bottom: $spacer--small;
+  }
+
+  li .button {
+    margin-left: -($spacer);
+  }
+
+  // Remove the bottom margin from the last child.
+  :last-child {
+    margin-bottom: 0;
+  }
+}

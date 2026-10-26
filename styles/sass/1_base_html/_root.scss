@@ -1,0 +1,130 @@
+@use "../0_tools" as *;
+
+:root {
+  // Colors.
+  --black: #{$black};
+  --white: #{$white};
+
+  --ucd-blue: #{$ucd-blue};
+  --ucd-gold: #{$ucd-gold};
+
+  --black-90: #{$ucd-black-90};
+  --black-80: #{$ucd-black-80};
+  --black-70: #{$ucd-black-70};
+  --black-60: #{$ucd-black-60};
+  --black-50: #{$ucd-black-50};
+  --black-40: #{$ucd-black-40};
+  --black-30: #{$ucd-black-30};
+  --black-20: #{$ucd-black-20};
+  --black-10: #{$ucd-black-10};
+
+  --brand-primary: #{$brand--primary};
+  --brand-primary-90: #{$brand--primary-90};
+  --brand-primary-80: #{$brand--primary-80};
+  --brand-primary-70: #{$brand--primary-70};
+  --brand-primary-60: #{$brand--primary-60};
+  --brand-primary-50: #{$brand--primary-50};
+  --brand-primary-40: #{$brand--primary-40};
+  --brand-primary-30: #{$brand--primary-30};
+  --brand-primary-20: #{$brand--primary-20};
+  --brand-primary-10: #{$brand--primary-10};
+
+  --brand-secondary: #{$brand--secondary};
+  --brand-secondary-90: #{$brand--secondary-90};
+  --brand-secondary-80: #{$brand--secondary-80};
+  --brand-secondary-70: #{$brand--secondary-70};
+  --brand-secondary-60: #{$brand--secondary-60};
+  --brand-secondary-50: #{$brand--secondary-50};
+  --brand-secondary-40: #{$brand--secondary-40};
+  --brand-secondary-30: #{$brand--secondary-30};
+  --brand-secondary-20: #{$brand--secondary-20};
+  --brand-secondary-10: #{$brand--secondary-10};
+
+  --gray-darker: #{$gray-darker};
+  --gray-dark: #{$gray-dark};
+  --gray: #{$gray};
+  --gray-light: #{$gray-light};
+  --gray-lighter: #{$gray-lighter};
+
+  --brand-success: #{$brand--success};
+  --brand-warning: #{$brand--warning};
+  --brand-danger: #{$brand--danger};
+  --brand-info: #{$brand--info};
+  --brand-gray: #{$brand--gray};
+
+  --rec-pool: #{$rec-pool};
+  --tahoe: #{$tahoe};
+  --gunrock: #{$gunrock};
+  --bodega: #{$bodega};
+  --rain: #{$rain};
+  --arboretum: #{$arboretum};
+  --putah-creek: #{$putah-creek};
+  --delta: #{$delta};
+  --farmers-market: #{$farmers-market};
+  --sage: #{$sage};
+  --quad: #{$quad};
+  --redwood: #{$redwood};
+  --golden-state: #{$golden-state};
+  --sunflower: #{$sunflower};
+  --poppy: #{$poppy};
+  --california: #{$california};
+  --rose: #{$rose};
+  --strawberry: #{$strawberry};
+  --double-decker: #{$double-decker};
+  --merlot: #{$merlot};
+  --thiebaud-icing: #{$thiebaud-icing};
+  --redbud: #{$redbud};
+  --pinot: #{$pinot};
+  --cabernet: #{$cabernet};
+
+  --wonder-blue: #{$brand--primary-80};
+
+  // Typography.
+  --font-color: #{$font-color};
+
+  --font-family: #{$font-family};
+  --font-family-sans-serif: #{$font-family--sans-serif};
+  --font-family-serif: #{$font-family--serif};
+  --font-family-monospace: #{$font-family--monospace};
+  --font-family-icons: #{$font-family--icons};
+  --font-family-icons-brand: #{$font-family--icons-brand};
+  --font-family-headings: #{$font-family--headings};
+
+  --font-size: #{$font-size};
+  --font-size-large: #{$font-size--large};
+  --font-size-small: #{$font-size--small};
+
+  --line-height: #{$line-height};
+  --line-height-small: #{$line-height--small};
+
+  --font-weight: #{$font-weight};
+  --font-weight-light: #{$font-weight--light};
+  --font-weight-bold: #{$font-weight--bold};
+  --font-weight-extra-bold: #{$font-weight--extra-bold};
+  --font-weight-icons: #{$font-weight--icons};
+  --font-weight-icons-regular: #{$font-weight--icons-regular};
+
+  // Spacing.
+  --spacer: #{$spacer};
+  --spacer-tiny: #{$spacer--tiny};
+  --spacer-small: #{$spacer--small};
+  --spacer-medium: #{$spacer--medium};
+  --spacer-large: #{$spacer--large};
+  --spacer-huge: #{$spacer--huge};
+  --spacer-vast: #{$spacer--vast};
+
+  // Misc.
+
+  // Get the smallest value to ensure content never falls off the page.
+  --full-width: min(var(--page-width, 100vw), 100vw);
+
+  // Tell the browser to allow animations to/from "auto" sizing.
+  interpolate-size: allow-keywords;
+
+  // Full width container space
+  --container-edge-space: #{$container-edge-space};
+
+  @media (min-width: $media-medium) {
+    --container-edge-space: #{$container-edge-space--md};
+  }
+}

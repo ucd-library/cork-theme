@@ -1,0 +1,46 @@
+// Form Mixins
+@use "../0_tools" as *;
+@use "forms-mixin" as *;
+
+// Form Field Container
+.field-container {
+  margin-bottom: $spacer;
+
+  &--small {
+    margin-bottom: $spacer--small;
+  }
+}
+
+.form-submit {
+  width: auto;
+  margin-right: $spacer--small;
+
+  @media (max-width: $media-small-max) {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.comment-form {
+  label {
+    font-style: italic;
+  }
+}
+
+.radio label,
+.checkbox label {
+  color: $gray;
+  font-weight: normal;
+}
+
+.checkbox {
+  @include checkbox();
+}
+
+.radio {
+  @include radio();
+}

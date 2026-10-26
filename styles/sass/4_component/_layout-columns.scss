@@ -1,0 +1,65 @@
+// WYSIWYG Layout Columns
+@use "../0_tools" as *;
+
+// Fallback layout until the web component is rendered.
+layout-columns:not(:defined) {
+  display: flex;
+  justify-content: space-between;
+}
+
+// If not using a web component.
+// TODO: Import it into the actual web component or remove it if not possible.
+.layout-columns {
+  @include clearfix();
+  // Explicitly set gap override to zero so that children can create gaps with
+  // margins. This isn't ideal, but it seems to be the only way to create
+  // consistently sized columns from layout to layout.
+  --l-gap-override: 0;
+  display: grid;
+  // Offset the left and right sides to accommodate column margins.
+  margin-right: calc(var(--l-gap) / -2);
+  margin-left: calc(var(--l-gap) / -2);
+
+  // Add back in the column gap with margins onto the child columns.
+  > * {
+    margin-right: calc(var(--l-gap) / 2);
+    margin-left: calc(var(--l-gap) / 2);
+  }
+
+  // Remove the bottom margin from the last element in each column
+  > div > :last-child {
+    margin-bottom: 0;
+  }
+
+  // Vertical Margin.
+  &--vert {
+    margin-top: $spacer;
+    margin-bottom: $spacer;
+
+    &-tiny {
+      margin-top: $spacer--tiny;
+      margin-bottom: $spacer--tiny;
+    }
+
+    &-small {
+      margin-top: $spacer--small;
+      margin-bottom: $spacer--small;
+    }
+
+    &-medium {
+      margin-top: $spacer--medium;
+      margin-bottom: $spacer--medium;
+    }
+
+    &-large {
+      margin-top: $spacer--large;
+      margin-bottom: $spacer--large;
+    }
+
+    &-huge {
+      margin-top: $spacer--huge;
+      margin-bottom: $spacer--huge;
+    }
+  }
+}
+

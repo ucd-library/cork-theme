@@ -1,0 +1,114 @@
+@use "../0_tools" as *;
+// Pack Object: forces all elements in a region to stay in a horizontal row and
+// fill an equal, fluid width of their parent.
+//
+// Adapted from [Inuit CSS](https://github.com/inuitcss)
+//
+// --o-pack-spacer-default: set this in the root to override for all.
+//
+// @param {boolean} $modifiers - print modifier classes.
+//
+// @example markup
+// <div class="o-pack">
+//   <div>
+//     <p>content</p>
+//   </div>
+//   <div>
+//     <p>content</p>
+//   </div>
+// </div>
+
+// Pack Object: Default Spacing unit
+$o-pack-spacer: .5rem !default;
+// Box Object: Large Spacing unit
+$o-pack-spacer--large: $o-pack-spacer * 2 !default;
+
+// Enable or disable object classes
+$o-pack-enable: false !default;
+
+@mixin o-pack($modifiers: true) {
+  --o-pack-spacer: var(--o-pack-spacer-default, inherit);
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+
+  @if ($modifiers == true) {
+    &--auto {
+      @include o-pack--auto();
+    }
+
+    &--rev {
+      @include o-pack--rev();
+    }
+
+    &--small {
+      @include o-pack--small();
+    }
+
+    &--large {
+      @include o-pack--large();
+    }
+  }
+
+  // Force an even width among items.
+  > * {
+    flex: 1 0 0;
+    min-width: 0; // Fix for firefox - http://stackoverflow.com/questions/31967019/max-width-doesnt-work-in-flexbox
+    margin-right: var(--o-pack-spacer, inherit);
+    margin-left: var(--o-pack-spacer, inherit);
+  }
+}
+
+// Pack Object: Auto `Modifier`
+//
+// Cause children to pack up into available space, but not equally sized.
+@mixin o-pack--auto() {
+  > * {
+    flex-basis: auto;
+  }
+}
+
+// Pack Object: Reverse `Modifier`
+//
+// Reverse the direction of `.o-pack_item` elements to right-to-left.
+@mixin o-pack--rev() {
+  flex-direction: row-reverse;
+}
+
+// Pack Object: Small `Modifier`
+//
+// Adds small gutters between items.
+@mixin o-pack--small() {
+  --o-pack-spacer: #{$o-pack-spacer};
+  margin-right: calc(var(--o-pack-spacer, #{$o-pack-spacer}) * -1);
+  // Until Safari supports the "gap" property we have to hack the position.
+  margin-left: calc(var(--o-pack-spacer, #{$o-pack-spacer}) * -1);
+}
+
+// Pack Object: Large `Modifier`
+//
+// Adds large gutters between items.
+@mixin o-pack--large() {
+  --o-pack-spacer: #{$o-pack-spacer--large};
+  margin-right: calc(var(--o-pack-spacer, #{$o-pack-spacer}) * -1);
+  margin-left: calc(var(--o-pack-spacer, #{$o-pack-spacer}) * -1);
+}
+
+// Pack Object: Remove a Pack Object styles.
+//
+// Remove the `.o-pack` from a region. This is useful when in mobile you might
+// want to have everything align vertically instead of packed horizontally.
+@mixin o-pack-removal() {
+  flex-wrap: wrap;
+
+  > * {
+    flex-basis: auto;
+  }
+}
+
+// Render the class.
+@if ($o-pack-enable == true) {
+  .o-pack {
+    @include o-pack();
+  }
+}

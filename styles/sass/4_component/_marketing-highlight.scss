@@ -1,0 +1,126 @@
+@use "sass:math";
+
+@use "../0_tools" as *;
+@use "../2_base_class/buttons-mixin" as *;
+
+.marketing-highlight {
+  $block: &;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+
+  &__image {
+    position: relative;
+    overflow: hidden;
+    border-radius: .5em;
+
+    img {
+      z-index: $zindex-component-bg;
+      width: 100%;
+      transition: transform $transition-time ease-in-out;
+    }
+  }
+
+  &__type {
+    @include category-brand-knockout($brand--primary);
+    position: absolute;
+    z-index: $zindex-component-fg;
+    right: -($spacer--large);
+    bottom: 0;
+    margin: 0;
+    padding: math.div($spacer, 1.5) $spacer--large * 1.75 math.div($spacer, 1.2) $spacer * 1.6;
+    font-size: 1.42rem;
+    transform: skewX(-15deg);
+    transition: padding $transition-time ease-in-out, right $transition-time ease-in-out;
+  }
+
+  &__body {
+    padding: $spacer 0;
+
+    // Remove any bottom margin on the last item.
+    > :last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__title {
+    @include heading--highlight();
+    margin-bottom: $spacer--small;
+    color: var(--forced-contrast-heading-primary, #{$brand--primary});
+  }
+
+  &__description > :last-child {
+    margin-bottom: 0;
+  }
+
+  &__cta {
+    @include btn--primary();
+    @include category-brand-knockout($brand--primary-80);
+    margin-top: $spacer;
+    background-color: var(--category-brand, #{$brand--primary});
+
+    #{$block}__title + & {
+      margin-top: $spacer--small;
+    }
+  }
+
+  &:hover {
+    color: inherit;
+    cursor: pointer;
+    text-decoration: none;
+
+    img {
+      transform: scale(1.1);
+    }
+
+    .marketing-highlight__type {
+      right: -($spacer--large) * .8;
+      padding-left: $spacer--large;
+    }
+
+    .marketing-highlight__cta {
+      color: var(--category-brand-contrast-color, #{$white});
+
+      &:before {
+        opacity: 1;
+        transform: translateX(-45%);
+      }
+    }
+  }
+}
+
+// Featured modifier allows for branding to be added
+.marketing-highlight--featured {
+  padding: $spacer--large;
+  background-color: var(--category-brand, #{$brand--primary-80});
+
+  .marketing-highlight__title,
+  .marketing-highlight__body {
+    color: var(--category-brand-contrast-color, #{$white});
+  }
+
+  .marketing-highlight__body {
+    padding-bottom: 0;
+  }
+
+  .marketing-highlight__type {
+    background-color: $white;
+    color: var(--category-brand-featured, var(--category-brand, #{$brand--primary-80}));
+  }
+
+  .marketing-highlight__cta {
+    background-color: $white;
+    color: var(--category-brand-featured, var(--category-brand, #{$brand--primary-80}));
+
+    &:before {
+      color: var(--category-brand-featured, var(--category-brand, #{$brand--primary-80}));
+    }
+  }
+
+  &:hover {
+
+    .marketing-highlight__cta {
+      color: var(--category-brand-filter, var(--category-brand, #{$brand--primary-80}));
+    }
+  }
+}

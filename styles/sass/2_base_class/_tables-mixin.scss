@@ -1,0 +1,197 @@
+// Tables
+@use "sass:color";
+@use "../0_tools" as *;
+
+@mixin table-colored-headings($head-color: $white, $foot-color: $black) {
+  > thead {
+    background-color: $brand--primary;
+    color: $head-color;
+
+    a {
+      color: $head-color;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      color: $head-color;
+    }
+  }
+
+  > tfoot {
+    color: $foot-color;
+
+    a {
+      color: $foot-color;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      color: $foot-color;
+    }
+  }
+}
+
+// Table: Bordered `Modifier`
+//
+// Add borders all around the table and between all the columns.
+@mixin table--bordered() {
+  // Heading
+  > thead > tr,
+  > tr {
+    > th {
+      border-bottom: 2px solid $brand--secondary;
+    }
+  }
+}
+
+// Table: Zebra-striping `Modifier`
+//
+// Default zebra-stripe styles (alternating gray and transparent backgrounds)
+@mixin table--striped() {
+  @include table-colored-headings($brand--secondary);
+  > tbody > tr:nth-of-type(odd),
+  > tr:nth-of-type(odd) {
+    background-color: $ucd-black-10;
+  }
+
+  td {
+    border-top: 0;
+  }
+
+  > tfoot {
+    background-color: $ucd-black-20;
+  }
+}
+
+// Table: Hover effect `Modifier`
+@mixin table--hover() {
+  @include table-colored-headings();
+  > tbody > tr:hover,
+  > tbody > tr:hover:nth-of-type(odd),
+  > tr:hover,
+  > tr:hover:nth-of-type(odd) {
+    background-color: $brand--primary-80;
+    color: $white;
+  }
+
+  td {
+    border-top: 0;
+  }
+
+  tr:hover {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      color: $white;
+    }
+  }
+
+  tr:hover a {
+    color: $white;
+    text-decoration: underline;
+  }
+
+  > tfoot {
+    background-color: $brand--primary-60;
+
+    &:hover {
+      a {
+        color: $black;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        color: $black;
+      }
+    }
+  }
+
+}
+
+// Table: Admin Table `Modifier`
+@mixin table--admin() {
+  @include table-colored-headings();
+  border: 1px solid $brand--primary-30;
+  border-collapse: inherit;
+  background-color: $white;
+
+  mark {
+    padding: $spacer--tiny $spacer--small;
+    border-radius: $spacer--small;
+    background-color: $strawberry;
+    color: $white;
+    font-size: .6875rem;
+    text-transform: capitalize;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  > thead {
+    > tr > th {
+      border-bottom-width: 0;
+    }
+
+    img {
+      margin-left: $spacer--small;
+    }
+
+    .active {
+      border-right: 1px solid $brand--primary-60;
+      border-left: 1px solid $brand--primary-60;
+      background-color: color.adjust($sage, $lightness: 25%);
+
+      .active {
+        color: $brand--primary;
+      }
+    }
+  }
+
+  td {
+    border-top: 1px solid $ucd-black-10;
+  }
+
+  > tbody {
+    > .drag-previous,
+    > .drag-previous:nth-of-type(odd) {
+      background-color: $brand--secondary-10;
+    }
+
+    > .drag,
+    > .drag:nth-of-type(odd) {
+      background-color: $brand--secondary-20;
+    }
+  }
+
+  > tfoot {
+    background-color: $brand--secondary;
+
+    > tr > th {
+      border-top-width: 0;
+      color: $ucd-black-90;
+      font-weight: normal;
+    }
+  }
+
+  .active {
+    border-right: 1px solid $brand--primary-40;
+    border-left: 1px solid $brand--primary-40;
+    background-color: color.adjust($sage, $lightness: 30%);
+  }
+}

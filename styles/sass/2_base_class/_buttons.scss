@@ -1,0 +1,69 @@
+// Buttons
+@use "../0_tools" as *;
+@use "buttons-mixin" as *;
+
+// Render the class.
+.btn {
+  @include btn();
+}
+
+// .button is used by jquery ui
+.btn--primary,
+.button {
+  @include btn--primary();
+}
+
+.btn--primary-input,
+.btn--primary:where(input),
+.button:where(input) {
+  @include btn--primary-input();
+}
+
+.btn--alt {
+  @include btn--alt();
+}
+
+.btn--alt2 {
+  @include btn--alt2();
+}
+
+.btn--alt3 {
+  @include btn--alt3();
+}
+
+.btn--icon {
+  @include btn--icon();
+}
+
+.btn--invert {
+  @include btn--invert();
+}
+
+// Increase the specificity of the disabled state to ensure it isn't overridden by other modifiers.
+:is(.btn--disabled, .btn[disabled], [disabled] .btn) {
+  @include btn--disabled();
+}
+
+.btn--lg {
+  @include btn--lg();
+}
+
+.btn--sm {
+  @include btn--sm();
+}
+
+.btn--round {
+  @include btn--round();
+}
+
+.btn--round-corners {
+  @include btn--round-corners();
+}
+
+.btn--block {
+  @include btn--block();
+}
+
+.btn--input {
+  @include btn--input();
+}

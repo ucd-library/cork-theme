@@ -1,0 +1,119 @@
+@use "sass:list";
+@use "../0_tools" as *;
+@use "../3_objects/o-media" as *;
+
+.alignable-promo {
+  container-name: var(--alignable-promo-name, alignable-promo);
+  container-type: inline-size;
+  text-align: center;
+
+  &__figure {
+    margin-bottom: $spacer;
+
+    @container alignable-promo (inline-size > 300px) {
+      max-width: 75cqi;
+      margin: 0 auto $spacer;
+    }
+
+    @container alignable-promo (inline-size > 800px) {
+      max-width: 50cqi;
+      margin: 0 auto $spacer;
+    }
+  }
+
+  &__title {
+    margin-bottom: $spacer--small;
+    font-size: calc($font-size + 3cqi);
+  }
+
+  &__line1 {
+    display: block;
+    color: var(--forced-contrast-heading-primary, #{$ucd-blue-80});
+
+    [class*="category-brand--"] & {
+      color: var(--forced-contrast-heading-primary, var(--category-brand--on-white, #{$ucd-blue}));
+    }
+  }
+
+  &__line2 {
+    color: var(--forced-contrast-heading-secondary, var(--category-brand--on-white, #{$ucd-blue}));
+  }
+
+  &__text {
+    margin-bottom: $spacer;
+    color: var(--forced-contrast, inherit);
+  }
+
+  &__buttons {
+    .btn {
+      margin: 0 $spacer--tiny $spacer--small;
+
+      &--primary {
+        --btn-arrow-color: var(--forced-scheme-contrast, #{$white});
+        background-color: var(--forced-scheme, var(--category-brand, #{$ucd-gold}));
+        color: var(--forced-scheme-contrast, var(--category-brand-contrast-color, #{$ucd-blue}));
+      }
+
+      &--invert {
+        --btn-arrow-color: var(--forced-scheme, var(--category-brand, #{$ucd-gold}));
+        border-color: var(--forced-scheme, var(--category-brand, #{$ucd-gold}));
+        color: var(--forced-scheme, #{$ucd-blue});
+      }
+    }
+  }
+
+  &--left,
+  &--right {
+    --alignable-promo-name: alignable-promo-aligned;
+  }
+
+  &__wrapper {
+    margin: auto;
+
+    @container alignable-promo (inline-size < 300px) {
+      width: 92cqi;
+    }
+
+    @container alignable-promo-aligned (inline-size < 400px) {
+      width: 92cqi;
+    }
+
+    @container alignable-promo (inline-size > 300px) {
+      width: 90cqi;
+    }
+
+    @container alignable-promo-aligned (inline-size > 300px) {
+      width: 90cqi;
+    }
+
+    @container alignable-promo-aligned (inline-size > 400px) {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 5cqi;
+
+      > * {
+        flex: 1;
+      }
+    }
+
+    @container alignable-promo-aligned (inline-size > 800px) {
+      align-items: center;
+      width: 75cqi;
+      margin: auto;
+    }
+
+    .alignable-promo--right & {
+      flex-direction: row-reverse;
+    }
+  }
+
+  &__body {
+    @container alignable-promo-aligned (inline-size > 400px) {
+      text-align: right;
+
+      :where(.alignable-promo--right .alignable-promo__figure) + & {
+        text-align: left;
+      }
+    }
+  }
+}

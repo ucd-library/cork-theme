@@ -1,0 +1,443 @@
+@use "sass:math";
+@use "sass:list";
+//------------------------------------
+//  $VARIABLES
+//------------------------------------
+
+// Base colors
+// -------------------------
+$black: #000;
+$white: #fff;
+
+// UC Davis colors - http://marketingtoolbox.ucdavis.edu/identity-guide/color.html
+// -------------------------
+
+$ucd-blue: #022851;
+$ucd-gold: #ffbf00;
+
+// Tints
+$ucd-blue-100: $ucd-blue;
+$ucd-blue-90: #14447a;
+$ucd-blue-80: #13639e;
+$ucd-blue-70: #73abdd;
+$ucd-blue-60: #b0d0ed;
+$ucd-blue-50: #cce0f3;
+$ucd-blue-40: #dbeaf7;
+$ucd-blue-30: #ebf3fa;
+$ucd-blue-20: #f7fafd;
+// There is no longer a 10% defined in the style guide
+$ucd-blue-10: $ucd-blue-20;
+
+$ucd-gold-100: $ucd-gold;
+$ucd-gold-90: #ffc519;
+$ucd-gold-80: #ffd24c;
+$ucd-gold-70: #ffdf80;
+$ucd-gold-60: #ffecb2;
+$ucd-gold-50: #fde9ac;
+$ucd-gold-40: #fff4d2;
+$ucd-gold-30: #fff9e6;
+$ucd-gold-20: #fffbed;
+// There is no longer a 10% defined in the style guide
+$ucd-gold-10: $ucd-gold-20;
+
+$ucd-black-90: #191919;
+$ucd-black-80: #333;
+$ucd-black-70: #4c4c4c;
+$ucd-black-60: #666;
+$ucd-black-50: #7f7f7f;
+$ucd-black-40: #999;
+$ucd-black-30: #b2b2b2;
+$ucd-black-20: #ccc;
+$ucd-black-10: #e5e5e5;
+
+// UC Davis secondary colors
+// -------------------------
+
+// 2021 Secondary Color Set
+$rec-pool: #6fcfeb;
+$tahoe: #00b2e3;
+$gunrock: #0047ba;
+$bodega: #003a5d;
+$rain: #03f9e6;
+$arboretum: #00c4b3;
+$putah-creek: #008eaa;
+$delta: #00524c;
+$farmers-market: #aada91;
+$sage: #6cca98;
+$quad: #3dae2b;
+$redwood: #266041;
+$golden-state: #ffff3b;
+$sunflower: #ffdc00;
+$poppy: #f18a00;
+$california: #8a532f;
+$rose: #ff8189;
+$strawberry: #f93549;
+$double-decker: #c10230;
+$merlot: #79242f;
+$thiebaud-icing: #f095cd;
+$redbud: #c6007e;
+$pinot: #76236c;
+$cabernet: #481268;
+
+// Category Brands
+// [class-name, color, contrast-color, brand-text-on-white]
+$category-brands: (
+  ("admin-blue",            $ucd-blue-80,       $white,      "yes"),
+  ("rec-pool",              $rec-pool,          $ucd-blue,   "no"),
+  ("tahoe",                 $tahoe,             $ucd-blue,   "no"),
+  ("gunrock",               $gunrock,           $white,      "yes"),
+  ("bodega",                $bodega,            $white,      "yes"),
+  ("rain",                  $rain,              $ucd-blue,   "no"),
+  ("arboretum",             $arboretum,         $ucd-blue,   "no"),
+  ("putah-creek",           $putah-creek,       $black,      "yes"),
+  ("delta",                 $delta,             $white,      "yes"),
+  ("farmers-market",        $farmers-market,    "#1b452f",   "no"), // Previously $redwood contrast.
+  ("sage",                  $sage,              "#003834",   "no"), // Previously $delta contrast.
+  ("quad",                  $quad,              "#02264e",   "no"), // Previously $ucd-blue contrast.
+  ("redwood",               $redwood,           $white,      "yes"),
+  ("golden-state",          $golden-state,      $ucd-blue,   "no"),
+  ("sunflower",             $sunflower,         $ucd-blue,   "no"),
+  ("poppy",                 $poppy,             $black,      "no"),
+  ("california",            $california,        $white,      "yes"),
+  ("rose",                  $rose,              $ucd-blue,   "no"),
+  ("strawberry",            $strawberry,        $black,      "yes"),
+  ("double-decker",         $double-decker,     $white,      "yes"),
+  ("merlot",                $merlot,            $white,      "yes"),
+  ("thiebaud-icing",        $thiebaud-icing,    $cabernet,   "no"),
+  ("redbud",                $redbud,            $white,      "yes"),
+  ("pinot",                 $pinot,             $white,      "yes"),
+  ("cabernet",              $cabernet,          $white,      "yes"),
+  ("primary",               $ucd-blue,          $white,      "yes"),
+  ("primary-50",            $ucd-blue-50,       $ucd-blue,   "no"),
+  ("secondary",             $ucd-gold,          $ucd-blue,   "no"),
+  ("secondary-50",          $ucd-gold-50,       $ucd-blue,   "no"),
+  ("centennial-walk-gray",  $ucd-black-30,      $black,      "no"),
+);
+
+// Section Brands - these will be added from the category brands.
+$section-brand-names: (
+  "primary",
+  "secondary",
+  "rec-pool",
+  "gunrock",
+  "bodega",
+  "rain",
+  "arboretum",
+  "delta",
+  "farmers-market",
+  "sage",
+  "golden-state",
+  "rose",
+  "double-decker",
+  "merlot",
+  "thiebaud-icing",
+  "pinot",
+  "cabernet",
+);
+
+// Set up a section brands list that will append from the category brands.
+$section-brands: (
+  ("wonder-blue", $ucd-blue-80,  $white,    "yes"),
+  ("dark-gray",   $ucd-black-80, $white,    "yes"),
+  ("light-gray",  $ucd-black-10, $ucd-blue, "no"),
+);
+@each $brand in $category-brands {
+  @if list.index($section-brand-names, list.nth($brand, 1)) {
+    $section-brands: list.append($section-brands, $brand, $separator: auto);
+  }
+}
+
+// Grays
+// -------------------------
+
+$gray-darker: $ucd-black-90 !default;
+$gray-dark: $ucd-black-80 !default;
+$gray: $ucd-black-70 !default;
+$gray-light: $ucd-black-40 !default;
+$gray-lighter: $ucd-black-10 !default;
+
+
+// Brand colors
+// -------------------------
+
+$brand--primary: $ucd-blue !default;
+$brand--secondary: $ucd-gold !default;
+$brand--success: $bodega !default;
+$brand--warning: $gray-darker !default;
+$brand--danger: $gray-darker !default;
+$brand--info: $ucd-blue-80 !default;
+$brand--gray: $ucd-blue-10 !default;
+$brand--chrome: #144478 !default;
+
+// Tints - It is preferable to use these as opposed to fixed UC Davis colors
+$brand--primary-90: $ucd-blue-90 !default;
+$brand--primary-80: $ucd-blue-80 !default;
+$brand--primary-70: $ucd-blue-70 !default;
+$brand--primary-60: $ucd-blue-60 !default;
+$brand--primary-50: $ucd-blue-50 !default;
+$brand--primary-40: $ucd-blue-40 !default;
+$brand--primary-30: $ucd-blue-30 !default;
+$brand--primary-20: $ucd-blue-20 !default;
+$brand--primary-10: $ucd-blue-10 !default;
+
+$brand--secondary-90: $ucd-gold-90 !default;
+$brand--secondary-80: $ucd-gold-80 !default;
+$brand--secondary-70: $ucd-gold-70 !default;
+$brand--secondary-60: $ucd-gold-60 !default;
+$brand--secondary-50: $ucd-gold-50 !default;
+$brand--secondary-40: $ucd-gold-40 !default;
+$brand--secondary-30: $ucd-gold-30 !default;
+$brand--secondary-20: $ucd-gold-20 !default;
+$brand--secondary-10: $ucd-gold-10 !default;
+
+
+// Links
+// -------------------------
+
+$link-color: $brand--primary-80;
+$link-color-hover: $tahoe;
+$link-color-active: #035369 !default;
+$link-color-visited: $pinot;
+$link-color-focus: $tahoe;
+$link-color--secondary: #003570 !default;
+$link-color-hover--secondary: oklch(from $link-color--secondary calc(l - .15) c h) !default;
+
+
+// Typography
+// -------------------------
+
+$font-color: $black !default;
+
+$font-family--sans-serif: "proxima-nova", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
+$font-family--icons: "Font Awesome 7 Free";
+$font-family--icons-brand: "Font Awesome 7 Brands";
+
+$font-family--serif: "Ryman Eco", "Iowan Old Style", Georgia, "Times New Roman", Times, serif !default;
+$font-family--monospace: Menlo, Monaco, Consolas, "Courier New", monospace !default;
+$font-family: $font-family--sans-serif !default;
+$font-family--headings: $font-family--serif !default;
+
+$font-size-base: 16px !default;
+$font-size: 1rem !default;
+$font-size--large: 1.25rem !default;
+$font-size--small: .875rem !default;
+
+$line-height: 1.618 !default; // Based on the Golden Ratio.
+$line-height--small: 1.3 !default;
+$line-height--heading: 1.2 !default;
+
+$font-weight: 400 !default;
+$font-weight--light: 200 !default;
+$font-weight--bold: 700 !default;
+$font-weight--extra-bold: 800 !default;
+$font-weight--icons: 900 !default;
+$font-weight--icons-regular: 400 !default;
+
+
+// Default Spacing Units
+// -------------------------
+
+$spacer: 1rem !default;
+$spacer--tiny: math.div($spacer, 4) !default;
+$spacer--small: math.div($spacer, 2) !default;
+$spacer--medium: $spacer * 1.5 !default;
+$spacer--large: $spacer * 2 !default;
+$spacer--huge: $spacer * 4 !default;
+$spacer--vast: $spacer * 8 !default;
+
+
+// Components
+// -------------------------
+
+$border-radius: .25rem !default;
+$border-radius--large: .375rem !default;
+$border-radius--small: .1875rem !default;
+
+$table-border-color: $brand--primary-50 !default;
+$table-bg-accent: $brand--primary-10 !default;
+$table-bg-hover: $brand--secondary-10 !default;
+
+
+// Forms
+// -------------------------
+
+$input-bg: $white !default;
+$input-bg--disabled: $gray-lighter !default;
+
+$input-color: $brand--primary-80 !default;
+$input-border-color: $gray-light !default;
+$input-border-radius: $border-radius !default;
+$input-border-focus: #66afe9 !default;
+$input-bg-focus: $brand--secondary-10 !default;
+
+$input-color-placeholder: $gray-light !default;
+
+$input-height: $spacer--large + $spacer--small !default;
+
+$legend-color: $gray-dark !default;
+$legend-border-color: $ucd-black-10 !default;
+
+$input-label: $brand--primary !default;
+
+
+// Miscellaneous
+// -------------------------
+
+// Hr border color
+$hr-border: $brand--primary !default;
+
+// Horizontal forms & lists
+$component-offset-horizontal: 180px !default;
+
+// Default transition time
+$transition-time: .3s !default;
+
+// Panel spacer
+$panel-spacer: 2.25rem !default;
+
+
+// Z-index master list
+// -------------------------
+// Used for a bird's eye view of components dependent on the z-axis
+// Try to avoid customizing these :)
+$zindex-component-bg: 800 !default;
+$zindex-component-mg: 810 !default;
+$zindex-component-fg: 820 !default;
+$zindex-navbar: 830 !default;
+$zindex-dropdown: 840 !default;
+$zindex-popover: 850 !default;
+$zindex-tooltip: 860 !default;
+$zindex-navbar-fixed: 1000 !default;
+$zindex-modal-background: 1100 !default;
+$zindex-modal: 1200 !default;
+$zindex-nav-tray: 1300 !default;
+
+
+// Primary Menu
+// -------------------------
+
+$menu-background-color: $white !default;
+$menu-background-color-mobile: $brand--primary-40 !default;
+$menu-background-sub-color: $brand--secondary-30 !default;
+$menu-background-color-active: $brand--secondary !default;
+$menu-dropdown-arrow-color: $brand--primary !default;
+// Menu dimensions
+$menu-vert-width: 310px !default;
+$menu-icon-width: 40% !default;
+$menu-height: 3.25rem !default;
+$menu-mobile-height: 3rem !default;
+$menu-mobile-separator: .15rem !default;
+
+
+// Header
+// -------------------------
+$header-height: 7rem !default;
+$header-height--md: 4.5rem !default;
+$header-height--sm: 3.125rem !default;
+$header-height--scrolling: 3.75rem !default;
+$header-bar-height: 3.25rem !default;
+
+
+// Object Overrides
+// -------------------------
+// Override objects here or enable modifiers like $o-media-enable--flush
+$o-media-gutter: $spacer !default;
+$o-flow-spacer: $spacer !default;
+// Disable o-box spacing since we are no longer using o-box with the current design.
+$o-box-spacer: 0 !default;
+
+// Enable object classes
+$o-box-enable--flush: true !default;
+$o-box-enable--small: true !default;
+$o-box-enable--large: true !default;
+$o-media-enable--rev: true !default;
+$o-media-enable--flush: true !default;
+$o-media-enable--small: true !default;
+$o-media-enable--large: true !default;
+
+
+// Container sizes
+// -------------------------
+
+// Small screen / tablet
+$container-width: 92% !default;
+$container-width-narrow: 80% !default;
+
+// Medium screen / desktop
+$container-width--md: 92% !default;
+$container-width-narrow--md: 68% !default;
+
+// Large screen / wide desktop
+$container-width--lg: 92% !default;
+$container-width-narrow--lg: $container-width-narrow--md !default;
+
+// X Large screen / huge desktop
+$container-width--xlg: 88% !default;
+$container-width-narrow--xlg: $container-width-narrow--md !default;
+
+// Container margin space
+$container-space: math.div(100% - $container-width, 2) !default;
+$container-space--md: math.div(100% - $container-width--md, 2) !default;
+$container-space--lg: math.div(100% - $container-width--lg, 2) !default;
+$container-space--xlg: math.div(100% - $container-width--xlg, 2) !default;
+
+$container-space-narrow: math.div(100% - $container-width-narrow, 2) !default;
+$container-space-narrow--md: math.div(100% - $container-width-narrow--md, 2) !default;
+$container-space-narrow--lg: math.div(100% - $container-width-narrow--lg, 2) !default;
+$container-space-narrow--xlg: math.div(100% - $container-width-narrow--xlg, 2) !default;
+
+// Full width container space
+$container-edge-space: $spacer !default;
+$container-edge-space--md: $spacer--medium !default;
+
+
+
+
+// Breakpoint Media Queries
+// -------------------------
+
+$media-xsmall: 330px !default;
+$media-small: 480px !default;
+$media-narrow: 768px !default;
+$media-medium: 992px !default;
+$media-wide: 1200px !default;
+$media-huge: 1600px !default;
+
+$media-xsmall-max: $media-xsmall - 1px;
+$media-small-max: $media-small - 1px;
+$media-narrow-max: $media-narrow - 1px;
+$media-medium-max: $media-medium - 1px;
+$media-wide-max: $media-wide - 1px;
+$media-huge-max: $media-huge - 1px;
+
+// DEPRECATED/LEGACY: the `$bp-*` variables below only exist as arguments for the
+// deprecated `breakpoint()` mixin (breakpoint-sass list syntax). Do not use in new
+// code. Use the scalar `$media-*` variables above with native `@media` queries, e.g.
+// `@media (min-width: $media-small) { ... }`.
+$bp-xsmall: $media-xsmall $media-small-max;
+$bp-small: $media-small $media-narrow-max;
+$bp-narrow: $media-narrow $media-medium-max;
+$bp-medium: $media-medium $media-wide-max;
+$bp-wide: $media-wide $media-huge-max;
+$bp-huge: $media-huge;
+
+$bp-xsmall--up: $media-xsmall;
+$bp-small--up: $media-small;
+$bp-narrow--up: $media-narrow;
+$bp-medium--up: $media-medium;
+$bp-wide--up: $media-wide;
+
+$bp-xsmall--down: max-width $media-xsmall-max;
+$bp-small--down: max-width $media-small-max;
+$bp-narrow--down: max-width $media-narrow-max;
+$bp-medium--down: max-width $media-medium-max;
+$bp-wide--down: max-width $media-wide-max;
+$bp-huge--down: max-width $media-huge-max;
+
+$bp-narrow--landscape: ($bp-narrow--down) (orientation landscape);
+
+
+// Setup grids
+// -------------------------
+
+$grid-gap: $spacer * 3;

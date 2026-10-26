@@ -1,0 +1,17 @@
+// Allows lazy loaded images to appear that they are fading in.
+.lazyload {
+  opacity: 0;
+  transition: opacity .2s ease-in;
+
+  &--loaded {
+    opacity: 1;
+  }
+
+  &__bg {
+    background-image: var(--lazy-bg-url);
+  }
+}
+
+.photoswipe .lazyload {
+  opacity: 1;
+}

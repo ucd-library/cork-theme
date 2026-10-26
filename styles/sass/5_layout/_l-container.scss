@@ -1,0 +1,99 @@
+@use "sass:math";
+@use "../0_tools" as *;
+
+// Container
+.l-container {
+  @include clearfix();
+  width: $container-width;
+  margin: 0 auto;
+
+  @media (min-width: $media-medium) {
+    width: $container-width--md;
+  }
+
+  @media (min-width: $media-huge) {
+    width: $container-width--xlg;
+  }
+
+  // Ignore container when inside of another container.
+  :where(#{&}) {
+    width: 100%;
+  }
+
+  // Narrow Container.
+  &--narrow {
+    @include clearfix();
+    width: $container-width-narrow;
+    margin: 0 auto;
+
+    @media (min-width: $media-narrow) {
+      width: $container-width-narrow--md;
+    }
+
+    @media (min-width: $media-huge) {
+      width: $container-width-narrow--xlg;
+    }
+
+    // Ignore container when inside of another container.
+    @at-root .l-container :where(#{&}) {
+      width: 100%;
+    }
+  }
+}
+
+// Create a fake container that uses padding. This should be the same width as
+// a container.
+.l-gutter {
+  @include clearfix();
+  padding-right: calc(var(--full-width) * #{math.div($container-space, 100%)});
+  padding-left: calc(var(--full-width) * #{math.div($container-space, 100%)});
+
+  @media (min-width: $media-medium) {
+    padding-right: calc(var(--full-width) * #{math.div($container-space--md, 100%)});
+    padding-left: calc(var(--full-width) * #{math.div($container-space--md, 100%)});
+  }
+
+  @media (min-width: $media-huge) {
+    padding-right: calc(var(--full-width) * #{math.div($container-space--xlg, 100%)});
+    padding-left: calc(var(--full-width) * #{math.div($container-space--xlg, 100%)});
+  }
+
+  // Narrow gutter will be the same size as the narrow container.
+  &--narrow {
+    @include clearfix();
+    padding-right: calc(var(--full-width) * #{math.div($container-space-narrow, 100%)});
+    padding-left: calc(var(--full-width) * #{math.div($container-space-narrow, 100%)});
+
+    @media (min-width: $media-medium) {
+      padding-right: calc(var(--full-width) * #{math.div($container-space-narrow--md, 100%)});
+      padding-left: calc(var(--full-width) * #{math.div($container-space-narrow--md, 100%)});
+    }
+
+    @media (min-width: $media-huge) {
+      padding-right: calc(var(--full-width) * #{math.div($container-space-narrow--xlg, 100%)});
+      padding-left: calc(var(--full-width) * #{math.div($container-space-narrow--xlg, 100%)});
+    }
+
+    // Ensure that a narrow in a narrow won't blow up.
+    &.l-container--narrow {
+      padding-right: 8%;
+      padding-left: 8%;
+    }
+  }
+}
+
+.l-container--navigation {
+  @include clearfix();
+}
+
+// Fix to prevent horizontal scroll when using Bootstrap Grids
+// Add this to the outermost div
+// http://stackoverflow.com/questions/14270084/overflow-xhidden-doesnt-prevent-content-from-overflowing-in-mobile-browsers
+.l-page {
+  overflow-x: hidden;
+}
+
+// Margin used by pattern lab to give components a bit of space.
+.sg-main {
+  margin: $spacer--small;
+}

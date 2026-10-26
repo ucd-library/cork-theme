@@ -1,0 +1,92 @@
+@use "../0_tools" as *;
+
+// Pagination
+// Make the active/current styles extensible for compatibility
+@mixin pager--current() {
+  background: $brand--primary-80;
+  color: $white;
+
+  &:hover {
+    background: $brand--secondary;
+  }
+}
+
+@mixin pager-icon($direction: left) {
+  display: inline-flex;
+  align-items: center;
+
+  @if ($direction == left) {
+    &:before {
+      margin-right: $spacer--small;
+      content: "\f30a";
+      font-family: $font-family--icons;
+      font-weight: $font-weight--icons;
+    }
+  }
+  @else {
+    &:after {
+      margin-left: $spacer--small;
+      content: "\f30b";
+      font-family: $font-family--icons;
+      font-weight: $font-weight--icons;
+    }
+  }
+}
+
+.pager {
+  @include reset-list();
+  display: flex;
+  flex-wrap: wrap;
+  margin: $spacer 0;
+
+  &__item {
+    margin: $spacer--tiny $spacer--tiny $spacer--tiny 0;
+
+    // Theme links and static text the same
+    a,
+    &--static {
+      @include link-style-secondary();
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: $spacer--large;
+      padding: $spacer--tiny $spacer--small;
+      color: var(--forced-contrast, #{$gray});
+      text-decoration: none;
+      transition: all .2s ease-in-out;
+    }
+
+    a:hover {
+      background: $brand--secondary;
+      color: $brand--primary;
+    }
+
+    // Allow the current item to have a link or just static text
+    &--current,
+    &--current a {
+      @include pager--current();
+    }
+
+    &--previous a {
+      @include pager-icon();
+    }
+
+    &--next a {
+      @include pager-icon(right);
+    }
+  }
+
+  &--mini {
+    .pager__item--current {
+      display: block;
+      padding: $spacer--tiny $spacer--small;
+      background: transparent;
+      color: var(--forced-contrast, #{$gray});
+      cursor: default;
+
+      &:hover {
+        background: transparent;
+      }
+    }
+  }
+}

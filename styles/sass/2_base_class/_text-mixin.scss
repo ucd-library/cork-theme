@@ -1,0 +1,105 @@
+// Text
+@use "../0_tools" as *;
+
+// Pullquote
+@mixin pullquote() {
+  z-index: 1;
+  min-height: 8.5rem;
+  margin: 0 1rem;
+  padding: 0;
+  color: var(--forced-contrast, #{$brand--primary});
+  font-weight: $font-weight--bold;
+  text-align: center;
+
+  @media (min-width: $media-small) {
+    margin-right: 4rem;
+    margin-left: 4rem;
+    font-size: 1.25rem;
+  }
+
+  .category-brand__background & {
+    color: var(--category-brand-contrast-color, #{$brand--primary});
+  }
+
+  em {
+    position: relative;
+    display: inline-block;
+    padding: .5em 1.5em;
+    color: var(--forced-contrast-heading-primary, #{$brand--primary-80});
+    font-size: .875em;
+    font-style: italic;
+
+    .category-brand__background & {
+      color: var(--category-brand-contrast-color, #{$brand--primary-80});
+    }
+
+    &:before {
+      position: absolute;
+      z-index: -1; // Allow text to be highlighted.
+      top: -.125em;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: block;
+      border: .25em solid var(--forced-contrast-heading-primary, #{$rec-pool});
+      content: "";
+      transform: skewX(-15deg);
+
+      // If in branded area just make border white
+      .category-brand__background & {
+        border-color: $white;
+        opacity: .5;
+      }
+    }
+  }
+
+  &:before {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    color: $ucd-black-10;
+    content: "\201c";
+    font-size: 6rem;
+    font-weight: $font-weight--extra-bold;
+    line-height: .8;
+    transform: translateX(-50%);
+
+    @media (min-width: $media-narrow) {
+      font-size: 12rem;
+    }
+
+    // If in branded area just make quote white
+    .category-brand__background & {
+      border-color: $white;
+      opacity: .2;
+    }
+  }
+
+  &:after {
+    position: absolute;
+    z-index: -2;
+    right: 0;
+    bottom: 0;
+    color: $ucd-black-10;
+    content: "\201d";
+    font-size: 6rem;
+    font-weight: $font-weight--extra-bold;
+    line-height: .8;
+    transform: translateX(30%);
+
+    @media (min-width: $media-narrow) {
+      font-size: 12rem;
+    }
+
+    // If in branded area just make quote white
+    .category-brand__background & {
+      border-color: $white;
+      opacity: .2;
+    }
+  }
+
+  &--italic {
+    font-style: italic;
+  }
+}

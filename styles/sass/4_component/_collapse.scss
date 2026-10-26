@@ -1,0 +1,56 @@
+@use "sass:math";
+
+@use "../0_tools" as *;
+
+// Collapse (Like accordion but only affects the current section)
+.collapse {
+
+  &__title {
+    @include category-brand-knockout($brand--primary);
+    @include has-icon(right);
+    justify-content: space-between;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: $spacer--medium $spacer--large $spacer--medium $spacer;
+    cursor: pointer;
+    font-size: $font-size--large;
+
+    @media (min-width: $media-small) {
+      font-size: 1.5rem;
+      line-height: 1.4;
+    }
+
+    @media (min-width: $media-narrow) {
+      font-size: 1.3325rem;
+    }
+
+    &:after {
+      --fa: "\f067"; // fa-solid fa-plus
+      color: var(--category-brand-contrast-color, #{$brand--secondary});
+      transition: all .4s ease-in;
+    }
+
+    &--open:after {
+      transform: rotate(135deg);
+    }
+  }
+
+  // Hiding of this content will be done in markup with a .u-hidden--visually
+  // class so that it can be removed by javascript. This is done for accessibility
+  // reasons so that the content is not actually hidden.
+  &__content {
+    padding: $spacer;
+    border: 1px solid $brand--primary;
+    border-top: 0;
+    background-color: $white;
+    color: $font-color;
+
+    li {
+      margin-bottom: math.div($spacer, 2);
+
+      a {
+        font-weight: normal;
+      }
+    }
+  }
+}

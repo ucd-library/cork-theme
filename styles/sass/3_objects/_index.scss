@@ -1,0 +1,31 @@
+//------------------------------------
+//  3_objects
+//------------------------------------
+@use "../variables" as *;
+
+@forward "o-filtered-image";
+
+@forward "o-box" with (
+  $o-box-enable: true,
+  $o-box-spacer: $o-box-spacer
+);
+
+@forward "o-box-wrapper" with (
+  $o-box-wrapper-enable: true
+);
+
+@forward "o-flex-region" with (
+  $o-flex-region-enable: true
+);
+
+@forward "o-flow" with (
+  $o-flow-enable: true
+);
+
+@forward "o-media" with (
+  $o-media-enable: true
+);
+
+@forward "o-pack" with (
+  $o-pack-enable: true
+);

@@ -1,0 +1,122 @@
+@use "../0_tools" as *;
+
+// Spotlight (view mode)
+.vm-spotlight {
+  // Assign the component class name to a variable so it can be used again.
+  $block: &;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-decoration: none;
+
+  // Body of text
+  &__body {
+    @include reset-list-titles();
+    width: 50%;
+    padding: $spacer--small 5%;
+    color: var(--forced-contrast, #{$black});
+    font-weight: $font-weight--bold;
+    transition: transform .2s ease-in-out;
+
+    @media (min-width: $media-wide) {
+      font-size: $font-size--large;
+    }
+
+    #{$block}:hover & {
+      transform: translateX(7%);
+    }
+  }
+
+  // Large callout of the first word
+  &__callout {
+    @include category-brand-knockout($brand--primary);
+    display: inline-block;
+    float: none;
+    min-width: 1.5em;
+    padding: 0 .25em;
+    font-size: 1.5rem;
+    font-weight: $font-weight--bold;
+    line-height: 1.4;
+    text-align: center;
+
+    @media (min-width: $media-narrow) {
+      font-size: 2.25rem;
+    }
+  }
+
+  // Title
+  &__title {
+    margin-top: $spacer--small;
+    font-size: 1rem;
+    font-weight: $font-weight;
+    line-height: 1.1;
+
+    @media (min-width: $media-narrow) {
+      font-size: 1.5rem;
+    }
+  }
+
+  // Image
+  &__image {
+    position: relative;
+    z-index: $zindex-component-bg;
+    display: grid;
+    grid-template-areas: "spotlight";
+    overflow: hidden;
+    width: 50%;
+
+    // Ensure that all items are contained in the image z stack.
+    > * {
+      grid-area: spotlight;
+    }
+
+    // Force the image to take over the entire space.
+    img {
+      width: 100%;
+    }
+
+    // Icon.
+    &:before {
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      grid-area: spotlight;
+      justify-content: center;
+      color: var(--category-brand-contrast-color, #{$white});
+      content: "\f35a";
+      font-family: $font-family--icons;
+      font-size: 3rem;
+      font-weight: 400; //TODO: replace with $font-weight--icons-regular
+      opacity: 0;
+      transform: translateX(-75%);
+      transition: opacity .3s ease-in-out, transform .2s ease-in-out;
+
+      @media (min-width: $media-narrow) {
+        font-size: 5rem;
+      }
+
+      #{$block}:hover & {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    // Color overlay.
+    &:after {
+      @include category-brand-background($brand--primary);
+      grid-area: spotlight;
+      content: "";
+      opacity: 0;
+      transition: opacity .2s ease-in-out;
+
+      #{$block}:hover & {
+        opacity: .7;
+      }
+    }
+  }
+
+  // Reverse the direction
+  &--rev {
+    flex-direction: row-reverse;
+  }
+}

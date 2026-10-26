@@ -1,0 +1,21 @@
+@use "../0_tools" as *;
+
+// 2 Column layout for search results page. The first sidebar is used for search
+// facets. The content area is used for search results and pagination. The top
+// region will be full width and used for the search form.
+.l-search {
+
+  @media (min-width: $media-narrow) {
+    display: grid;
+    grid-template-areas:
+      "top top"
+      "first middle"
+      "first content";
+    grid-template-columns: minmax(25%, 200px) 1fr;
+    grid-template-rows: auto 1fr;
+    min-height: 100vh;
+    gap: $spacer--medium;
+  }
+}
+
+

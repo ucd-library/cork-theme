@@ -1,0 +1,46 @@
+@use "../0_tools" as *;
+
+// Responsive iFrame box styles
+.responsive-iframe {
+  margin-bottom: $spacer;
+  --responsive-iframe-ratio: 56.25; // 16:9
+
+  &--4x3 {
+    --responsive-iframe-ratio: 75; // 4:3
+  }
+
+  &--playlist {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 100 / var(--responsive-iframe-ratio);
+  }
+
+  // Aggie Video playlists need more height when the playlist is below the video.
+  &--playlist-vertical {
+    --responsive-iframe-ratio: 100;
+  }
+
+  // Use a smaller margin similar to images when in a <figure> since the
+  // <figcaption> will provide a bottom margin of its own.
+  :where(figure) & {
+    margin-bottom: $spacer--small;
+  }
+
+  &--flush {
+    margin-bottom: 0;
+  }
+
+  // Fix extra margins when aligning
+  .u-align--right > &,
+  .u-align--left > & {
+    margin-bottom: 0;
+  }
+
+  :where(iframe, object, embed) {
+    width: 100%;
+    height: auto;
+    margin-bottom: 0;
+    aspect-ratio: 100 / var(--responsive-iframe-ratio);
+  }
+
+}

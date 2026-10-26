@@ -1,0 +1,125 @@
+@use "../0_tools" as *;
+
+$factoid-bracket-color: oklch(from var(--category-brand, $brand--primary-70) l c h / .3);
+
+.factoid {
+  container-name: factoid;
+  container-type: inline-size;
+  text-align: center;
+
+  &__link {
+    display: block;
+    max-width: 10rem;
+    margin: auto;
+    text-decoration: none;
+
+    @container factoid (inline-size > 350px) {
+      max-width: calc(20rem + 1cqi);
+    }
+
+    &:hover {
+
+      .factoid__figure {
+        bottom: -.5rem;
+      }
+
+      .factoid__body {
+        top: -.5rem;
+      }
+
+      .factoid__bracket-one:before {
+        left: -$spacer;
+      }
+
+      .factoid__bracket-two:before {
+        right: -$spacer;
+      }
+    }
+  }
+
+  &--brackets {
+
+    .factoid__bracket-one {
+      width: 4.75rem;
+
+      &:before {
+        position: relative;
+        left: 0;
+        display: block;
+        float: right;
+        width: 1.75rem;
+        height: 12rem;
+        border-top: 1rem solid $factoid-bracket-color;
+        border-bottom: 1rem solid $factoid-bracket-color;
+        border-left: 1rem solid $factoid-bracket-color;
+        content: "";
+        transition: left .2s ease-in-out;
+      }
+    }
+
+    .factoid__bracket-two {
+      width: 4.75rem;
+
+      &:before {
+        position: relative;
+        right: 0;
+        display: block;
+        float: left;
+        width: 1.75rem;
+        height: 12rem;
+        border-top: 1rem solid $factoid-bracket-color;
+        border-right: 1rem solid $factoid-bracket-color;
+        border-bottom: 1rem solid $factoid-bracket-color;
+        content: "";
+        transition: right .2s ease-in-out;
+      }
+    }
+  }
+
+  &--brackets {
+
+    .factoid__link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  &__icon {
+    color: var(--category-brand, var(--forced-contrast, #{$brand--secondary}));
+    font-size: min($font-size--large * 2, $font-size + 4cqi);
+  }
+
+  &__figure {
+    position: relative;
+    bottom: 0;
+    margin-bottom: $spacer * 1.5;
+    transition: bottom .2s ease-in-out;
+
+    :where(img) {
+      width: calc(3rem + 10cqi);
+    }
+
+    &.factoid__icon {
+      margin-bottom: $spacer;
+    }
+  }
+
+  &__body {
+    position: relative;
+    top: 0;
+    padding: 0 $spacer;
+    transition: top .2s ease-in-out;
+  }
+
+  &__big-text {
+    margin-bottom: $spacer;
+    font-size: min($font-size * 4, $font-size + 6cqi);
+  }
+
+  &__small-text {
+    margin-top: 0;
+    color: var(--forced-contrast, #{$brand--primary});
+    font-size: min($font-size--large, $font-size + .5cqi);
+  }
+}

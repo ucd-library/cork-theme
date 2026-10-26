@@ -1,0 +1,40 @@
+@use "../0_tools" as *;
+
+.person {
+
+  &__position-title {
+    @media (min-width: $media-small) {
+      margin-top: 0;
+    }
+  }
+
+  &__pronoun {
+    @include h5();
+    margin-bottom: $spacer;
+  }
+
+}
+
+// Unit List
+// Provide a pipe list with h3 style text
+.unit-list {
+  @include h3();
+  margin-bottom: $spacer--medium;
+
+  li {
+    display: inline;
+
+    &:after {
+      display: inline-block;
+      width: 3px;
+      height: $spacer * 1.1;
+      margin: 0 $spacer--small 0 $spacer;
+      background-color: $ucd-black-40;
+      content: "";
+    }
+
+    &:last-child:after {
+      display: none;
+    }
+  }
+}

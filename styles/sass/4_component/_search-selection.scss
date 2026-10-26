@@ -1,0 +1,40 @@
+@use "../0_tools" as *;
+@use "../2_base_class/buttons-mixin";
+
+.search-selection {
+
+  &__title {
+    padding-top: $spacer;
+    color: $brand--primary;
+    font-size: 1.75rem;
+    font-style: italic;
+    font-weight: $font-weight;
+    font-weight: $font-weight--light;
+  }
+
+  &__list {
+    @include reset-list();
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: $spacer;
+    gap: $spacer--small;
+  }
+
+  &__btn {
+    @include buttons-mixin.btn--round-corners();
+    @include has-icon("right");
+    --fa: "\f2d3"; // fa-solid fa-square-xmark
+    padding: .375rem .5rem;
+    border: 0;
+    background-color: $brand--primary-80;
+    color: $white;
+    font-weight: $font-weight--bold;
+
+    &:hover {
+      background-color: $brand--primary;
+    }
+  }
+
+}
+
+

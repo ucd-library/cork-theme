@@ -1,0 +1,143 @@
+@use "../0_tools" as *;
+
+// Native <details>/<summary> accordion. Visually matches the legacy
+// `.list--accordion` / `.list--faq` (see 2_base_class/_lists-mixin.scss).
+.accordion {
+  margin-bottom: $spacer;
+  font-style: normal;
+  text-align: left;
+  white-space: normal;
+
+  &__item {
+    margin: 0;
+    padding: 0;
+    border: 0;
+
+    & + .accordion__item {
+      border-top: 1px solid var(--list-bordered-border);
+    }
+
+    > summary {
+      position: relative;
+      display: block;
+      padding: $spacer--small $spacer--large;
+      background-color: $ucd-blue;
+      color: $white;
+      cursor: pointer;
+      font-weight: $font-weight--extra-bold;
+      list-style: none; // Hide default marker (Firefox).
+
+      &::-webkit-details-marker {
+        display: none; // Hide default marker (WebKit).
+      }
+
+      &::before {
+        position: absolute;
+        margin: -.15em 0 0 -1.43em;
+        color: var(--list-arrow-color);
+        content: "\f054";
+        font-family: $font-family--icons;
+        font-size: .8em;
+        font-weight: $font-weight--icons;
+        line-height: 2.5;
+        transition: transform $transition-time ease;
+      }
+
+      > p {
+        margin: 0;
+      }
+    }
+
+    // Rotate the arrow when open.
+    &[open] > summary::before {
+      transform: rotate(90deg);
+    }
+
+    &::details-content {
+      overflow: clip;
+      padding: 0 $spacer--large;
+      background-color: $brand--primary-30;
+      block-size: 0;
+      color: $font-color;
+      transition:
+        block-size $transition-time ease,
+        padding-block $transition-time ease,
+        content-visibility $transition-time ease allow-discrete;
+
+      > :last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    &[open]::details-content {
+      block-size: auto;
+      padding-block: $spacer--small;
+    }
+
+    > :not(summary):last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// FAQ modifier: match `.list--faq` (Q:/A: prefixes, no blue header).
+.accordion--faq {
+
+  .accordion__item {
+    // Question.
+    > summary {
+      padding: $spacer--small $spacer--small $spacer--small var(--list-faq-prefix-spacing);
+      background-color: transparent;
+      color: var(--category-brand-contrast-color, var(--forced-contrast, var(--list-faq-question)));
+      font-weight: $font-weight--extra-bold;
+
+      &:hover {
+        color: var(--category-brand-contrast-color, var(--forced-contrast, var(--list-faq-question-hover)));
+        opacity: .8;
+      }
+
+      // "Q:" prefix replaces the chevron.
+      &::before {
+        position: static;
+        display: inline-block;
+        width: var(--list-faq-prefix-spacing);
+        margin: 0 0 0 calc(-1 * var(--list-faq-prefix-spacing));
+        color: inherit;
+        content: "Q:";
+        font-family: inherit;
+        font-size: 1em;
+        font-weight: $font-weight--extra-bold;
+        line-height: inherit;
+        transition: none;
+      }
+    }
+
+    // No arrow rotation for FAQ.
+    &[open] > summary::before {
+      transform: none;
+    }
+
+    // Answer.
+    &::details-content {
+      margin: 0;
+      padding: 0;
+      padding-left: var(--list-faq-prefix-spacing);
+      background-color: transparent;
+      color: var(--category-brand-contrast-color, var(--forced-contrast, var(--list-faq-a)));
+
+      &::before {
+        display: inline-block;
+        float: left;
+        width: var(--list-faq-prefix-spacing);
+        margin-left: calc(-1 * var(--list-faq-prefix-spacing));
+        content: "A:";
+        font-weight: $font-weight--extra-bold;
+      }
+    }
+
+    &[open]::details-content {
+      padding-bottom: $spacer;
+    }
+
+  }
+}

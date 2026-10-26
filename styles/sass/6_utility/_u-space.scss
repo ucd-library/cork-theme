@@ -1,0 +1,162 @@
+@use "../0_tools" as *;
+
+//------------------------------------
+//  Space
+//------------------------------------
+
+// Create classes for X and Y spacings.
+// Example for X margin: left and right direction:
+// .u-space-mx
+// .u-space-mx--small
+// .u-space-mx--medium
+// .u-space-mx--large
+// .u-space-mx--huge
+// .u-space-mx--vast
+// .u-space-mx--flush
+@mixin u-space-xy($type-abbr, $type) {
+  $xy: (
+    "x": ("left", "right"),
+    "y": ("top", "bottom"),
+  );
+
+  @each $axis, $props in $xy {
+
+    .u-space-#{$type-abbr}#{$axis} {
+      @each $u-space-dir in $props {
+        #{$type}-#{$u-space-dir}: $spacer !important;
+      }
+
+      // Small spacing.
+      &--small {
+        @each $u-space-dir in $props {
+          #{$type}-#{$u-space-dir}: $spacer--small !important;
+        }
+      }
+
+      // Medium spacing.
+      &--medium {
+        @each $u-space-dir in $props {
+          #{$type}-#{$u-space-dir}: $spacer--medium !important;
+        }
+      }
+
+      // Large spacing.
+      &--large {
+        @each $u-space-dir in $props {
+          #{$type}-#{$u-space-dir}: $spacer--large !important;
+        }
+      }
+
+      // Huge spacing.
+      &--huge {
+        @each $u-space-dir in $props {
+          #{$type}-#{$u-space-dir}: $spacer--huge !important;
+        }
+      }
+
+      // Vast spacing.
+      &--vast {
+        @each $u-space-dir in $props {
+          #{$type}-#{$u-space-dir}: $spacer--vast !important;
+        }
+      }
+
+      // Remove any previously applied XY spacing.
+      &--flush {
+        @each $u-space-dir in $props {
+          #{$type}-#{$u-space-dir}: 0 !important;
+        }
+      }
+    }
+
+  }
+}
+
+// Create classes for each direction
+// Example for margin bottom direction:
+// .u-space-mb
+// .u-space-mb--small
+// .u-space-mb--medium
+// .u-space-mb--large
+// .u-space-mb--huge
+// .u-space-mb--vast
+// .u-space-mb--flush
+@mixin u-space-direction($type-abbr, $type) {
+  // Direction types
+  $directions: (
+    "t": "top",
+    "r": "right",
+    "b": "bottom",
+    "l": "left"
+  );
+
+  @each $direction-abbr, $direction in $directions {
+
+    .u-space-#{$type-abbr}#{$direction-abbr} {
+      #{$type}-#{$direction}: $spacer !important;
+
+      // Small spacing.
+      &--small {
+        #{$type}-#{$direction}: $spacer--small !important;
+      }
+
+      // Medium spacing.
+      &--medium {
+        #{$type}-#{$direction}: $spacer--medium !important;
+      }
+
+      // Large spacing.
+      &--large {
+        #{$type}-#{$direction}: $spacer--large !important;
+      }
+
+      // Huge spacing.
+      &--huge {
+        #{$type}-#{$direction}: $spacer--huge !important;
+      }
+
+      // Vast spacing.
+      &--vast {
+        #{$type}-#{$direction}: $spacer--vast !important;
+      }
+
+      // Remove any previously applied directional spacing.
+      &--flush {
+        #{$type}-#{$direction}: 0 !important;
+      }
+    }
+
+  }
+}
+
+// Loop through margin and padding and create utility classes.
+$u-space-types: (
+  "m": "margin",
+  "p": "padding",
+);
+
+@each $u-space-type-abbr, $u-space-type in $u-space-types {
+  // X and Y spacings.
+  @include u-space-xy($u-space-type-abbr, $u-space-type);
+
+  // Single direction spacings.
+  @include u-space-direction($u-space-type-abbr, $u-space-type);
+
+  // Remove all spacings.
+  .u-space-#{$u-space-type-abbr}--flush {
+    margin: 0 !important;
+  }
+}
+
+
+// Remove all margins.
+.u-space--flush {
+  margin: 0 !important;
+}
+
+// Remove all default vertical margin collapsing.
+// Be aware that this can cause problems due to changing the display type.
+.u-space--no-margin-collapse {
+  display: grid !important;
+  grid-template-columns: 100%;
+}

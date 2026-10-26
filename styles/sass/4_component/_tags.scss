@@ -1,0 +1,29 @@
+@use "sass:math";
+
+@use "../0_tools" as *;
+
+// Tags Styling
+.tags {
+
+  &__title {
+    @include heading--auxiliary();
+  }
+
+  &__tag {
+    @include link-style-secondary();
+    display: inline-block;
+    width: auto;
+    margin-right: math.div($spacer--small, 1.5);
+    margin-bottom: math.div($spacer--small, 1.5);
+    padding: $spacer--small $spacer;
+    background: $brand--secondary;
+    color: $link-color-hover--secondary;
+    text-decoration: none;
+    transition: all .2s ease-in-out;
+
+    &:hover {
+      background: $brand--primary;
+      color: $brand--secondary;
+    }
+  }
+}

@@ -1,0 +1,29 @@
+@use "sass:math";
+
+@use "../0_tools" as *;
+
+.nav-sub {
+
+  &__title,
+  &__title:first-child,
+  &__title-linked a {
+    @include reduced-title();
+    display: block;
+    padding: $spacer 0;
+    background-color: transparent;
+  }
+
+  &__title-linked a {
+    line-height: inherit;
+  }
+
+  h2:first-child {
+    margin-bottom: 0;
+  }
+
+  .o-box &__title-linked a {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+}

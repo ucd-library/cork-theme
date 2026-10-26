@@ -1,0 +1,13 @@
+@use "../0_tools" as *;
+
+.accordion-accessiblity {
+  text-align: right;
+
+  &__expand {
+    @include button-as-text-link();
+  }
+
+  &__collapse {
+    @include button-as-text-link();
+  }
+}

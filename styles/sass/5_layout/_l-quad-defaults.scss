@@ -1,0 +1,175 @@
+@use "../0_tools" as *;
+
+// Create Quad Layout defaults.
+
+// In order to make sure gutters align, use all 12 regions when doing thirds or
+// larger spacings like 75/25
+
+// Default settings for the quad layout.
+@mixin l-quad-settings() {
+  @include l-default-settings();
+  grid-template-rows: max-content;
+}
+
+// sass-lint:disable indentation
+.l-quad {
+  // Default with all 4 regions rendered - use 2x2 in narrow
+  @media (min-width: $media-narrow) {
+    @include l-quad-settings();
+    grid-template-areas:
+      "first second"
+      "third fourth";
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (min-width: $media-wide) {
+    @include l-quad-settings();
+    grid-template-areas: "first second third fourth";
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+
+  // Default with 1 region rendered.
+  &--full {
+    @media (min-width: $media-narrow) {
+      @include l-quad-settings();
+      grid-template-areas:
+        "first"
+        "second"
+        "third"
+        "fourth";
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // Default with 2 regions rendered.
+  &--half {
+    @media (min-width: $media-medium) {
+      @include l-quad-settings();
+      grid-template-areas: "first second";
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  // Default with 3 regions rendered.
+  &--third {
+    @media (min-width: $media-medium) {
+      @include l-quad-settings();
+      grid-template-areas: "first first first first second second second second third third third third";
+    }
+  }
+
+  // Create fixed grid.
+  &--fixed {
+    @media (min-width: $media-medium) {
+      @include l-quad-settings();
+      grid-template-areas: "first second third fourth";
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+  }
+
+  // Create 2x2 grid.
+  &--2x2 {
+    @media (min-width: $media-medium) {
+      @include l-quad-settings();
+      grid-template-areas:
+        "first second"
+        "third fourth";
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  // Create 1x2x1 grid.
+  &--1x2x1 {
+    @media (min-width: $media-narrow) {
+      @include l-quad-settings();
+      grid-template-areas:
+        "first first"
+        "second third"
+        "fourth fourth";
+      grid-template-columns: 1fr 1fr;
+    }
+
+    // We have to repeat the settings again to wide for IE.
+    @media (min-width: $media-wide) {
+      @include l-quad-settings();
+      grid-template-areas:
+        "first first"
+        "second third"
+        "fourth fourth";
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  // Create 1x3 grid.
+  &--1x3 {
+    @media (min-width: $media-medium) {
+      @include l-quad-settings();
+      grid-template-areas:
+        "first first first first first first first first first first first first"
+        "second second second second third third third third fourth fourth fourth fourth";
+    }
+  }
+
+  // Create 3x1 grid.
+  &--3x1 {
+    @media (min-width: $media-medium) {
+      @include l-quad-settings();
+      grid-template-areas:
+        "first first first first second second second second third third third third"
+        "fourth fourth fourth fourth fourth fourth fourth fourth fourth fourth fourth fourth";
+    }
+  }
+
+  // Create 75% 25% grid.
+  &--75-25 {
+    @media (min-width: $media-medium) {
+      @include l-quad-settings();
+      grid-template-areas:
+        "first first first second"
+        "third fourth fourth fourth";
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+  }
+
+  // Create 67% 33% grid.
+  &--67-33 {
+    @media (min-width: $media-medium) {
+      @include l-quad-settings();
+      grid-template-areas:
+        "first first first first first first first first second second second second"
+        "third third third third fourth fourth fourth fourth fourth fourth fourth fourth";
+    }
+  }
+
+  &__region {
+    // https://github.com/kenwheeler/slick/issues/982#issuecomment-345057850
+    min-width: 0;
+
+    // Named classes to overwrite nth-child for when in Drupal sometimes not all
+    // 4 regions are added. Use the :where on nth-children to not increase
+    // specificity.
+    &:where(:nth-child(1)),
+    &--first {
+      grid-area: first;
+      min-width: 0;
+    }
+
+    &:where(:nth-child(2)),
+    &--second {
+      grid-area: second;
+      min-width: 0;
+    }
+
+    &:where(:nth-child(3)),
+    &--third {
+      grid-area: third;
+      min-width: 0;
+    }
+
+    &:where(:nth-child(4)),
+    &--fourth {
+      grid-area: fourth;
+      min-width: 0;
+    }
+  }
+}

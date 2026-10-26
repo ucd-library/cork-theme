@@ -1,0 +1,21 @@
+@use "../0_tools" as *;
+
+$max-cols: 5;
+
+@media (min-width: $media-narrow) {
+  @for $i from 2 through 3 {
+    .l-column--#{$i} {
+      column-count: $i;
+      column-gap: 2.5em;
+    }
+  }
+}
+
+@media (min-width: $media-medium) {
+  @for $i from 4 through $max-cols {
+    .l-column--#{$i} {
+      column-count: $i;
+      column-gap: 2.5em;
+    }
+  }
+}

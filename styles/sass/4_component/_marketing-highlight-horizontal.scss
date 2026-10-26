@@ -1,0 +1,120 @@
+@use "../0_tools" as *;
+
+// Marketing Highlight Horizontal
+.marketing-highlight-horizontal {
+  overflow: hidden;
+  padding-bottom: 0;
+  text-decoration: none;
+
+  &__image {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      transition: all $transition-time ease-in-out;
+    }
+
+    &:after {
+      content: none;
+    }
+  }
+
+  &__body {
+    position: relative;
+    padding: 0;
+  }
+
+  &__title {
+    @include category-brand-knockout($brand--primary-80);
+    z-index: $zindex-component-fg;
+    width: 100%;
+    margin: 0;
+    padding: $spacer $spacer--medium;
+    color: var(--category-brand-contrast-color, #{$white});
+    font-size: 1.25rem;
+    text-align: left;
+
+    @media (min-width: $media-small) {
+      font-size: 1.5625rem;
+      line-height: 1.3;
+    }
+
+    &:hover {
+      color: var(--category-brand-contrast-color, #{$white});
+    }
+  }
+
+  &:hover {
+    text-decoration: none;
+
+    img {
+      transform: scale(1.05);
+    }
+  }
+
+  // Variant of MHH with overlayed text.
+  &--overlay {
+    position: relative;
+    display: block;
+    container-name: mhho;
+    container-type: inline-size;
+
+    .marketing-highlight-horizontal__body {
+      z-index: 1;
+      left: 0;
+      display: flex;
+      margin-top: $spacer--small;
+      gap: $spacer--tiny;
+
+      &:before {
+        display: block;
+        width: 1rem;
+        background-color: var(--category-brand, #{$brand--secondary});
+        content: "";
+        transition: width $transition-time ease-in-out;
+      }
+    }
+
+    &:hover {
+      .marketing-highlight-horizontal__body:before {
+        width: 1.5rem;
+      }
+    }
+
+    .marketing-highlight-horizontal__image {
+      border-radius: .5em;
+    }
+
+    .marketing-highlight-horizontal__title {
+      padding: $spacer;
+      background-color: transparent;
+      color: $brand--primary;
+      text-transform: uppercase;
+    }
+
+    @container mhho (inline-size > 350px) {
+      .marketing-highlight-horizontal__body {
+        position: absolute;
+        bottom: 5cqi;
+
+        &:before {
+          width: min(2rem, 4cqi);
+        }
+      }
+
+      .marketing-highlight-horizontal__title {
+        color: $white;
+        font-size: max(1.5rem, 1.23rem + 2cqi);
+        text-shadow: 2px 2px 2px $ucd-black-60;
+      }
+
+      &:hover {
+        .marketing-highlight-horizontal__body:before {
+          width: min(2.5rem, 6cqi);
+        }
+      }
+    }
+  }
+}

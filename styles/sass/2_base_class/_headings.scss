@@ -1,0 +1,70 @@
+// Headings
+@use "../0_tools" as *;
+
+$page-title-triangle-size: 40px;
+
+:root {
+  --heading-primary-font-size: 1.6055rem;
+  --heading-secondary-font-size: 1.3325rem;
+  --heading-h1-font-size: 1.91rem;
+  --heading-h2-font-size: var(--heading-primary-font-size);
+  --heading-h3-font-size: var(--heading-secondary-font-size);
+  --heading-h4-font-size: 1.092rem;
+  --heading-h5-font-size: 1rem;
+  --heading-h6-font-size: 1rem;
+  --reduced-title-font-size: 1.2rem;
+
+  @media (min-width: $media-narrow) {
+    --heading-primary-font-size: 2.0995rem;
+    --heading-secondary-font-size: 1.7425rem;
+    --heading-h1-font-size: 2.94rem;
+    --heading-h4-font-size: 1.428rem;
+    --heading-h5-font-size: 1.207rem;
+    --reduced-title-font-size: 1.4rem;
+  }
+}
+
+// Standard Heading
+.heading {
+  @include heading-default();
+}
+
+.heading--primary {
+  @include heading--primary();
+}
+
+.heading--secondary {
+  @include heading--secondary();
+}
+
+.heading--highlight {
+  @include heading--highlight();
+}
+
+.heading--auxiliary {
+  @include heading--auxiliary();
+}
+
+.heading--weighted {
+  @include heading--weighted();
+}
+
+.heading--underline {
+  @include heading--underline();
+}
+
+.heading--weighted-underline {
+  @include heading--weighted-underline();
+}
+
+.heading--center-underline {
+  @include heading--center-underline();
+}
+
+.heading--invert {
+  @include heading--invert();
+}
+
+.heading--invert-box {
+  @include heading--invert-box();
+}

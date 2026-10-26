@@ -1,0 +1,61 @@
+@use "../0_tools" as *;
+
+// The flex region object makes a section easy to drop multiple items in and
+// receive a sensible layout
+//
+// --o-flex-region-spacer-default: set this in the root to override for all.
+
+// Flex Region Object: Default Spacing unit
+$o-flex-region-spacer: 1rem !default;
+// Enable or disable object classes
+$o-flex-region-enable: false !default;
+
+// Flex Region Object: Allow content in this region to arrange itself into sensible columns
+//
+// @param {boolean} $elements - print item classes.
+//
+// @example markup
+// <div class="o-flex-region">
+//   <div class="o-flex-region__item">content</div>
+//   <div class="o-flex-region__item">content</div>
+//   <div class="o-flex-region__item">content</div>
+// </div>
+@mixin o-flex-region($elements: true) {
+  --o-flex-region-spacer: var(--o-flex-region-spacer-default, #{$o-flex-region-spacer});
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  @media (min-width: $media-medium) {
+    flex-wrap: nowrap;
+  }
+
+  @if ($elements == true) {
+    > * {
+      @include o-flex-region__item();
+    }
+  }
+}
+
+@mixin o-flex-region__item() {
+  flex-grow: 1;
+  width: 100%;
+  margin-bottom: var(--o-flex-region-spacer);
+
+  @media (min-width: $media-narrow) {
+    width: 50%;
+  }
+
+  @media (min-width: $media-medium) {
+    flex-grow: 0;
+    width: auto;
+    min-width: 20%;
+  }
+}
+
+// Render the class.
+@if ($o-flex-region-enable == true) {
+  .o-flex-region {
+    @include o-flex-region();
+  }
+}

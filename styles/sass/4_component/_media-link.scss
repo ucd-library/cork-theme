@@ -1,0 +1,48 @@
+@use "../0_tools" as *;
+@use "../3_objects/o-media" as *;
+
+// For use in a WYSIWYG editor.
+.media-link {
+  --media-link-background: #{$brand--secondary};
+  @include o-media(true, false);
+
+  & {
+    @include link-style-secondary();
+    padding: $spacer--small;
+    color: $font-color;
+    text-decoration: none;
+    transition: background-color .2s ease-in-out;
+  }
+
+  @media (min-width: $media-small) {
+    padding: $spacer--medium;
+  }
+
+  &:hover {
+    background-color: oklch(from var(--category-brand, var(--media-link-background)) l c h / .1);
+  }
+
+  &__figure {
+    max-width: 25%;
+
+    // Prevent an inside figure tag from adding extra margins.
+    figure,
+    img {
+      margin-bottom: 0;
+    }
+  }
+
+  &__title {
+    @include heading--auxiliary();
+    color: $brand--primary-80;
+  }
+
+  .category-brand__background & {
+    color: var(--category-brand-contrast-color, $white);
+
+    &:hover {
+      background-color: oklch(from var(--category-brand-contrast-color, var(--media-link-background)) l c h / .1);
+    }
+
+  }
+}

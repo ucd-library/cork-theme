@@ -1,0 +1,111 @@
+@use "../0_tools" as *;
+
+:root {
+  --fixed-header-scroll-offset: #{$header-bar-height * 1.25};
+  --sticky-header-scroll-offset: #{$header-bar-height * 1.25};
+}
+
+// Header
+.header {
+  --ucd-logo-color: #{$brand--secondary};
+  background-color: $white;
+  box-shadow: 0 1px 1px oklch(from $brand--primary l c h / .15);
+
+  &__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    height: $header-bar-height;
+    padding: 1px $container-edge-space;
+    background: $brand--primary-80 url("../images/header-bar1.webp") no-repeat left top;
+    background-size: cover;
+    gap: $spacer;
+    transition: height .3s ease-in-out;
+
+    @media (min-width: $media-medium) {
+      padding-right: $container-edge-space--md;
+      padding-left: $container-edge-space--md;
+    }
+
+    &--logo-right {
+      justify-content: flex-end;
+    }
+
+    // Loop through 7 styles for the header bar images.
+    @for $i from 2 through 7 {
+      &--backdrop#{$i} {
+        background-image: url("../images/header-bar#{$i}.webp");
+      }
+    }
+
+    .sticky-header & {
+      position: fixed;
+      z-index: $zindex-navbar-fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      width: 100%;
+    }
+
+    .sticky-header--is-fixed & {
+      height: calc(#{$header-bar-height} - 1rem);
+    }
+  }
+
+  &__university {
+    // Fix weird vertical alignment due to being inline.
+    a {
+      display: flex;
+    }
+  }
+
+  .ucd-logo {
+    width: auto;
+    height: 1.25rem;
+    color: var(--ucd-logo-color);
+    transition: height .2s ease-in-out;
+
+    .sticky-header--is-fixed & {
+      height: 1rem;
+    }
+  }
+
+  &__branding {
+    display: flex;
+    align-items: center;
+    padding: $spacer--small $container-edge-space;
+
+    @media (min-width: $media-medium) {
+      min-height: 6.5rem;
+      padding-right: $container-edge-space--md;
+      padding-left: $container-edge-space--md;
+    }
+  }
+
+  &__toggles {
+    display: flex;
+    align-items: center;
+  }
+
+  // Navbar
+  &__navbar {
+    background-color: $brand--primary;
+    box-shadow: 0 2px 1px oklch(from $brand--primary l c h / .15);
+  }
+}
+
+.site-logo {
+  max-height: 5.5rem;
+}
+
+// Add this .sticky-header class to the body or a top level dom element.
+// This will add a .sticky-header--is-fixed class when the user scrolls.
+.sticky-header {
+  padding-top: $header-bar-height;
+
+  // Offset scrollable anchor tags
+  [id] {
+    scroll-margin-top: var(--sticky-header-scroll-offset);
+  }
+}

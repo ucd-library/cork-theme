@@ -1,0 +1,91 @@
+@use "../0_tools" as *;
+@use "../2_base_class/buttons-mixin";
+
+.search-filter {
+  @media (max-width: $media-narrow-max) {
+
+    &__overlay {
+      position: fixed;
+      z-index: $zindex-modal;
+      top: 0;
+      left: 0;
+      display: none;
+      overflow: auto;
+      width: 100%;
+      height: 100%;
+      background-color: $white;
+      overscroll-behavior: contain;
+
+      .search-filter--open & {
+        display: block;
+      }
+    }
+
+    &__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .675rem 1rem;
+      background-color: color-mix(in oklch, $brand--primary-80 20%, $white);
+    }
+
+    &__title {
+      @include has-icon();
+      --fa: "\f1de"; // fa-solid fa-sliders
+      margin-bottom: 0;
+      color: $brand--primary;
+      font-style: italic;
+      font-weight: $font-weight--bold;
+
+      &::before {
+        font-style: normal;
+      }
+    }
+
+    &__close-btn {
+      border: 0;
+      border-radius: 50%;
+      aspect-ratio: 1;
+      background-color: color-mix(in oklch, $brand--primary-80 50%, $white);
+      color: $brand--primary;
+      font-weight: $font-weight--bold;
+
+      &:hover {
+        background-color: $brand--secondary;
+      }
+    }
+
+    &__footer {
+      display: flex;
+      justify-content: center;
+      margin: $spacer--medium;
+    }
+
+    &__footer-btn {
+      @include buttons-mixin.btn--round-corners();
+      padding: .675rem 1rem;
+      border: 0;
+      background-color: $brand--primary-80;
+      color: $white;
+      font-weight: $font-weight--bold;
+
+      &:hover {
+        background-color: $brand--secondary;
+        color: $brand--primary;
+      }
+    }
+
+    details {
+      padding-inline: 1rem;
+    }
+
+  }
+
+  @media (min-width: $media-narrow) {
+    &__header,
+    &__footer,
+    &__open-btn {
+      display: none;
+    }
+  }
+}

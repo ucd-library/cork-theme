@@ -1,0 +1,106 @@
+@use "../0_tools" as *;
+@use "sass:math";
+
+.content-card {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+  border-radius: 1.5rem;
+  background-color: var(--category-brand, #{$ucd-blue-40});
+  color: var(--forced-contrast, inherit);
+  container-type: inline-size;
+
+  .layout-section--force-contrast & {
+    background-color: var(--category-brand, rgb(0 0 0 / .15));
+  }
+
+  &__figure {
+    aspect-ratio: 4 / 3;
+
+    & > *,
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    img {
+      object-fit: cover;
+    }
+  }
+
+  &__body {
+    --content-card-font-size: clamp(16px, 3cqw, 1rem);
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 8%;
+    color: var(--category-brand-contrast-color, var(--forced-contrast, #{$brand--primary}));
+    font-size: var(--content-card-font-size);
+    gap: $spacer;
+
+    > * {
+      margin: 0;
+    }
+  }
+
+  &__pre-title {
+    font-size: clamp(.875rem, 4cqw, 1.5rem);
+    opacity: .75;
+  }
+
+  &__title {
+    color: var(--category-brand-contrast-color, var(--forced-contrast, #{$brand--primary}));
+    font-size: clamp(1.25rem, 8cqw, 3.5rem);
+    font-weight: $font-weight--bold;
+    line-height: 1;
+
+    .content-card__pre-title + & {
+      margin-top: -$spacer;
+    }
+  }
+
+  &__subtitle {
+    font-size: clamp(1.125rem, 5cqw, 1.75rem);
+    font-weight: $font-weight;
+    line-height: 1;
+    opacity: .9;
+
+    .content-card__title + & {
+      margin-top: -$spacer--small;
+    }
+  }
+
+  &__badge {
+    display: flex;
+    align-items: center;
+    color: var(--category-brand-contrast-color, var(--forced-contrast, #{$brand--info}));
+    font-size: clamp(math.div($font-size-base, 2), $font-size-base, $font-size-base);
+    font-style: italic;
+    font-weight: math.div($font-weight, 2);
+    gap: 8px;
+
+    [class*="fa-"] {
+      color: var(--category-brand-contrast-color, var(--forced-contrast, #{$brand--info}));
+      font-size: 26px;
+    }
+  }
+
+  &__cta {
+    margin-top: 1rem;
+
+    & > * {
+      width: 100%;
+    }
+  }
+
+  .btn {
+    border-color: transparent;
+    background-color: var(--forced-scheme, var(--brand-secondary));
+    color: var(--forced-scheme-contrast, var(--brand-primary));
+    font-size: var(--content-card-font-size);
+  }
+
+}

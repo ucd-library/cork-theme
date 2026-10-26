@@ -1,0 +1,14 @@
+@use "../0_tools" as *;
+
+// Special styling for article titles
+.article {
+
+  &__title {
+    margin-top: $spacer--small;
+  }
+
+  &__subtitle {
+    margin-top: $spacer--small;
+    margin-bottom: $spacer;
+  }
+}

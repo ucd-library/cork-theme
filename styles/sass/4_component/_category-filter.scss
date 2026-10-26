@@ -1,0 +1,79 @@
+@use "sass:math";
+
+@use "../0_tools" as *;
+
+// Category Filter
+
+$category-filter-triangle-width: 1rem;
+$category-filter-triangle-height: math.div(2.5rem, 2);
+$category-filter-hover-bg: $brand--primary-50;
+$category-filter-active-bg: $brand--primary-80;
+
+@mixin category-filter-triangle($color: $brand--primary-50) {
+  border: 0 solid transparent;
+  border-width: $category-filter-triangle-height $category-filter-triangle-width $category-filter-triangle-height 0;
+  border-right-color: $color;
+}
+
+.category-filter {
+  @include reset-list();
+
+  &__link {
+    @include link-style-secondary();
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    min-height: $category-filter-triangle-height;
+    padding: $spacer--small;
+    font-weight: $font-weight;
+    line-height: 1.5;
+    text-decoration: none;
+
+    &:before {
+      flex-shrink: 0;
+      width: $category-filter-triangle-width;
+      height: $category-filter-triangle-width;
+      margin-right: $spacer;
+      border: 3px solid $brand--secondary;
+      border-color: var(--category-brand, #{$brand--secondary});
+      border-radius: 50%;
+      content: "";
+    }
+  }
+
+  &__list-item {
+    display: flex;
+    align-items: center;
+
+    &:before {
+      flex-shrink: 0;
+      width: $category-filter-triangle-width;
+      content: "";
+    }
+
+    &:hover .category-filter__link {
+      background-color: $category-filter-hover-bg;
+    }
+
+    &:hover:before {
+      @include category-filter-triangle();
+    }
+  }
+
+  &__list-item--active {
+    &:before,
+    &:hover:before {
+      @include category-filter-triangle($category-filter-active-bg);
+    }
+
+    .category-filter__link,
+    &:hover .category-filter__link {
+      background-color: $category-filter-active-bg;
+      color: $white;
+
+      &:before {
+        border-color: $white;
+      }
+    }
+  }
+}

@@ -1,0 +1,88 @@
+@use "../0_tools" as *;
+
+// Brand Textbox which will add a category color to the background
+.brand-textbox {
+  @include category-brand-knockout();
+  --panel-bg: var(--category-brand);
+  position: relative;
+  padding: $spacer;
+
+  @media (min-width: $media-narrow) {
+    padding: $spacer;
+  }
+
+  *:last-child {
+    margin-bottom: 0;
+  }
+
+  &--collapsible {
+    padding-right: $spacer--huge;
+
+    @media (min-width: $media-medium) {
+      padding-right: $spacer--large;
+    }
+  }
+
+  &--closed {
+    position: relative;
+    top: 0;
+    right: 0;
+    height: 1.85 * $spacer;
+    padding: 1.25 * $spacer $spacer--large;
+
+    @media (min-width: $media-medium) {
+      height: $spacer;
+      padding: $spacer $spacer--large;
+    }
+  }
+
+  &__content {
+
+    .brand-textbox--closed & {
+      visibility: hidden;
+    }
+  }
+
+  &__button {
+    position: absolute;
+    top: $spacer--tiny;
+    right: $spacer--tiny;
+    overflow: hidden;
+    width: $spacer--large;
+    height: $spacer--large;
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+
+
+    @media (min-width: $media-medium) {
+      width: $spacer--medium;
+      height: $spacer--medium;
+    }
+
+    &:before {
+      display: block;
+      margin-bottom: $spacer;
+      background-color: $white;
+      color: var(--category-brand-featured, var(--category-brand, #{$brand--primary-80}));
+      content: "\f00d";
+      font-family: $font-family--icons;
+      font-size: 1.5 * $font-size;
+      font-weight: $font-weight--bold;
+      line-height: 2.1rem;
+
+      @media (min-width: $media-medium) {
+        font-size: $font-size;
+        line-height: 1.6;
+      }
+
+      .brand-textbox--closed & {
+        content: "\f078";
+      }
+    }
+
+    &:hover {
+      opacity: .75;
+    }
+  }
+}

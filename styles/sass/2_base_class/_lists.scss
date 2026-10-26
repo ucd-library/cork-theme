@@ -1,0 +1,112 @@
+// List Styles
+@use "../0_tools" as *;
+@use "lists-mixin" as *;
+
+:root {
+  --list-arrow-color: #{$brand--secondary-90};
+  --list-bordered-border: #{$brand--primary-40};
+  --list-faq-question: #{$brand--primary-80};
+  --list-faq-question-hover: #{$link-color-hover--secondary};
+  --list-faq-a: #{$brand--primary};
+  --list-pipe-pipe: #{$gray};
+  --list-faq-prefix-spacing: #{$spacer--medium};
+  --list-bordered-vertical-spacing: #{$spacer--small};
+}
+
+// List style modifier classes and list modifier wrapper classes
+//
+// List wrapper classes will apply further down the DOM
+// even if they don't have the class applied directly to their list.
+
+// List: Flush `Modifier` and wrapper
+// Make list flush to the left side
+.list--flush,
+.list-wrapper--flush ul {
+  @include list-flush();
+}
+
+// List: Arrows `Modifier` and wrapper
+// Bullets become an arrow
+.list--arrow,
+.list-wrapper--arrow ul {
+  @include list-arrow(); }
+
+// List: White Arrows `Modifier` and wrapper
+// Bullets become white arrows
+.list--white-arrow,
+.list-wrapper--white-arrow ul {
+  @include list-arrow-white();
+}
+
+// List: Bordered `Modifier` and wrapper
+// adds a blocked chevron for the bullet and puts a border between items
+.list--bordered,
+.list-wrapper--bordered ul {
+  @include list-bordered();
+}
+
+// List: FAQ `Modifier` and wrapper
+// Turns a list into an FAQ where odd items are the Question and
+// even items are the answer. These will be toggleable as well.
+.list--faq,
+.list-wrapper--faq ul {
+  @include list-faq();
+}
+
+// List: Pipe `Modifier` and wrapper
+// Places each item in a horizontal list separated by a vertical pipe
+.list--pipe,
+.list-wrapper--pipe ul {
+  @include list-pipe();
+}
+
+// List: Comment `Modifier`
+// Formats a user comment
+.list--comment {
+  @include list-comment();
+}
+
+// List: Simple `Modifier` and wrapper
+// Removes bullets and initial left margin
+.list--simple,
+.list-wrapper--simple ul {
+  @include list-simple();
+}
+
+// List: Filter `Modifier`
+// Slightly indents list of facets
+.list--filter {
+  @include list-filter();
+}
+
+// Multi-level Ordered List
+.list--multilevel {
+  @include list-multilevel();
+}
+
+// Outline Ordered List
+.list--outline {
+  @include list-outline();
+}
+
+// List: Reset Modifier
+// Strips styling from a list
+.list--reset {
+  @include reset-list();
+}
+
+// List: Accordion `Modifier`
+// Turns a list into a standard accordion drop down.
+.list--accordion {
+  @include list-accordion();
+}
+
+// Download List
+// Provide the list styling needed to then apply icon classes
+.list--download {
+  @include reset-list();
+
+  a {
+    @include link-style();
+  }
+}

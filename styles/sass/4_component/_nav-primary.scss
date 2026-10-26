@@ -1,0 +1,35 @@
+@use "sass:math";
+
+@use "../0_tools" as *;
+
+.nav-primary {
+  --nav-drill-height: calc(100dvh - var(--nav-tray-height-offset, 0px));
+  --nav-scrollbar-color: rgba(0, 0, 0, .2) rgba(0, 0, 0, .025);
+  --nav-drill-left-offset: 0;
+
+  .nav-drill {
+    @at-root .nav-primary.nav-drill a,
+    &__button,
+    &__nolink,
+    &__submenu-toggle {
+      min-height: 3rem;
+      padding: .5rem 0;
+
+      @container (min-width: 1000px) {
+        font-size: 1.25rem;
+      }
+    }
+
+    &__top-link a,
+    &__top-link .nav-drill__button,
+    &__top-link .nav-drill__nolink,
+    &__top-link .nav-drill__submenu-toggle {
+      padding: 1.125rem 1rem;
+      font-size: 1.875rem;
+    }
+
+    &__description-title {
+      font-size: 1.35rem;
+    }
+  }
+}

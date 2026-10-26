@@ -1,0 +1,12 @@
+// Provide a way to align captions to the left/right in certain circumstances.
+// This wrapper class method is required due to media on the drupal side.
+.figcaption {
+
+  &--left figcaption {
+    text-align: left;
+  }
+
+  &--right figcaption {
+    text-align: right;
+  }
+}

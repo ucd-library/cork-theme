@@ -1,0 +1,67 @@
+@use "../0_tools" as *;
+@use "../2_base_class/buttons-mixin" as *;
+
+$wysiwyg-feature-block-spacer: $spacer--medium;
+
+.wysiwyg-feature-block {
+  --list-faq-question: #{$white};
+  // The position and z-index must be set because when it is floated, other
+  // relatively positioned elements next to it will overflow on top.
+  position: relative;
+  z-index: 1;
+  background-color: $brand--primary;
+  color: $white;
+
+  &__figure {
+    img {
+      width: 100%;
+      margin: 0;
+    }
+
+    figure {
+      display: block;
+      margin: 0;
+    }
+
+    figcaption {
+      display: block;
+      padding: $spacer--tiny;
+      color: $brand--primary-60;
+      font-size: .75rem;
+    }
+
+    .responsive-iframe {
+      margin: 0;
+    }
+  }
+
+  &__title {
+    @include reduced-title();
+    margin: 0;
+    padding: $spacer $wysiwyg-feature-block-spacer;
+    font-weight: $font-weight--bold;
+    text-align: left;
+  }
+
+  &__body {
+    padding: 0 $wysiwyg-feature-block-spacer $wysiwyg-feature-block-spacer;
+    text-align: left;
+
+    a {
+      @include link-style();
+      color: $brand--secondary-50;
+    }
+
+    .btn--primary {
+      @include btn--primary();
+    }
+  }
+
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: $white;
+  }
+}

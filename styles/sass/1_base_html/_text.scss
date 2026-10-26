@@ -1,0 +1,81 @@
+@use "../0_tools" as *;
+
+// Text-Related Elements
+
+p {
+  margin-top: 0;
+  margin-bottom: $spacer;
+}
+
+strong,
+%strong {
+  font-weight: $font-weight--bold;
+}
+
+// Blockquote
+blockquote {
+  position: relative;
+  min-height: 5.5rem;
+  margin: inherit;
+  margin-bottom: 1rem;
+  padding-left: $spacer * 3;
+  color: var(--forced-contrast, #{$brand--primary-80});
+  font-size: 1.125rem;
+
+  @media (min-width: $media-small) {
+    padding-left: $spacer * 6;
+  }
+
+  .category-brand__background & {
+    color: var(--category-brand-contrast-color, #{$brand--primary-80});
+  }
+
+  &:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "\201c";
+    font-size: 4rem;
+    font-weight: $font-weight--extra-bold;
+    line-height: .8;
+
+    @media (min-width: $media-small) {
+      font-size: 9rem;
+    }
+
+    // If in branded area just make the quote white
+    .category-brand__background & {
+      color: $white;
+      opacity: .6;
+    }
+  }
+}
+
+// Horizontal Rule
+hr {
+  display: block;
+  height: 1px;
+  margin: $spacer--large 0;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid $hr-border;
+}
+
+abbr {
+  border-bottom: 1px dotted $gray;
+  cursor: help;
+}
+
+mark {
+  border-radius: 4px;
+  padding-inline: .25em;
+}
+
+// Inline code formatting.
+:not(pre) code {
+  padding: .15em;
+  border-radius: 4px;
+  background-color: #e9e9e9;
+  color: $black;
+  font-size: inherit;
+}

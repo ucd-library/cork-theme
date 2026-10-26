@@ -1,0 +1,178 @@
+@use "../0_tools" as *;
+@use "../2_base_class/buttons-mixin" as *;
+
+// Hero Banner
+.hero-banner {
+  display: grid;
+  align-items: center;
+  grid-template-areas: "hero";
+
+  @keyframes rainbow-rotate-animation {
+    0% {
+      filter: sepia(1) hue-rotate(0deg);
+    }
+
+    100% {
+      filter: sepia(1) hue-rotate(360deg);
+    }
+  }
+
+  @keyframes sepia-fade-animation {
+    0% {
+      filter: sepia(1);
+    }
+
+    20% {
+      filter: sepia(1);
+    }
+
+    100% {
+      filter: sepia(0);
+    }
+  }
+
+  &__image {
+    grid-area: hero;
+    height: 100%;
+
+    // Prevent wrapping containers from affecting the height of the hero banner.
+    > :has(img) {
+      height: 100%;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__video-popup {
+    --responsive-iframe-ratio: 56.25; // 16:9
+    background-color: $black;
+
+    iframe {
+      width: 100%;
+      height: auto;
+      margin-bottom: 0;
+      aspect-ratio: 100 / var(--responsive-iframe-ratio);
+    }
+  }
+
+  &__body {
+    z-index: 1;
+    grid-area: hero;
+    width: 100%;
+    padding: 2rem 8%;
+    color: $white;
+
+    @media (min-width: $media-narrow) {
+      font-size: 1.5rem;
+    }
+
+    @media (min-width: $media-medium) {
+      font-size: 1.875rem;
+    }
+
+    @media (min-width: $media-wide) {
+      font-size: 2.5rem;
+    }
+  }
+
+  &__title {
+    font-size: 1.5em;
+    font-weight: $font-weight--extra-bold;
+    line-height: 1;
+    text-shadow: $black 0 0 2px;
+  }
+
+  &__summary {
+    font-size: .875em;
+    font-weight: $font-weight--light;
+    line-height: 1;
+    text-shadow: $black 0 0 2px;
+  }
+
+  &__button-group {
+    margin-top: $spacer;
+  }
+
+  &__button {
+    @include btn--primary();
+    margin-right: $spacer--small;
+    margin-bottom: $spacer--small;
+    font-size: .75em;
+
+    @media (min-width: $media-medium) {
+      font-size: 1.25rem;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  // ==========================================================================
+  // Alignment Option
+  // ==========================================================================
+
+  // Center
+  &--align-center {
+    text-align: center;
+  }
+
+  // Right
+  &--align-right {
+    text-align: right;
+  }
+
+  // ==========================================================================
+  // Branding Options
+  // ==========================================================================
+  &--brand-primary &__title {
+    color: $brand--primary;
+    text-shadow: none;
+  }
+
+  &--brand-secondary &__title {
+    color: $brand--secondary;
+    text-shadow: none;
+  }
+
+  &--round-buttons &__button {
+    @include btn--round();
+  }
+
+  // ==========================================================================
+  // Content Visibility Option
+  // ==========================================================================
+  &--image-only {
+    .hero-banner__body {
+      display: none;
+    }
+  }
+
+  // ==========================================================================
+  // Image filtering
+  // ==========================================================================
+
+  // Darken the image so white text in the body will show clearer
+  &--darken {
+    --hero-banner-darken: 25;
+
+    .hero-banner__image {
+      filter: brightness(calc((100 - var(--hero-banner-darken)) / 100));
+    }
+  }
+
+  // Color image and fade to different rainbow colors
+  &--rainbow &__image {
+    animation: rainbow-rotate-animation 30s infinite;
+  }
+
+  // Sepia fade to normal color
+  &--sepia-fade &__image {
+    animation: sepia-fade-animation 10s;
+  }
+
+}

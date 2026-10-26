@@ -1,0 +1,61 @@
+@use "../0_tools" as *;
+
+.testimonial {
+  display: block;
+  padding: 3rem 2rem;
+  container-type: inline-size;
+  text-align: center;
+
+
+  &__image {
+    margin: 0 0 2em;
+
+    img {
+      width: clamp(135px, 30%, 260px);
+      height: auto;
+      border-radius: 50%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+    }
+  }
+
+  &__name {
+    @include heading--primary();
+    margin-bottom: $spacer--small;
+    color: var(--forced-contrast, #{$brand--primary-80});
+    @container (min-width: 250px) {
+      font-size: clamp(1rem, 9.2cqw, 5rem);
+    }
+  }
+
+  &__position-title {
+    @include heading--secondary();
+    margin-top: 0;
+    margin-bottom: $spacer--small;
+    color: var(--forced-contrast, #{$brand--primary});
+    font-weight: $font-weight;
+    @container (min-width: 250px) {
+      font-size: clamp(1rem, 7.4cqw, 4rem);
+    }
+  }
+
+  &__quote {
+    min-height: 14rem;
+    margin-top: $spacer--small;
+    padding: .75rem 0;
+    background: url("../images/quote-mark.svg") no-repeat top center / 26% auto;
+    color: var(--forced-contrast, #{$brand--primary});
+    font-style: italic;
+    @container (min-width: 250px) {
+      font-size: clamp(1rem, 3.8cqw, 3rem);
+    }
+
+    // Defensive style for unfortunate type someone adds a list.
+    ul,
+    ol {
+      text-align: left;
+    }
+  }
+}
+
+

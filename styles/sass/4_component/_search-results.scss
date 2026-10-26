@@ -1,0 +1,10 @@
+@use "../0_tools" as *;
+
+.search-results {
+  margin-bottom: $spacer--medium;
+  container-type: inline-size;
+
+  &--grid {
+    @include flex-columns(3, 250px, 30px);
+  }
+}

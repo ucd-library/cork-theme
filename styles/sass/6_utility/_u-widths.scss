@@ -1,0 +1,23 @@
+@use "../0_tools" as *;
+
+// Width Half - Force an element to be half the width of its parent
+.u-width--half {
+  @media (min-width: $media-narrow) {
+    width: 50% !important;
+  }
+}
+
+// Width One-third - Force an element to be one-third the width of its parent
+.u-width--one-third {
+  @media (min-width: $media-narrow) {
+    width: 33% !important;
+  }
+}
+
+
+// Width Two-thirds - Force an element to be two-thirds the width of its parent
+.u-width--two-thirds {
+  @media (min-width: $media-narrow) {
+    width: 66% !important;
+  }
+}

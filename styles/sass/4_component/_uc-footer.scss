@@ -1,0 +1,33 @@
+@use "../0_tools" as *;
+
+// UC Footer
+.uc-footer {
+  width: min(100%, 60rem);
+  margin-top: 5rem;
+  padding: $spacer--medium;
+  border-radius: 2rem;
+  background-color: oklch(from $brand--primary l c h / .75);
+  container-type: inline-size;
+  margin-inline: auto;
+  text-align: center;
+
+  &__list {
+    @include reset-list();
+
+    & + & {
+      margin-top: $spacer;
+    }
+
+    li {
+      display: inline-block;
+      margin-right: $spacer--tiny;
+      padding-right: $spacer--small;
+      line-height: 1;
+
+      @container (width < 400px) {
+        display: block;
+        margin-bottom: .5rem;
+      }
+    }
+  }
+}

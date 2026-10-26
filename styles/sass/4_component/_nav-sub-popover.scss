@@ -1,0 +1,77 @@
+@use "../0_tools" as *;
+@use "../2_base_class/buttons-mixin" as *;
+
+.nav-sub-popover {
+  $block: &;
+  position: relative;
+  anchor-scope: --nav-sub-popover-btn;
+  container-type: inline-size;
+
+  &__btn {
+    @include btn();
+    @include has-icon();
+    --fa: "\f0c9"; // fa-solid fa-bars
+    justify-content: flex-start;
+    width: 100%;
+    padding: $spacer;
+    border: 0;
+    border-radius: 0;
+    anchor-name: --nav-sub-popover-btn;
+    background-color: color-mix(in oklch, #{$brand--primary-80} 10%, #{$white});
+    font-weight: $font-weight;
+
+    &:hover {
+      background-color: color-mix(in oklch, #{$brand--primary-80} 20%, #{$white});
+    }
+
+    #{$block}:has(:popover-open) & {
+      --fa: "\f00d"; // fa-solid fa-xmark
+      background-color: color-mix(in oklch, #{$brand--primary-80} 20%, #{$white});
+    }
+
+    &::before {
+      min-width: 1rem;
+    }
+  }
+
+  &__tray {
+    position: absolute;
+    top: 3rem;
+    left: 0;
+    width: 100cqw;
+    min-height: 10rem;
+    margin: 0;
+    padding: $spacer;
+    border: 0;
+    background-color: $white;
+    box-shadow: 0 8px 8px -6px $gray-light;
+
+    @supports (position-anchor: --nav-sub-popover-btn) {
+      inset: anchor(bottom) auto auto;
+      position-anchor: --nav-sub-popover-btn;
+    }
+
+    &:popover-open {
+      animation: nav-sub-popover-animate-down .2s linear forwards;
+    }
+  }
+
+  // Remove the popover from the preview so that it doesn't interfere with
+  // Layout Builder UI. FYI, in the html, the "popover" attribute needs to be
+  // removed to prevent defaul popover behavior.
+  &--preview &__tray {
+    position: relative;
+  }
+
+  @keyframes nav-sub-popover-animate-down {
+    0% {
+      opacity: 0;
+      transform: translateY(-1rem);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+}

@@ -1,0 +1,34 @@
+@use "../0_tools" as *;
+
+// Style the default heading tags
+// by assigning heading mixins to H tags
+
+h1 {
+  @include h1();
+}
+
+// H2 Heading style: Implements the heading--primary() style
+h2 {
+  @include h2();
+}
+
+// H3 Heading style: Implements the heading--secondary() style
+h3 {
+  @include h3();
+}
+
+
+// H4 Heading style
+h4 {
+  @include h4();
+}
+
+// H5 Heading style
+h5 {
+  @include h5();
+}
+
+// H6 Heading style
+h6 {
+  @include h6();
+}

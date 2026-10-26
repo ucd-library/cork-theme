@@ -1,0 +1,67 @@
+@use "sass:math";
+
+@use "../0_tools" as *;
+
+// Box Wrapper Container Object
+//
+// --o-box-wrapper-spacer-default: set this in the root to override for all.
+
+// Box Object: Default Spacing unit
+$o-box-wrapper-spacer: 1rem !default;
+// Box Object: Small Spacing unit
+$o-box-wrapper-spacer--small: math.div($o-box-wrapper-spacer, 2) !default;
+// Box Object: Large Spacing unit
+$o-box-wrapper-spacer--large: $o-box-wrapper-spacer * 2 !default;
+
+// Enable or disable object classes
+$o-box-wrapper-enable: false !default;
+
+// Box Wrapper Object: Useful for when multiple boxes need wrapped in a padded box.
+//
+// @param {boolean} $modifiers - print modifier classes.
+@mixin o-box-wrapper($modifiers: true) {
+  --o-box-wrapper-spacer: var(--o-box-wrapper-spacer-default, #{$o-box-wrapper-spacer});
+  @include clearfix();
+  margin-bottom: $spacer--large;
+  padding: var(--o-box-wrapper-spacer);
+  background-color: $white;
+
+  // Create modifier to classes.
+  @if ($modifiers == true) {
+    &--flush {
+      @include o-box-wrapper--flush();
+    }
+
+    &--small {
+      @include o-box-wrapper--small();
+    }
+
+    &--large {
+      @include o-box-wrapper--large();
+    }
+  }
+}
+
+// Box Wrapper Object: Flush `Modifier`
+//
+// Removes the bottom margin
+@mixin o-box-wrapper--flush() {
+  margin-bottom: 0;
+}
+
+// Box Wrapper Object: Small `Modifier`
+@mixin o-box-wrapper--small() {
+  --o-box-wrapper-spacer: #{$o-box-wrapper-spacer--small};
+}
+
+// Box Wrapper Object: Large `Modifier`
+@mixin o-box-wrapper--large() {
+  --o-box-wrapper-spacer: #{$o-box-wrapper-spacer--large};
+}
+
+// Render the class.
+@if ($o-box-wrapper-enable == true) {
+  .o-box-wrapper {
+    @include o-box-wrapper();
+  }
+}

@@ -1,0 +1,88 @@
+@use "../0_tools" as *;
+
+.nav-quicklinks {
+  container-type: inline-size;
+  margin-inline: calc(var(--container-edge-space) * -1);
+
+  a {
+    display: block;
+    padding: $spacer--small $spacer--medium;
+    color: $black;
+    font-weight: $font-weight;
+    line-height: 1.35;
+    text-decoration: underline;
+    transition: background-color .25s ease-out;
+
+    &:hover,
+    &:focus-visible {
+      background: $poppy;
+    }
+  }
+
+  &--highlight {
+    li:nth-child(-n + 3) {
+      margin-bottom: .25rem;
+      column-span: all;
+
+      a {
+        padding: .75rem;
+        border-radius: .5rem;
+        background-color: $poppy;
+        color: $brand--primary;
+        font-size: 1.25rem;
+        font-weight: $font-weight--bold;
+        margin-inline: var(--container-edge-space);
+        text-decoration: none;
+
+        &:hover,
+        &:focus-visible {
+          background: $brand--primary;
+          color: $white;
+        }
+
+        &::before {
+          color: $white;
+          font-size: .75em;
+        }
+      }
+    }
+
+    li:nth-child(3) {
+      margin-bottom: $spacer;
+    }
+  }
+
+  // Style the quicklinks like the WWW homesite does
+  &--home-site {
+    a {
+      @include has-icon();
+    }
+
+    li:first-child a:before {
+      --fa: "\f406";
+    }
+
+    li:nth-child(2) a:before {
+      --fa: "\f058";
+    }
+
+    li:nth-child(3) a:before {
+      --fa: "\f06b";
+    }
+  }
+
+  // Display the menu as two columns
+  &--two-columns {
+    @container (inline-size > 350px) {
+      ul {
+        column-count: 2;
+        column-gap: 0;
+      }
+
+      // Keep items from splitting across columns
+      li {
+        break-inside: avoid;
+      }
+    }
+  }
+}

@@ -1,0 +1,280 @@
+// List Styles
+@use "../0_tools" as *;
+
+// Add arrows to a list
+@mixin list-arrow() {
+  li {
+    position: relative;
+    // Fix the bullet spacing.
+    margin-left: -1ch;
+    padding-left: 1ch;
+
+    &::marker {
+      color: var(--list-arrow-color);
+      content: "\f054";
+      font-family: $font-family--icons;
+      font-size: .8em;
+      font-weight: $font-weight--icons;
+    }
+
+    li {
+      &::marker {
+        content: "\f101";
+        font-size: 1em;
+      }
+
+      li::marker {
+        content: "\f138";
+        font-size: .8em;
+      }
+    }
+  }
+}
+
+// Add white arrows to a list
+@mixin list-arrow-white() {
+  --list-arrow-color: #{$white};
+  @include list-arrow();
+}
+
+// Bordered List Style
+@mixin list-bordered() {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  ul {
+    margin-top: var(--list-bordered-vertical-spacing);
+    border-top: 1px solid var(--list-bordered-border);
+
+    li:first-child {
+      padding-top: var(--list-bordered-vertical-spacing);
+    }
+  }
+
+  li,
+  > div {
+    position: relative;
+    margin-bottom: var(--list-bordered-vertical-spacing);
+    padding: 0 0 var(--list-bordered-vertical-spacing) $spacer--large;
+    border-bottom: 1px solid var(--list-bordered-border);
+
+    &:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    &:before {
+      position: absolute;
+      margin: 0 0 0 -1.7em;
+      color: var(--list-arrow-color);
+      content: "\f138";
+      font-family: $font-family--icons;
+      font-size: .8em;
+      font-weight: $font-weight--icons;
+      line-height: 2.1;
+    }
+
+    li {
+      padding-left: 0;
+
+      &:before {
+        content: "";
+      }
+    }
+  }
+}
+
+// List FAQ
+@mixin list-faq() {
+  margin-left: $spacer;
+  @include reset-list();
+
+  > li {
+    padding: 0 $spacer--small $spacer--small var(--list-faq-prefix-spacing);
+
+    // Question.
+    &:nth-child(odd) {
+      padding-top: $spacer--small;
+      color: var(--category-brand-bg-text, var(--forced-contrast, var(--list-faq-question)));
+      cursor: pointer;
+      font-weight: $font-weight--extra-bold;
+      text-decoration: none;
+
+      &:hover {
+        color: var(--category-brand-bg-text, var(--forced-contrast, var(--list-faq-question-hover)));
+        opacity: .8;
+      }
+
+      &:not(:first-child) {
+        border-top: 1px solid var(--list-bordered-border);
+      }
+
+      &:before {
+        display: inline-block;
+        width: var(--list-faq-prefix-spacing);
+        margin-left: calc(-1 * var(--list-faq-prefix-spacing));
+        content: "Q:";
+        font-weight: $font-weight--extra-bold;
+      }
+
+      > p {
+        margin: 0;
+      }
+    }
+
+    // Answer.
+    &:nth-child(even) {
+      padding-bottom: $spacer;
+
+      &:before {
+        display: inline-block;
+        float: left;
+        width: var(--list-faq-prefix-spacing);
+        margin-left: calc(-1 * var(--list-faq-prefix-spacing));
+        color: var(--category-brand-bg-text, var(--forced-contrast, var(--list-faq-a)));
+        content: "A:";
+        font-weight: $font-weight--extra-bold;
+      }
+    }
+  }
+}
+
+// List Pipe
+@mixin list-pipe() {
+  @include reset-list();
+
+  li {
+    display: inline-block;
+    margin-right: $spacer--tiny;
+    padding-right: $spacer--small;
+    border-right: 1px solid var(--category-brand-bg-text, var(--forced-contrast, var(--list-pipe-pipe)));
+    line-height: 1;
+
+    &:last-child {
+      margin-right: 0;
+      padding-right: 0;
+      border-right: 0;
+    }
+  }
+}
+
+// List Simple
+@mixin list-simple() {
+  @include reset-list();
+
+  li {
+    @include reset-list-titles();
+    margin-bottom: $spacer;
+
+    ul {
+      margin-top: $spacer;
+    }
+  }
+
+  a {
+    font-weight: $font-weight;
+  }
+}
+
+// List Multilevel
+@mixin list-multilevel() {
+  list-style-type: decimal;
+
+  ol {
+    list-style-type: lower-alpha;
+
+    ol {
+      list-style-type: lower-roman;
+    }
+  }
+}
+
+// List Outline
+@mixin list-outline() {
+  list-style-type: upper-roman;
+
+  ol {
+    list-style-type: upper-alpha;
+
+    ol {
+      list-style-type: decimal;
+
+      ol {
+        list-style-type: lower-latin;
+
+        ol {
+          list-style-type: lower-roman;
+        }
+      }
+    }
+  }
+}
+
+// List Comment
+@mixin list-comment() {
+  @include list-bordered();
+
+  margin: 0;
+  padding: 0 0 $spacer--large;
+}
+
+// List Filter
+@mixin list-filter() {
+  @include reset-list();
+
+  li {
+    padding: $spacer--tiny 0 $spacer--tiny $spacer--small;
+  }
+}
+
+// List Accordion
+@mixin list-accordion() {
+  @include reset-list();
+  margin-bottom: $spacer;
+
+  > li {
+    padding: 0 $spacer--small $spacer--small var(--list-faq-prefix-spacing);
+
+    &:nth-child(odd) {
+      position: relative;
+      display: block;
+      padding: $spacer--small $spacer--large;
+      border: 0;
+      border-bottom: 1px solid $brand--primary-50;
+      background-color: $ucd-blue;
+      color: $white;
+      cursor: pointer;
+      font-style: normal;
+      font-weight: $font-weight--extra-bold;
+      text-align: left;
+      white-space: normal;
+
+      &:before {
+        position: absolute;
+        margin: -.15em 0 0 -1.43em;
+        color: var(--list-arrow-color);
+        content: "\f054";
+        font-family: $font-family--icons;
+        font-size: .8em;
+        font-weight: $font-weight--icons;
+        line-height: 2.5;
+      }
+
+      > p {
+        margin: 0;
+      }
+    }
+
+    &:nth-child(even) {
+      padding: $spacer--small $spacer--large;
+      background-color: $brand--primary-30;
+      color: $font-color;
+    }
+  }
+
+  .active:before {
+    transform: rotate(90deg);
+  }
+}

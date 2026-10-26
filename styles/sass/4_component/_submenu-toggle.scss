@@ -1,0 +1,94 @@
+@use "sass:color";
+@use "../0_tools" as *;
+
+// Sub-Menu Toggle
+.submenu-toggle {
+  display: flex;
+  float: right;
+  flex-shrink: 0;
+  width: 50px;
+  margin-left: auto; // forces to the right when in flexbox
+  padding-bottom: 1px; //this is to avoid the border
+  border: 0;
+  border-bottom: $menu-mobile-separator solid $white;
+  appearance: none;
+  background-color: $brand--primary;
+  text-align: center;
+
+  @media (min-width: $menu-vert-width) {
+    width: $menu-mobile-height;
+  }
+
+  // Hide everything in desktop.
+  @media (min-width: $media-medium) {
+    display: none;
+
+    &__icon {
+      display: none;
+    }
+  }
+
+  // Always show in desktop.
+  @media (min-width: $media-medium) {
+    display: flex;
+
+    &__icon {
+      display: block;
+    }
+  }
+
+  &:focus-visible {
+    box-shadow: inset 0 0 0 3px $brand--primary;
+    outline: none;
+  }
+
+  a:hover + & {
+    background-color: oklch(from $menu-background-color-active calc(l - .1) c h);
+  }
+
+  &--open .submenu-toggle__icon:before {
+    transform: rotate(0deg);
+  }
+
+  &__wrapper {
+    display: flex;
+    align-items: stretch;
+
+    // Force the first link to use all of the space
+    a:first-child,
+    .nolink:first-child {
+      flex-grow: 1;
+    }
+  }
+
+  &__icon {
+    @include vertical-center();
+    z-index: 1;
+    left: 30%;
+    display: block;
+    width: $menu-icon-width;
+    height: 3px;
+    background-color: $white;
+    font-size: 0;
+
+    &:before {
+      position: absolute;
+      z-index: 1;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: $white;
+      content: "";
+      transform: rotate(90deg);
+      transition: all $transition-time;
+    }
+
+    a:hover & {
+      background-color: $white;
+
+      &:before {
+        background-color: $white;
+      }
+    }
+  }
+}

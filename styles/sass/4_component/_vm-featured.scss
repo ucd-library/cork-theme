@@ -1,0 +1,28 @@
+@use "../0_tools" as *;
+@use "../3_objects/o-flow" as *;
+
+.vm-featured {
+  --o-flow-spacer-default: #{$spacer--small};
+  @include o-flow();
+
+  &__title {
+    color: $brand--primary;
+    font-weight: $font-weight--bold;
+
+    a {
+      color: $brand--primary;
+      text-decoration: none;
+
+      &:hover {
+        color: $brand--primary;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__subtitle {
+    color: $brand--primary-80;
+    font-style: italic;
+    font-weight: $font-weight--bold;
+  }
+}

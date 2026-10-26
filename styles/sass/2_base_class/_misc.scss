@@ -1,0 +1,30 @@
+// Global classes
+@use "../0_tools" as *;
+
+// Visually hide all web components until they are rendered.
+// TODO: decide if this is a good practice or not before enabling.
+//.js :not(:defined) {
+//  visibility: visible;
+//  opacity: 0;
+//}
+
+// Reset all Menus lists
+.menu {
+  @include reset-list();
+
+  li {
+    @include reset-list();
+  }
+}
+
+// Links to more content
+.view-all {
+  display: block;
+  padding-top: $spacer--small;
+  border-top: 1px solid $brand--primary-50;
+}
+
+// Provide themed underline for components
+.sf-underline {
+  border-bottom: 1px solid $brand--primary-20;
+}

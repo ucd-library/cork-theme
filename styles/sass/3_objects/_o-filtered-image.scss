@@ -1,0 +1,23 @@
+// Allow images to be filtered on a component.
+//
+// --o-filtered-image-darken: set this in the root to override for all.
+//
+// @example markup
+// <div class="o-filtered-image--darken">
+//   <p>content</p>
+//   <div class="o-filtered-image">
+//     <img src="my-image.png">
+//   </div>
+// </div>
+
+.o-filtered-image {
+  $block: &;
+
+  &--darken {
+    --o-filtered-image-darken: 25;
+
+    :where(#{$block} img) {
+      filter: brightness(calc((100 - var(--o-filtered-image-darken)) / 100));
+    }
+  }
+}

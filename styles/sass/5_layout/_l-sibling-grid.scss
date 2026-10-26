@@ -1,0 +1,39 @@
+@use "sass:math";
+
+@use "../0_tools" as *;
+
+// Sibling Grid
+.l-sibling-grid {
+
+  // Half
+  &--half {
+    @media (min-width: $media-narrow) {
+      clear: none;
+      float: left;
+      width: calc(50% - #{math.div($grid-gap, 2)});
+
+      // Last element
+      & + & {
+        float: right;
+      }
+    }
+  }
+
+  // Third
+  &--third {
+    @media (min-width: $media-narrow) {
+      clear: none;
+      float: left;
+      width: 32%;
+      margin-right: 2%;
+    }
+
+    // Last element
+    @media (min-width: $media-small) {
+      & + & + & {
+        margin-right: 0;
+      }
+    }
+  }
+
+}

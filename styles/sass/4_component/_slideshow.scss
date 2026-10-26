@@ -1,0 +1,190 @@
+@use "sass:math";
+
+@use "../0_tools" as *;
+
+// Slideshow using the Web Awesome carousel (<wa-carousel>).
+
+$slideshow-button-size: 2.5rem;
+$slideshow-caption-offset: $slideshow-button-size * 3;
+
+// Main Slideshow
+.slideshow {
+  position: relative;
+  margin-bottom: $spacer;
+  background-color: $black;
+
+  &::part(carousel) {
+    gap: 0;
+  }
+
+  &::part(scroll-container) {
+    border-radius: 0;
+    column-gap: 0;
+  }
+
+  // Each slide.
+  &__item {
+    position: relative;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &--has-title img {
+      filter: brightness(70%);
+    }
+  }
+
+  // Slide title + caption overlay.
+  &__text {
+    position: absolute;
+    bottom: 0;
+    display: grid;
+    grid-template-rows: auto minmax($slideshow-button-size * 2.25, 1fr);
+    width: 100%;
+    gap: $spacer--small;
+    pointer-events: none;
+  }
+
+  &__title {
+    margin-left: $spacer;
+    color: $white;
+    font-size: 2rem;
+    font-weight: $font-weight--extra-bold;
+    line-height: 1;
+
+    @media (min-width: $media-narrow) {
+      font-size: 3.5rem;
+    }
+  }
+
+  &__caption {
+    display: flex;
+    align-items: center;
+    clear: both;
+    grid-row: 2 / 3;
+    padding: $spacer--small $spacer--small $spacer--small $slideshow-caption-offset;
+    background-color: rgba(0, 0, 0, .5);
+    color: $white;
+    font-size: .75rem;
+    line-height: 1.3;
+
+    @media (min-width: $media-narrow) {
+      font-size: 1rem;
+    }
+  }
+
+  // Navigation arrows.
+  &::part(navigation) {
+    position: absolute;
+    z-index: 2;
+    top: auto;
+    right: auto;
+    bottom: $spacer * 2.5;
+    left: $spacer;
+    display: flex;
+    width: auto;
+    height: auto;
+    gap: $spacer--small;
+  }
+
+  &::part(navigation-button) {
+    position: static;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: $slideshow-button-size;
+    height: $slideshow-button-size;
+    padding: 0;
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, .7);
+    color: $white;
+    font-size: math.div($slideshow-button-size, 2);
+    transition: background-color $transition-time;
+  }
+
+  &::part(navigation-button):hover {
+    background-color: $brand--secondary;
+    color: $brand--primary;
+  }
+
+  &::part(navigation-button-disabled) {
+    opacity: .2;
+  }
+
+  // Pagination dots.
+  &::part(pagination) {
+    justify-content: flex-start;
+    padding: $spacer--small $spacer--small $spacer--small $slideshow-caption-offset;
+    background-color: $black;
+    gap: $spacer--tiny;
+  }
+
+  &::part(pagination-item) {
+    width: .75rem;
+    height: .75rem;
+    border-radius: 50%;
+    background-color: $ucd-black-70;
+    transition: background-color $transition-time;
+  }
+
+  &::part(pagination-item):hover,
+  &::part(pagination-item-active) {
+    background-color: $brand--secondary;
+    transform: none;
+  }
+
+}
+
+// Thumbnails Navigation Controls
+.slideshow-nav {
+  position: relative;
+  display: flex;
+  overflow-x: auto;
+  margin-top: -15px;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+
+  @media (max-width: $media-small-max) {
+    display: none;
+  }
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &__thumb {
+    flex: 0 0 auto;
+    padding: 10px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    filter: brightness(70%);
+    transition: filter $transition-time;
+
+    @media (max-width: $media-narrow-max) {
+      padding: 5px;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: 64px;
+      pointer-events: none;
+    }
+
+    &:hover,
+    &:focus-visible,
+    &--active {
+      filter: brightness(100%);
+    }
+  }
+}
+
+// Add some space when a slideshow is right next to another
+.slideshow + .slideshow,
+.slideshow-nav + .slideshow {
+  margin-top: $spacer;
+}

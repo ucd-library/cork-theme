@@ -1,0 +1,46 @@
+@use "../0_tools" as *;
+@use "../3_objects/o-media" as *;
+
+// card (view mode)
+.vm-card {
+
+  &__header {
+    @include o-media();
+
+    & {
+      margin-bottom: $spacer;
+    }
+  }
+
+  &__figure {
+    @include o-media__figure();
+    max-width: 25%;
+  }
+
+  &__body {
+    @include o-media__body();
+  }
+
+  &__title {
+    margin-top: 0;
+    color: var(--forced-contrast-heading-primary, #{$brand--primary});
+
+    @media (min-width: $media-narrow) {
+      font-size: 1.5rem;
+    }
+
+    a {
+      color: var(--forced-contrast-heading-primary, #{$brand--primary});
+      text-decoration: none;
+
+      &:hover {
+        color: var(--forced-contrast-heading-primary, #{$link-color-hover});
+      }
+    }
+  }
+
+  &__summary {
+    margin-bottom: $spacer;
+    line-height: $line-height--small;
+  }
+}

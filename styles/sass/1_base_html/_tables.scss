@@ -1,0 +1,32 @@
+@use "../0_tools" as *;
+
+// Tables
+table {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: $spacer;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+th {
+  padding: $spacer--small;
+  text-align: left;
+  vertical-align: bottom;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: $font-size;
+    line-height: 1;
+  }
+}
+
+td {
+  padding: $spacer--small;
+  border-top: 1px solid $rec-pool;
+  vertical-align: top;
+}

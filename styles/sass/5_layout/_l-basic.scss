@@ -1,0 +1,53 @@
+@use "../0_tools" as *;
+
+// Default 3 region layouts.
+
+// sass-lint:disable indentation
+
+// Positions the first and second sidebar to the left side of the page.
+.l-basic {
+  @include l-stack-flow();
+
+  @media (min-width: $media-medium) {
+    @include l-default-settings();
+    grid-template-areas:
+      "first first first first content content content content content content content content"
+      "second second second second content content content content content content content content";
+
+    .l-sidebar-first {
+      margin-bottom: $panel-spacer;
+    }
+  }
+}
+
+// Positions the first and second sidebar to the right side of the page.
+.l-basic--flipped {
+  @include l-stack-flow();
+
+  @media (min-width: $media-medium) {
+    @include l-default-settings();
+    grid-template-areas:
+      "content content content content content content content content first first first first"
+      "content content content content content content content content second second second second";
+
+    .l-sidebar-first {
+      margin-bottom: $panel-spacer;
+    }
+  }
+}
+
+// Positions the first and second sidebar to the sides of the page with content
+// in the middle.
+.l-basic--3col {
+  @include l-stack-flow();
+
+  @media (min-width: $media-medium) {
+    @include l-default-settings();
+    // Explicitly set the sidebars larger horizontal space than the normal 12
+    // column layout will allow. This provides more space when cramped in
+    // smaller screen sizes. We do this knowing that columns will not perfectly
+    // align with other grid layouts. It's a tradeoff worth having.
+    grid-template-areas: "first content second";
+    grid-template-columns: 1fr 1.5fr 1fr;
+  }
+}

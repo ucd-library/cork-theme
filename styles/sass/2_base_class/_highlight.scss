@@ -1,0 +1,18 @@
+// Text Highlight Styles.
+@use "highlight-mixin" as *;
+
+.custom-highlight-marker-info {
+  @include highlight-info();
+}
+
+.custom-highlight-marker-success {
+  @include highlight-success();
+}
+
+.custom-highlight-marker-warning {
+  @include highlight-warning();
+}
+
+.custom-highlight-marker-danger {
+  @include highlight-danger();
+}

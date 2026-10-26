@@ -1,0 +1,20 @@
+@use "../0_tools" as *;
+
+html {
+  // Add background color to ensure the footer color cascades to the bottom when
+  // there is very minimal vertical content on the site.
+  background-color: $white;
+  // This font size is what the rest of the fonts in the site using REM will be
+  // based off of. Changing this size will change it throughout the site.
+  @include fluid-type($media-narrow, 3840px, $font-size-base, 30px);
+}
+
+body {
+  position: relative;
+  overflow-x: hidden;
+  background-color: $white;
+  color: $font-color;
+  font-family: $font-family;
+  font-size: $font-size;
+  line-height: $line-height;
+}

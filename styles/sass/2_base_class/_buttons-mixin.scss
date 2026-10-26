@@ -1,0 +1,266 @@
+// Buttons
+@use "sass:math";
+
+@use "../0_tools" as *;
+
+$button-min-height: 2.5em;
+$button-horizontal-spacing: 1em;
+$button-arrow-spacing: $button-horizontal-spacing * .75;
+$button-arrow-size: .75em;
+$button-arrow-width: math.div($button-arrow-spacing, $button-arrow-size) + em;
+
+// Button Generator
+@mixin btn() {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto; // Needed for when adding to an <input> that is going 100%;
+  min-width: 10ch;
+  min-height: $button-min-height;
+  margin-bottom: 0; // For input.btn
+  padding: math.div($button-min-height, 4) $button-horizontal-spacing;
+  border: 1px solid $brand--primary-60;
+  border-radius: 9999px;
+  background-color: transparent;
+  color: $brand--primary;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: $font-weight--bold;
+  line-height: 1.1;
+  text-align: center;
+  text-decoration: none;
+
+  &:hover {
+    color: $brand--primary;
+    text-decoration: none;
+  }
+
+  .category-brand__background &,
+  .dark-background & {
+    border-color: var(--category-brand-contrast-color);
+    color: var(--category-brand-contrast-color);
+  }
+}
+
+// Allow buttons to have an arrow icon appear on hover.
+@mixin btn--icon-arrow() {
+  --btn-arrow-color: #{$brand--secondary};
+  padding-right: $button-arrow-spacing * 2;
+  padding-left: $button-arrow-spacing;
+  transition: .2s padding ease-out;
+
+  &:before {
+    width: $button-arrow-width;
+    color: var(--btn-arrow-color);
+    content: "\f054";
+    font-family: $font-family--icons;
+    font-size: .75em;
+    font-weight: $font-weight--icons;
+    opacity: 0;
+    // Translate percents can't be used because the width is 0.
+    transform: translateX(-100%);
+    transition: .2s all ease-out;
+  }
+
+  &:hover {
+    padding-right: $button-arrow-spacing * 1.5;
+    padding-left: $button-arrow-spacing * 1.5;
+
+    &:before {
+      opacity: 1;
+      transform: translateX(-45%);
+    }
+  }
+}
+
+// Button: Input Style `Modifier` to override icons on <inputs> which cannot have :before.
+@mixin btn--input() {
+  padding-right: $button-horizontal-spacing;
+  padding-left: $button-horizontal-spacing;
+
+  &:hover {
+    padding-right: $button-arrow-spacing;
+    padding-left: $button-arrow-spacing;
+  }
+}
+
+// Button: Primary Style `Modifier`
+@mixin btn--primary-base() {
+  --btn-arrow-color: #{$white};
+  border-color: transparent;
+  background-color: $brand--secondary;
+
+  .category-brand__background &,
+  .dark-background & {
+    --btn-arrow-color: var(--category-brand-featured, var(--category-brand, #{$brand--primary-80}));
+    border-color: transparent;
+    background-color: $white;
+    color: var(--category-brand-featured, var(--category-brand, #{$brand--primary-80}));
+
+    &:hover {
+      color: var(--category-brand-featured, var(--category-brand, #{$brand--primary-80}));
+    }
+  }
+
+  .category-brand__background--lighten & {
+    --btn-arrow-color: var(--category-brand-contrast-color, #{$white});
+    border-color: transparent;
+    background-color: var(--category-brand, #{$brand--secondary});
+    color: var(--category-brand-contrast-color, #{$ucd-blue});
+
+    &:hover,
+    &:active {
+      color: var(--category-brand-contrast-color, #{$ucd-blue});
+    }
+  }
+}
+
+// Button: Primary Style `Modifier`
+@mixin btn--primary() {
+  @include btn();
+  @include btn--icon-arrow();
+  @include btn--primary-base();
+}
+
+// Button: Primary Input Style `Modifier` for use on <inputs> which cannot have :before.
+@mixin btn--primary-input() {
+  @include btn();
+  padding-right: $button-arrow-spacing * 2;
+  padding-left: $button-arrow-spacing * 2;
+  border-color: transparent;
+  background-color: $brand--secondary;
+
+  &:hover {
+    padding-right: $button-arrow-spacing * 2;
+    padding-left: $button-arrow-spacing * 2;
+  }
+
+  .category-brand__background &,
+  .dark-background & {
+    border-color: transparent;
+    background-color: $white;
+    color: var(--category-brand-featured, var(--category-brand, #{$brand--primary-80}));
+
+    &:hover {
+      color: var(--category-brand-featured, var(--category-brand, #{$brand--primary-80}));
+    }
+  }
+}
+
+// Button: Alternate Style `Modifier`
+@mixin btn--alt() {
+  @include btn();
+  @include btn--icon-arrow();
+  border-color: transparent;
+  background-color: $brand--primary;
+  color: $white;
+
+  &:hover {
+    color: $white;
+  }
+
+  .category-brand__background &,
+  .dark-background & {
+    --btn-arrow-color: var(--category-brand-contrast-color);
+    border: 2px solid var(--category-brand-contrast-color, #{$white});
+    background-color: transparent;
+
+    &:hover {
+      background-color: oklch(from var(--category-brand--dark, transparent) l c h / .1);
+    }
+  }
+}
+
+// Button: Alternate Style 2 `Modifier`
+@mixin btn--alt2() {
+  @include btn--alt();
+  background-color: $brand--primary-80;
+}
+
+// Button: Alternate Style 3 `Modifier`
+@mixin btn--alt3() {
+  @include btn();
+  @include btn--icon-arrow();
+  --btn-arrow-color: #{$brand--primary-80};
+  border-color: transparent;
+  background-color: $brand--primary-40;
+
+  .category-brand__background &,
+  .dark-background & {
+    background-color: oklch(from var(--category-brand-contrast-color) l c h / .09);
+  }
+}
+
+// Button: Inverted Style `Modifier`
+@mixin btn--invert() {
+  @include btn();
+  @include btn--icon-arrow();
+  --btn-arrow-color: var(--forced-contrast, #{$brand--secondary});
+  border-color: var(--forced-contrast, #{$brand--secondary});
+  background-color: transparent;
+  color: var(--forced-contrast, #{$brand--primary});
+
+  &:hover {
+    color: var(--forced-contrast, #{$brand--primary});
+  }
+}
+
+// Button: Disabled `Modifier`
+@mixin btn--disabled() {
+  border-color: #dadada;
+  background-color: #dadada;
+  box-shadow: none;
+  color: #5d5d5d;
+  cursor: not-allowed;
+  pointer-events: none; // Future-proof disabling of clicks
+}
+
+// Button: Large `Modifier`
+@mixin btn--lg() {
+  font-size: $font-size--large;
+}
+
+// Button: Small `Modifier`
+@mixin btn--sm() {
+  font-size: $font-size--small;
+}
+
+// Button: Round `Modifier`
+@mixin btn--round() {
+  border-radius: math.div($button-min-height, 2);
+}
+
+// Button: Full Width `Modifier`
+@mixin btn--block() {
+  display: flex;
+  width: 100%;
+}
+
+// Button: Round Corners `Modifier`
+@mixin btn--round-corners() {
+  border-radius: math.div($button-min-height, 8);
+}
+
+// Button: Round Icon `Modifier`
+@mixin btn--icon() {
+  @include btn();
+  @include btn--primary-base();
+  gap: .25em;
+  transition: padding .25s ease-out;
+
+  &:before {
+    content: var(--fa);
+    font-family: var(--fa-style-family-classic), serif;
+    transform: translateX(-.25em);
+    transition: transform .25s ease-out;
+  }
+
+  &:hover,
+  &:focus-visible {
+    padding-inline: ($button-horizontal-spacing + .25em) ($button-horizontal-spacing - .25em);
+
+    &:before {
+      transform: scale(1.07) translateX(0);
+    }
+  }
+}

@@ -1,0 +1,28 @@
+@use "../0_tools" as *;
+
+.focus-box {
+  --focus-box-background: #{$brand--primary};
+
+  &__image {
+    margin-bottom: -1px; // Fix to avoid white space when an image doesn't scale well
+
+    img {
+      width: 100%;
+    }
+  }
+
+  &__title {
+    @include heading--invert-box();
+
+    @media (min-width: $media-narrow) {
+      font-size: 1.42rem;
+    }
+  }
+
+  &__body {
+    @include category-brand-background--lighten(var(--focus-box-background));
+    padding: $spacer;
+    color: $font-color;
+  }
+
+}

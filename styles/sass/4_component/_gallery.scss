@@ -1,0 +1,74 @@
+@use "../0_tools" as *;
+
+// Image gallery using PhotoSwipe
+
+// Gallery Grid
+.gallery {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  text-align: center;
+
+  @media (min-width: $media-small) {
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  }
+
+  &__item {
+    position: relative;
+  }
+
+  &__title {
+    display: none;
+  }
+
+  // Single Poster image visible
+  &--poster {
+    display: block;
+  }
+
+  &--poster &__item {
+    display: none;
+
+    &:first-child {
+      display: block;
+      width: 100%;
+      margin-bottom: 0;
+
+      img {
+        width: 100%;
+      }
+    }
+  }
+
+  &--poster &__title {
+    display: block;
+    width: 100%;
+    padding: $spacer $spacer--large;
+    background: $brand--primary-20;
+    text-align: left;
+  }
+
+  a {
+    display: block;
+
+    // Icon to indicate the image can get bigger in a lightbox window
+    &:after {
+      position: absolute;
+      right: $spacer--small;
+      bottom: $spacer--small;
+      display: block;
+      width: 32px;
+      height: 32px;
+      background: url("../images/expand.svg");
+      content: "";
+      opacity: .6;
+      transition: all .3s ease-in-out;
+    }
+
+    &:hover:after {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+  }
+
+}

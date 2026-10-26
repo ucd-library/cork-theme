@@ -1,0 +1,49 @@
+@use "sass:list";
+@use "../0_tools" as *;
+
+// Styles content with icons
+
+// List of icons used throughout the site
+// Key paired with Font Awesome unicodes.
+$icons-list: (
+  ("calendar", "\f133"),
+  ("location", "\f3c5"),
+  ("phone", "\f879"),
+  ("envelope", "\f0e0"),
+  ("web", "\f6ff"),
+  ("map", "\f279"),
+  ("download", "\f381"),
+  ("clock", "\f017"),
+  ("view-more", "\f055"),
+  ("circle-arrow-right", "\f138")
+);
+
+.icon {
+  display: inline-block;
+  margin-left: $spacer--medium;
+
+  &:before {
+    display: inline-block;
+    min-width: $spacer;
+    margin-right: $spacer--small;
+    margin-left: -($spacer--medium);
+    color: var(--forced-contrast, var(--icon-color, #{$brand--primary-70}));
+    font-family: $font-family--icons;
+    font-size: .8em;
+    font-weight: $font-weight--icons;
+    text-align: center;
+  }
+}
+
+//@each $item in $category-brand--list {
+@for $i from 1 through list.length($icons-list) {
+  // Get the current item
+  $item: list.nth($icons-list, $i);
+  // Fetch the name and unicode from the item
+  $icon-name: list.nth($item, 1);
+  $icon-unicode: list.nth($item, 2);
+
+  .icon--#{$icon-name}:before {
+    content: "#{$icon-unicode}";
+  }
+}

@@ -1,0 +1,28 @@
+@use "../0_tools" as *;
+
+.search-result {
+  margin-bottom: $spacer--medium;
+
+  &__title {
+    @include heading--primary();
+    font-size: 1.25rem;
+
+    @media (min-width: $media-narrow) {
+      font-size: 1.5rem;
+    }
+
+    a {
+      color: $brand--primary-80;
+      text-decoration: none;
+
+      &:hover {
+        color: $brand--primary-80;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__info {
+    color: $gray;
+  }
+}

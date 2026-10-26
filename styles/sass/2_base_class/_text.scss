@@ -1,0 +1,68 @@
+// Text
+@use "../0_tools" as *;
+@use "text-mixin" as *;
+
+// Font Families
+.font--secondary {
+  font-family: $font-family--serif;
+}
+
+.font--monospace {
+  font-family: $font-family--monospace;
+}
+
+// Caption
+.caption {
+  font-style: italic;
+}
+
+.hr-invert {
+  border-color: oklch(from $white l c h / .25);
+}
+
+.byline {
+  margin-bottom: $spacer--small;
+  color: var(--forced-contrast, #{$gray});
+}
+
+.pullquote {
+  @include pullquote();
+}
+
+// Text Modifiers
+.text--smaller {
+  font-size: .9375rem;
+}
+
+// Text Indents
+.indent {
+  margin-left: .75em;
+
+  @media (min-width: $media-medium) {
+    margin-left: 2em;
+
+    &--large {
+      margin-left: 4em;
+    }
+
+    &--giant {
+      margin-left: 6em;
+    }
+
+    &--huge {
+      margin-left: 8em;
+    }
+  }
+
+  &--large {
+    margin-left: 1.5em;
+  }
+
+  &--giant {
+    margin-left: 2.25em;
+  }
+
+  &--huge {
+    margin-left: 3em;
+  }
+}

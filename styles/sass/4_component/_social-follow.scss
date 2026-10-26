@@ -1,0 +1,75 @@
+@use "../0_tools" as *;
+
+$social-follow-icon-width: 2.75rem;
+
+.social-follow {
+  background: transparent;
+
+  ul {
+    @include reset-list;
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacer * .75 $spacer;
+
+    @media (min-width: $media-medium) {
+      gap: $spacer * .75 $spacer * 1.4;
+    }
+  }
+
+  a {
+    display: inline-block;
+    text-decoration: none;
+
+    &:hover .fab,
+    &:focus-visible .fab {
+      background-color: $brand--primary-80;
+
+      &::before {
+        color: $white;
+      }
+
+      .footer & {
+        background-color: $white;
+
+        &::before {
+          color: $brand--primary-80;
+          rotate: 10deg;
+        }
+      }
+
+      .layout-section--wonder-blue & {
+        background-color: $brand--primary-90;
+      }
+    }
+  }
+
+  .fab {
+    @include circle($social-follow-icon-width, $color: var(--forced-contrast, #{$ucd-blue}));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &::before {
+      color: var(--forced-scheme-contrast, #{$white});
+      font-size: 1.5rem;
+      transition: all, .2s ease-in-out;
+    }
+  }
+
+  // Styles inside the Site Footer.
+  :where(.footer) & {
+    ul {
+      gap: .75rem;
+    }
+
+    .fab {
+      @include circle(2.25em, #93bfe1);
+      font-size: .85rem;
+
+      &::before {
+        color: $brand--chrome;
+        font-size: 1.25em;
+      }
+    }
+  }
+}

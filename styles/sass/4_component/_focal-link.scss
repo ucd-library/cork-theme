@@ -1,0 +1,64 @@
+@use "../0_tools" as *;
+@use "../3_objects/o-media" as *;
+
+// Featured Links
+$focal-link-size: 4rem;
+
+.focal-link {
+  --focal-link-background: #{$brand--primary};
+  @include o-media(true, false);
+
+  & {
+    @include link-style-secondary();
+    align-items: center;
+    padding: $spacer;
+    text-decoration: none;
+    transition: background-color .2s ease-in-out;
+  }
+
+  &:hover {
+    background-color: oklch(from var(--category-brand, var(--focal-link-background)) l c h / .1);
+  }
+
+  &__figure {
+    // Sizing uploaded img's to match svg sprite
+    img {
+      width: $focal-link-size;
+    }
+  }
+
+  &__body {
+    font-size: 1.0625rem;
+  }
+
+  // Reverse the image to the right side
+  &--rev {
+    @include o-media--rev();
+  }
+
+  // Font Awesome icons for when not using an <img> tag. Add this to the &__figure div
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: $focal-link-size;
+    height: $focal-link-size;
+    border-radius: 50%;
+    background-color: var(--category-brand, #{$brand--primary});
+    color: $white;
+
+    // Force a higher specificity for the color to prevent issues of the
+    // category text color changing this.
+    &.category-brand__background {
+      color: $white;
+    }
+  }
+
+  .footer & {
+    background-color: $ucd-blue-90;
+
+    &:hover {
+      background-color: $ucd-blue-10;
+    }
+  }
+}

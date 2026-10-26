@@ -1,0 +1,99 @@
+@use "../0_tools" as *;
+
+$btn-size: 2.5rem;
+
+:root {
+  --nav-tray-toggle-color: #{$white};
+  --nav-tray-toggle-highlight: #{$brand--secondary};
+}
+
+.nav-tray-toggle {
+  position: relative;
+  flex-shrink: 0;
+  width: $btn-size;
+  height: $btn-size;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+
+  // Icon styles.
+  &::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--nav-tray-toggle-color);
+    content: "";
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: 55%;
+    transition: opacity .2s ease-in-out, mask-size .2s ease-in-out;
+  }
+
+  &--menu {
+    width: $btn-size + .5rem;
+
+    &::before {
+      mask-image: url("../images/icons/menu.svg");
+      mask-size: 65%;
+    }
+  }
+
+  &--search::before {
+    mask-image: url("../images/icons/search.svg");
+  }
+
+  &--quicklinks::before {
+    mask-image: url("../images/icons/quicklinks.svg");
+  }
+
+  // Hover underline styles.
+  &::after {
+    position: absolute;
+    bottom: 3px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--nav-tray-toggle-highlight);
+    content: "";
+    opacity: 0;
+    transform: scaleX(0);
+    transition: opacity .2s ease-in-out, transform .2s ease-in-out;
+  }
+
+  &:hover {
+    outline: none;
+
+    &::after {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+  }
+}
+
+// Close button styles for nav trays.
+[data-nav-tray-type="menu"] .nav-tray-toggle--menu,
+[data-nav-tray-type="search"] .nav-tray-toggle--search,
+[data-nav-tray-type="quicklinks"] .nav-tray-toggle--quicklinks {
+  &::before {
+    left: 50%;
+    width: $btn-size;
+    height: $btn-size;
+    border-radius: 50%;
+    background: $ucd-gold url("../images/icons/close.svg") no-repeat center;
+    background-size: 45%;
+    mask: none;
+    transform: translateX(-50%) scale(.75);
+  }
+}
+
+[data-nav-tray-type="quicklinks"] .nav-tray-toggle--quicklinks::before {
+  background-color: oklch(from $brand--primary l c h / .15);
+}
+
+.sticky-header--is-fixed {
+  .header__toggles .nav-tray-toggle::before {
+    mask-size: 40%;
+  }
+}

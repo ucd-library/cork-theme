@@ -1,0 +1,148 @@
+@use "sass:math";
+@use "../0_tools" as *;
+
+.flip-fact {
+  $block: &;
+  position: relative;
+  display: grid;
+  grid-template: 1fr / 1fr;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  container-name: flip-fact;
+  container-type: inline-size;
+  cursor: pointer;
+
+  --flip-dur: .8s;
+  --flip-ease: cubic-bezier(.2, .7, .1, 1);
+
+  &__face {
+    display: flex;
+    flex-direction: column;
+    grid-area: 1 / 1;
+    border-radius: 1rem;
+    backface-visibility: hidden;
+    box-shadow: 2px 4px 4px 0 var(--shadow-color, #{$gray-light});
+    gap: .5rem;
+    text-decoration: none;
+    transform-style: preserve-3d;
+    transition: transform var(--flip-dur) var(--flip-ease), opacity var(--flip-dur) var(--flip-ease);
+
+    &:active {
+      transform: scale(.95);
+    }
+
+    > * {
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+  }
+
+  &__front {
+    align-items: center;
+    justify-content: center;
+    padding: 10%;
+    background-color: var(--category-brand-contrast-color, #{$white});
+    color: var(--category-brand, #{$brand--primary});
+    font-size: 1.5rem;
+    text-align: center;
+    transform: rotateY(0deg);
+  }
+
+  &__back {
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
+    padding: 2rem 1rem;
+    aspect-ratio: 1 / 1;
+    background-color: var(--category-brand-contrast-color, #{$ucd-blue-80});
+    color: var(--category-brand, #{$white});
+    font-weight: $font-weight--light;
+    gap: 1.5rem;
+    transform: rotateY(180deg);
+
+    &:hover,
+    &:active {
+      color: var(--category-brand, #{$white});
+    }
+  }
+
+  &__title {
+    color: var(--category-brand, #{$ucd-blue-80});
+    font-size: clamp($font-size, 18cqi, $font-size * 4);
+    font-weight: $font-weight--bold;
+    line-height: 4rem;
+  }
+
+  &__subtitle {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    color: var(--category-brand, #{$ucd-blue-80});
+    font-size: clamp($font-size, 6cqi, $font-size * 2.4);
+    font-weight: $font-weight--bold;
+    gap: 1rem;
+    line-height: clamp(1.2rem, 6cqi, 2.1rem);
+
+    &--light {
+      color: var(--category-brand, #{$white});
+    }
+
+    &--narrow {
+      width: 80%;
+    }
+  }
+
+  &__icon {
+    font-size: clamp(2.5rem, 12cqi, 4rem);
+
+    &--large {
+      font-size: clamp(5rem, 30cqi, 7rem);
+    }
+
+    &--color {
+      color: var(--category-brand, #{$ucd-gold});
+    }
+  }
+
+  &__body {
+    overflow-y: auto;
+    width: 80%;
+    font-size: clamp($font-size, 5cqi, $font-size * 2);
+    scrollbar-color: rgba(0, 0, 0, .2) rgba(0, 0, 0, .025);
+    scrollbar-width: thin;
+  }
+
+  &__flipper {
+    position: absolute;
+    z-index: 3;
+    right: .75rem;
+    bottom: .75rem;
+    width: 33px;
+    height: 32px;
+    background-color: var(--category-brand-contrast-color, #{$ucd-blue-80});
+    mask: url("../images/flip-fact-flipper.svg") no-repeat center / contain;
+    opacity: .6;
+  }
+
+
+  &--flipped {
+    #{$block}__front {
+      transform: rotateY(-180deg);
+    }
+
+    #{$block}__back {
+      transform: rotateY(0deg);
+    }
+
+    #{$block}__flipper {
+      background-color: var(--category-brand-contrast-color, #{$ucd-blue-40});
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #{$block}__front, #{$block}__back {
+      transition: none;
+    }
+  }
+}

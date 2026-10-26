@@ -1,0 +1,179 @@
+@use "../variables" as *;
+@use "mixins" as *;
+
+// Mixins for all heading styles
+
+// Defaults for all Headings
+// @param {string} $weight [bold] - font weight for the text. "light" may be
+// passed to use the lighter font weight.
+@mixin heading-default() {
+  margin: .75em 0 .25em;
+  padding: 0;
+  color: var(--forced-contrast-heading-primary, #{$brand--primary});
+  font-size: $font-size;
+  font-style: normal;
+  font-weight: $font-weight--extra-bold;
+  line-height: $line-height--heading;
+
+  // Remove the top margin on the first elements of non-layout blocks so that
+  // there aren't issues with backgrounds starting in the wrong place.
+  :where(:not([class*="block-field-"])) > &:first-child {
+    margin-top: 0;
+  }
+}
+
+// Primary Heading
+@mixin heading--primary() {
+  @include heading-default();
+  color: var(--forced-contrast-heading-primary, #{$brand--primary-80});
+  font-size: var(--heading-primary-font-size);
+}
+
+// Secondary Heading
+@mixin heading--secondary() {
+  @include heading-default();
+  color: var(--forced-contrast-heading-secondary, #{$brand--primary});
+  font-size: var(--heading-secondary-font-size);
+}
+
+// Auxiliary Heading
+@mixin heading--auxiliary() {
+  @include heading--secondary();
+  margin-bottom: $spacer--small;
+  color: var(--forced-contrast-heading-primary, #{$brand--primary});
+  font-style: italic;
+  font-weight: $font-weight--bold;
+}
+
+// Highlight Heading
+// @param {boolean} $line [true] - Set to FALSE if the short line should not be shown
+@mixin heading--highlight() {
+  @include heading-default();
+  color: var(--forced-contrast-heading-primary, #{$brand--primary});
+  font-size: 1.42rem;
+  font-style: inherit;
+}
+
+// Weighted Heading
+// @param {boolean} $invert [false] - Set to TRUE if the first word should be bold
+@mixin heading--weighted($invert: false) {
+  @include heading--primary();
+  color: var(--forced-contrast-heading-primary, #{$brand--primary});
+
+  @if ($invert) {
+    font-weight: $font-weight--bold;
+  }
+  @else {
+    font-weight: $font-weight--light;
+  }
+
+  &--weighted {
+    @if ($invert) {
+      font-weight: $font-weight--light;
+    }
+    @else {
+      font-weight: $font-weight--bold;
+    }
+  }
+}
+
+// Underline Heading
+@mixin heading--underline() {
+  @include heading--primary();
+  color: var(--forced-contrast-heading-primary, #{$brand--primary});
+  font-weight: $font-weight--light;
+
+  &:after {
+    display: block;
+    width: $spacer * 4;
+    margin: $spacer--small 0 $spacer;
+    border-top: .42rem dotted $brand--secondary;
+    content: "";
+
+    // If an underlined heading is centered using some sort of modifier
+    // then center the underline component.
+    .panel--center & {
+      margin: $spacer--small auto;
+    }
+
+    // If in branded area just make the dots white
+    [class^="category-brand--"] & {
+      border-color: $white;
+    }
+  }
+}
+
+// Weighted Underline Heading
+@mixin heading--weighted-underline() {
+  @include heading--underline();
+  @include heading--weighted();
+}
+
+@mixin heading--center-underline() {
+  @include heading--underline();
+  font-weight: $font-weight--bold;
+  text-align: center;
+
+  &:after {
+    margin-inline: auto;
+  }
+}
+
+// Footer Audience Headers
+@mixin heading--invert() {
+  @include heading--secondary();
+  color: var(--category-brand-bg-text, var(--forced-contrast, #{$white}));
+}
+
+// Heading for Inverted Box elements
+@mixin heading--invert-box() {
+  @include heading--invert();
+  margin: 0;
+  padding: $spacer;
+  background-color: var(--category-brand, #{$brand--primary});
+  color: var(--category-brand-contrast-color, #{$white});
+}
+
+// Single mixin to include in H tags.
+
+// stylelint-disable scss/at-mixin-pattern
+// H1 Heading style
+@mixin h1() {
+  @include heading-default();
+  @include link-style-heading();
+  font-size: var(--heading-h1-font-size);
+}
+
+// H2 Heading style: Implements the heading--primary() style
+@mixin h2() {
+  @include heading--primary();
+  @include link-style-heading($brand--primary-80);
+}
+
+// H3 Heading style: Implements the heading--secondary() style
+@mixin h3() {
+  @include heading--secondary();
+  @include link-style-heading($brand--primary);
+}
+
+// H4 Heading style
+@mixin h4() {
+  @include heading-default();
+  @include link-style-heading();
+  font-size: var(--heading-h4-font-size);
+}
+
+// H5 Heading style
+@mixin h5() {
+  @include heading-default();
+  @include link-style-heading();
+  font-size: var(--heading-h5-font-size);
+}
+
+// H6 Heading style
+@mixin h6() {
+  @include heading-default();
+  @include link-style-heading();
+  font-size: var(--heading-h6-font-size);
+}
+// stylelint-enable scss/at-mixin-pattern

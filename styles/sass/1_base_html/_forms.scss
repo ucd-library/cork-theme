@@ -1,0 +1,78 @@
+// Forms
+@use "../0_tools" as *;
+@use "forms-mixin" as *;
+
+fieldset {
+  margin: $spacer 0;
+  padding: $spacer;
+  border: 1px solid $brand--gray;
+  border-top: 3px solid $brand--primary;
+
+  > legend {
+    padding: $spacer--tiny;
+    font-size: 1.125rem;
+  }
+}
+
+label {
+  display: block;
+  padding-bottom: $spacer--tiny;
+  color: $input-label;
+  font-weight: $font-weight--bold;
+}
+
+%form-input {
+  @include form-input();
+}
+
+input,
+select,
+textarea {
+  @include form-input();
+}
+
+input,
+select {
+  height: $input-height;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+}
+
+[type="text"],
+[type="search"],
+[type="url"],
+[type="number"],
+textarea {
+  appearance: none;
+}
+
+// This was altered previously in the reset.
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+  &:-moz-focusring {
+    @include focus-visible-outline();
+  }
+}
+
+button,
+[type="submit"] {
+  cursor: pointer;
+}
+
+[type="checkbox"],
+[type="radio"] {
+  width: auto;
+  height: auto;
+  margin-right: .3em;
+}
+
+// Override content-box in Normalize (* isn't specific enough)
+[type="search"] {
+  box-sizing: border-box;
+}

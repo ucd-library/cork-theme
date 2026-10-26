@@ -1,0 +1,96 @@
+@use "sass:math";
+@use "../0_tools" as *;
+
+.circle-ranking {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  max-width: 26rem;
+  margin: 0 auto;
+  container: circle-ranking/inline-size;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    .circle-ranking__line {
+      transform: rotate(-24deg);
+    }
+
+    .circle-ranking__number {
+      top: 30%;
+      right: -14%;
+    }
+
+    .circle-ranking__title {
+      $offset: .3rem;
+      padding-top: calc(#{$spacer--small} - #{$offset});
+      padding-bottom: calc(#{$spacer--small} + #{$offset});
+    }
+  }
+
+  &__wrapper {
+    position: relative;
+    width: 72%;
+  }
+
+  &__title {
+    padding: $spacer--small $spacer;
+    color: var(--forced-contrast-heading-primary, #{$brand--primary});
+    font-size: clamp(1rem, 6cqw, 2.2rem);
+    font-weight: $font-weight--bold;
+    line-height: 1.2;
+    text-align: center;
+    transition: all .2s ease-in-out;
+  }
+
+  &__line {
+    position: absolute;
+    width: 100%;
+    transition: all .32s cubic-bezier(.175, .885, .32, 1.275);
+  }
+
+  &__stroke {
+    animation: circle-ranking-progress 1s ease-out forwards;
+    fill: none;
+    scale: .9;
+    stroke: var(--category-brand, #{$tahoe});
+    stroke-linecap: round;
+    stroke-width: .8;
+    transform: rotate(124deg);
+    transform-origin: center;
+  }
+
+  &__media {
+    overflow: clip;
+    margin: 18%;
+    border-radius: 50%;
+  }
+
+  &__video {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+
+  &__number {
+    position: absolute;
+    top: 50%;
+    right: -18%;
+    display: block;
+    width: 2ch;
+    max-width: 100%;
+    color: var(--forced-contrast-heading-primary, #{$brand--primary});
+    font-family: sans-serif;
+    font-size: 20cqw;
+    font-weight: bold;
+    transition: all .32s cubic-bezier(.175, .885, .32, 1.275);
+    translate: 0 -50%;
+  }
+}
+
+@keyframes circle-ranking-progress {
+  0% {
+    stroke-dasharray: 0 100;
+  }
+}

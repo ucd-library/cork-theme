@@ -1,0 +1,25 @@
+@use "../0_tools" as *;
+
+/* Remove all animations and transitions
+for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+// Remove default outline on elements when focused by mouse/touch,
+// but ensure they still have a visible indicator when needed.
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+// Define a clear and accessible focus indicator for keyboard users
+*:focus-visible {
+  @include focus-visible-outline();
+}

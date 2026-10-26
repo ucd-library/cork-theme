@@ -1,0 +1,214 @@
+@use "sass:list";
+@use "../0_tools" as *;
+
+// Panel Titles.
+// --panel-bg
+
+$panel-title-icon-size: 6.25rem;
+
+// Create responsive sprite icons.
+$panel-title-icons: (
+  ("flask", "\f0c3", null, $quad),
+  ("bullhorn", "\f0a1", null, $poppy),
+  ("feed", "\f09e", null, $sunflower),
+  ("twitter", "\f099", $font-family--icons-brand, #1da1f2),
+  ("mustang", "\f7ab", null, $brand--primary),
+  ("line-chart", "\f201", null, $putah-creek),
+  ("instagram", "\f16d", $font-family--icons-brand, #833ab4),
+  ("bulb", "\f0eb", null, $sunflower),
+  ("alerts", "\f071", null, $strawberry)
+);
+
+// Default each Panel Pane to a white background.
+.panel {
+  clear: both;
+  margin-bottom: $panel-spacer;
+  background-color: var(--panel-bg, #{$white});
+  overflow-wrap: break-word;
+
+  // Remove bottom spacing on panels that are nested and use top margin for
+  // panel siblings instead.
+  &--nested :where(#{&}) {
+    margin-bottom: 0;
+  }
+
+  &--nested :where(#{&} + #{&}) {
+    margin-top: $panel-spacer;
+  }
+
+  // Create icon modifiers for each image in the icon sprite.
+  @for $i from 1 through list.length($panel-title-icons) {
+    // Get the first item.
+    $panel-item: list.nth($panel-title-icons, $i);
+    // Now fetch the name and unicode from this first item.
+    $panel-name: list.nth($panel-item, 1);
+    $panel-icon: list.nth($panel-item, 2);
+    $panel-icon-family: list.nth($panel-item, 3);
+    $panel-icon-color: list.nth($panel-item, 4);
+
+    &--icon-#{$panel-name} {
+      --panel-icon: "#{$panel-icon}";
+      --panel-icon-color: var(--category-brand-contrast-color, #{$panel-icon-color});
+
+      @if ($panel-icon-family) {
+        --panel-icon-family: "#{$panel-icon-family}";
+      }
+    }
+  }
+
+  // Loop through each brand colors to apply to icons.
+  @for $i from 1 through list.length($category-brands) {
+    $brand: list.nth($category-brands, $i);
+
+    // Now fetch the name and color from this first item.
+    $brand-name: list.nth($brand, 1);
+    $brand-color: list.nth($brand, 2);
+
+    &--icon-#{$brand-name} {
+      --panel-icon-color: #{$brand-color};
+    }
+  }
+
+  &--flush {
+    margin-bottom: 0;
+  }
+
+  &--transparent {
+    background-color: transparent;
+  }
+
+  &--center {
+    text-align: center;
+  }
+
+  &__title {
+    @include heading--primary();
+    @include reduced-title();
+    margin-bottom: $spacer--large;
+    color: var(--category-brand-contrast-color, var(--forced-contrast-heading-primary, #{$brand--primary}));
+  }
+
+  // Lots of modifiers to affect the title.
+
+  // Intro title.
+  &--intro &__title {
+    @include heading--underline();
+  }
+
+  // Weighted Underline title.
+  &--weighted-underline &__title {
+    @include heading--weighted-underline();
+  }
+
+  // Center Underline title.
+  &--center-underline &__title {
+    @include heading--center-underline();
+  }
+
+  // Auxiliary title.
+  &--auxiliary &__title {
+    @include heading--auxiliary();
+  }
+
+  // Title with Icon.
+  &--icon &__title {
+    display: flex;
+    margin-left: calc(-1 * var(--o-box-spacer, 0));
+    // Needs a little padding to give the icon space.
+    padding-top: .75rem;
+
+    &:before {
+      margin-right: $spacer--small;
+      color: var(--panel-icon-color, #{$brand--primary});
+      content: var(--panel-icon, "\f0eb");
+      font-family: var(--panel-icon-family, "#{$font-family--icons}");
+      font-size: 1.6055rem;
+      font-weight: $font-weight--icons;
+      line-height: .9;
+
+      @media (min-width: $media-narrow) {
+        margin-right: $spacer;
+        font-size: 2.47rem;
+        line-height: .6;
+      }
+    }
+  }
+
+  &--icon-custom &__title {
+    // Remove default icons.
+    &:before {
+      content: none;
+    }
+  }
+
+  // For when doing a traditional font awesome icon with a span.
+  &__custom-icon {
+    margin-top: .125em;
+    margin-right: $spacer;
+    color: var(--panel-icon-color, #{$brand--primary});
+  }
+
+  // Wrapper class to convert a block into an collapsable popout in mobile.
+  &--mobile-collapse {
+    @media (max-width: $media-medium-max) {
+      .panel__title {
+        display: block;
+
+        // Resets for if other panel title modifiers are applied in desktop
+        height: auto;
+        margin-bottom: 0;
+        padding: $spacer--small $spacer;
+        background-color: $brand--primary;
+        color: $white;
+        cursor: pointer;
+        font-weight: $font-weight--bold;
+        text-align: center;
+        transition: background-color $transition-time ease-in-out;
+
+        &:after {
+          display: none;
+        }
+
+        &:hover,
+        &:focus-visible {
+          background-color: $brand--primary-80;
+          color: $white;
+          text-decoration: none;
+        }
+      }
+
+      .panel__content {
+        // Fake spacer to avoid JS glitch when margin is directly on the panel.
+        &:before {
+          display: block;
+          margin-top: $spacer;
+          content: "";
+        }
+
+        // Remove margin from the last element so it doesn't cause vertical
+        // screen jumping when opening and closing.
+        > :last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      // Alter margins when using .o-box.
+      &.o-box,
+      .o-box & {
+        .panel__title {
+          // Ensure the title button stays on top of the content
+          position: relative;
+          z-index: 2;
+          margin: calc(-1 * var(--o-box-spacer));
+        }
+
+        .panel__content {
+          // Fake spacer to avoid JS glitch.
+          &:before {
+            margin-top: calc(var(--o-box-spacer) * 2);
+          }
+        }
+      }
+    }
+  }
+}

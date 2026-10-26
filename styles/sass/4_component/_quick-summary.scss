@@ -1,0 +1,18 @@
+@use "../0_tools" as *;
+
+.quick-summary {
+  margin-bottom: $spacer--large;
+
+  &__title {
+    margin: 0;
+    padding: $spacer;
+    border: 1px solid $brand--primary-40;
+    background-color: $brand--primary-40;
+    color: $brand--primary;
+    font-size: $font-size--large;
+  }
+
+  &__body {
+    border: 1px solid $brand--primary-40;
+  }
+}

@@ -1,0 +1,61 @@
+@use "../0_tools" as *;
+@use "../2_base_class/buttons-mixin" as *;
+
+wa-tab-group {
+  margin-bottom: $spacer;
+  background-color: $gray-lighter;
+  --indicator-color: transparent;
+  --track-width: 0;
+}
+
+wa-tab::part(tab) {
+  @include btn();
+  margin-top: $spacer--tiny;
+  margin-left: $spacer--tiny;
+  border-color: transparent;
+  border-radius: 0;
+  background-color: $white;
+  color: $gray;
+  font-size: 1rem;
+  font-weight: $font-weight;
+  transition: background-color .2s ease-in-out;
+}
+
+// stylelint-disable selector-no-qualifying-type
+wa-tab[active]::part(tab) {
+  background-color: $brand--primary-80;
+  color: $white;
+}
+
+wa-tab[active]::part(tab):hover {
+  color: $font-color;
+}
+// stylelint-enable selector-no-qualifying-type
+
+wa-tab-group::part(scroll-button-start) {
+  z-index: 1;
+}
+
+wa-tab-group::part(scroll-button-start),
+wa-tab-group::part(scroll-button-end) {
+  top: 1px;
+  border: 1px solid $white;
+  background-color: $gray-lighter;
+}
+
+wa-tab-group::part(scroll-button-start):hover,
+wa-tab-group::part(scroll-button-end):hover {
+  background-color: $ucd-gold;
+}
+
+wa-tab-panel {
+  --padding: 0;
+  margin: 1px;
+  padding: $spacer;
+  border-top: 0;
+  background-color: $white;
+}
+
+wa-tab::part(tab):hover {
+  background-color: $brand--secondary;
+}

@@ -1,0 +1,59 @@
+@use "../0_tools" as *;
+@use "../2_base_class/buttons-mixin" as *;
+
+// navigation tabs
+
+@mixin tabs__item() {
+  @include btn();
+  margin-top: $spacer--tiny;
+  margin-right: $spacer--tiny;
+  border-color: transparent;
+  background-color: $white;
+  color: $gray;
+  font-weight: $font-weight;
+  transition: background-color .2s ease-in-out;
+
+  &:hover {
+    background-color: $brand--secondary;
+  }
+}
+
+@mixin tabs__item--active() {
+  background-color: $brand--primary-80;
+  color: $white;
+}
+
+.tabs {
+  @include reset-list();
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: $spacer;
+  padding: 0 $spacer--tiny 1px;
+  background-color: $gray-lighter;
+
+  &--secondary {
+    border-bottom: 1px solid $gray-lighter;
+    background-color: transparent;
+    font-size: .8125rem;
+  }
+
+  a,
+  .tabs__item {
+    @include tabs__item();
+
+    // stylelint-disable selector-no-qualifying-type
+    &.active,
+    &--active {
+      @include tabs__item--active();
+    }
+    // stylelint-enable selector-no-qualifying-type
+  }
+
+  &__content {
+    margin-top: -($spacer);
+    margin-bottom: $spacer;
+    padding: $spacer;
+    border: 1px solid $gray-lighter;
+    border-top: 0;
+  }
+}

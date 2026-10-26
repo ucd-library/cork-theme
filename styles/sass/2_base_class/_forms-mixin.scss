@@ -1,0 +1,128 @@
+// Form Mixins
+@use "../0_tools" as *;
+
+@mixin checkbox() {
+  @include select-option("checkbox");
+
+  label {
+    // Outer box of the fake checkbox
+    &:before {
+      top: 6px;
+      left: 0;
+      width: $spacer;
+      height: $spacer;
+      border: 1px solid $brand--primary-60;
+    }
+
+    // Checkmark of the fake checkbox
+    &:after {
+      top: .6em;
+      left: .2em;
+      width: .6em;
+      height: .3em;
+      border-bottom: 2px solid;
+      border-left: 2px solid;
+      color: $white;
+      transform: rotate(-45deg);
+    }
+  }
+}
+
+@mixin radio() {
+  @include select-option("radio");
+
+  label {
+    // Outer circle of the fake radio
+    &:before {
+      top: 6px;
+      left: 0;
+      width: 21px;
+      height: 21px;
+      border-radius: 50%;
+    }
+
+    // Dot mark of the fake radio
+    &:after {
+      top: 13px;
+      left: 7px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: $white;
+    }
+  }
+}
+
+// Pure CSS Styled Checkboxes
+// Setup for Pure CSS select/option lists like radios or checkbox(es)
+@mixin select-option($input-type) {
+  [type="#{$input-type}"] {
+    width: 0;
+    margin-right: 0;
+    opacity: 0;
+  }
+
+  // The label and input can be arranged three ways:
+  //   1. input before label  -> [type] + label               (sibling)
+  //   2. label before input  -> label:has(+ [type])          (preceding sibling)
+  //   3. input inside label  -> label:has([type])            (descendant)
+  // Do not nest the :has() rules under [type]; the label is never a descendant
+  // of the input.
+
+  // Fill the outer box/circle on the checked state
+  [type="#{$input-type}"]:checked + label:before,
+  label:has(+ [type="#{$input-type}"]:checked):before,
+  label:has([type="#{$input-type}"]:checked):before {
+    border-color: $brand--primary-80;
+    background-color: $brand--primary-80;
+  }
+
+  // Hide the checkmark/radio by default
+  [type="#{$input-type}"] + label:after,
+  label:has(+ [type="#{$input-type}"]):after,
+  label:has([type="#{$input-type}"]):after {
+    content: none;
+  }
+
+  // Unhide on the checked state
+  [type="#{$input-type}"]:checked + label:after,
+  label:has(+ [type="#{$input-type}"]:checked):after,
+  label:has([type="#{$input-type}"]:checked):after {
+    content: "";
+  }
+
+  // Adding focus styles on the outer-box/outer-circle of the fake checkbox/radio
+  [type="#{$input-type}"]:focus + label:before,
+  label:has(+ [type="#{$input-type}"]:focus):before,
+  label:has([type="#{$input-type}"]:focus):before {
+    border-color: transparent;
+    box-shadow: 0 0 0 3px $brand--primary;
+    outline-color: transparent;
+    outline-style: solid;
+  }
+
+  label {
+    position: relative;
+    display: inline-block;
+    padding-left: $spacer * 1.75;
+
+    &:before,
+    &:after {
+      position: absolute;
+
+      // Needed for the line-height to take effect
+      display: inline-block;
+      content: "";
+    }
+
+    // Outer box of the fake checkbox/radio
+    &:before {
+      border: 1px solid $brand--primary-60;
+    }
+
+    // Check or Radio outer box hover state
+    &:hover:before {
+      border-color: $brand--primary-80;
+    }
+  }
+}

@@ -1,0 +1,33 @@
+@use "../0_tools" as *;
+
+.priority-links {
+  display: flex;
+  flex-wrap: wrap;
+  padding: $spacer * 3 $spacer;
+  background-color: $white;
+  gap: 1.5rem;
+  text-align: center;
+
+  &__item {
+    flex-basis: 0;
+    flex-grow: 1;
+  }
+
+  .vertical-link {
+    margin-bottom: 0;
+  }
+
+  &--boxed-offset {
+    padding: $spacer--medium $spacer;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, .3);
+    transform: translateY(-4vw);
+
+    @media (min-width: $media-medium) {
+      margin-bottom: -3%;
+      padding: $spacer--large;
+      // This can be set to the original -50% if we use container queries for
+      // the hero banner text size. Right now it covers the button.
+      transform: translateY(-40%);
+    }
+  }
+}

@@ -1,0 +1,21 @@
+// Forms
+@use "../0_tools" as *;
+
+// Form Input: default style for form text boxes
+// @group Forms
+@mixin form-input() {
+  margin: 0;
+  padding: $spacer--tiny ($spacer--small + $spacer--tiny);
+  border: 1px solid $input-border-color;
+  border-radius: 0;
+  background-color: $input-bg;
+  background-image: none;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .075) inset;
+  color: $input-color;
+  font-family: inherit;
+  outline: 0;
+
+  &:focus-visible {
+    @include set-focus("form");
+  }
+}

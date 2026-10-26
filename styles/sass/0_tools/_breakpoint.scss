@@ -1,0 +1,65 @@
+@use "sass:list";
+@use "sass:math";
+@use "sass:meta";
+
+// DEPRECATED / LEGACY — do not use in new code.
+//
+// This is a backwards-compatibility shim, a local drop-in replacement for the
+// old breakpoint-sass `breakpoint()` mixin. It exists only so subthemes that
+// still call `breakpoint()` keep compiling. New code must use native CSS media
+// queries directly, e.g. `@media (min-width: $media-small) { ... }`.
+//
+// Supports the subset of breakpoint-sass syntax this design system used:
+//   - a single number            -> (min-width: N)
+//   - `<feature> <value>`        -> (feature: value)   e.g. `max-width 479px`
+//   - `<min> <max>` (two numbers)-> (min-width: min) and (max-width: max)
+//   - a list of the above        -> each condition joined with `and`
+
+// Parse one condition (number, feature/value pair, or numeric min/max range).
+@function breakpoint-condition($condition) {
+  @if meta.type-of($condition) == "number" {
+    @return "(min-width: #{$condition})";
+  }
+
+  @if meta.type-of($condition) == "list" and list.length($condition) == 2 {
+    $first: list.nth($condition, 1);
+    $second: list.nth($condition, 2);
+
+    // Two numbers describe a min/max range; sort so order does not matter.
+    @if meta.type-of($first) == "number" and meta.type-of($second) == "number" {
+      @return "(min-width: #{math.min($first, $second)}) and (max-width: #{math.max($first, $second)})";
+    }
+
+    // Otherwise it is a `feature value` pair in either order.
+    @if meta.type-of($first) == "string" {
+      @return "(#{$first}: #{$second})";
+    }
+    @return "(#{$second}: #{$first})";
+  }
+
+  // Anything else is passed through wrapped in parentheses.
+  @return "(#{$condition})";
+}
+
+// DEPRECATED: use native `@media` queries instead. Kept for backwards compatibility.
+@mixin breakpoint($query) {
+  @warn "The `breakpoint()` mixin is deprecated. Use a native media query instead, e.g. `@media (min-width: $media-small)`.";
+
+  $query-string: "";
+
+  // A list whose first item is itself a list means multiple `and` conditions.
+  @if meta.type-of($query) == "list" and meta.type-of(list.nth($query, 1)) == "list" {
+    $first: true;
+    @each $condition in $query {
+      $parsed: breakpoint-condition($condition);
+      $query-string: if($first, $parsed, "#{$query-string} and #{$parsed}");
+      $first: false;
+    }
+  } @else {
+    $query-string: breakpoint-condition($query);
+  }
+
+  @media #{$query-string} {
+    @content;
+  }
+}

@@ -1,0 +1,73 @@
+@use "../0_tools" as *;
+@use "../3_objects/o-flex-region" as *;
+
+// Footer
+.footer {
+  margin-top: $spacer--large;
+  padding: 3rem var(--container-edge-space) 6rem;
+  background: $brand--chrome url("../images/footer-bg.webp") no-repeat center bottom 20rem;
+  color: $white;
+
+  @media (min-width: $media-narrow) {
+    background-position: center bottom 5rem;
+  }
+
+  @media (min-width: 1900px) {
+    background-size: contain;
+  }
+
+  &--flush & {
+    margin-top: 0;
+  }
+
+  &__container {
+    // Only do this if there is a second child in the container.
+    &:has(:nth-child(2)) {
+      @media (min-width: $media-medium) {
+        display: flex;
+        flex-direction: row-reverse;
+        gap: 8vw;
+      }
+    }
+  }
+
+  &__primary {
+    margin-bottom: $spacer--large;
+
+    .footer:has(.footer__flex > *) & {
+      @media (min-width: $media-medium) {
+        max-width: 33%;
+      }
+    }
+  }
+
+  :where(h1, h2, h3, h4, h5, h6, .pane-title) {
+    @include heading--invert();
+    margin-bottom: $spacer--small;
+    font-size: 1.5rem;
+    font-weight: $font-weight--bold;
+
+    @media (min-width: $media-narrow) {
+      font-size: 1.5rem;
+    }
+  }
+
+  a {
+    color: $white;
+  }
+
+  &__flex {
+    @include flex-columns(4, 250px, 4vw);
+    flex-grow: 1;
+    margin-bottom: $spacer--large;
+    row-gap: $spacer;
+
+    @media (max-width: $media-narrow-max) {
+      display: block;
+    }
+
+    &--disabled {
+      display: block;
+    }
+  }
+}

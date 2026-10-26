@@ -1,0 +1,20 @@
+@use "../0_tools" as *;
+
+// Provides the layout styles for four-column layout section.
+.l-4col {
+  @include l-default-settings();
+  display: block;
+  grid-template-areas: "first first first second second second third third third fourth fourth fourth";
+  @include l-stack-flow();
+
+  @media (min-width: $media-medium) {
+    display: grid;
+  }
+
+  // Override the 12 column layout in the wysiwyg so that gaps do not break
+  // containers.
+  &.layout-columns {
+    grid-template-areas: "first second third fourth";
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

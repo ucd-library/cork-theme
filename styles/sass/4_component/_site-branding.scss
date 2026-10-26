@@ -1,0 +1,66 @@
+@use "../0_tools" as *;
+@use "../3_objects/o-media" as *;
+
+// Site Branding
+.site-branding {
+  @include o-media();
+
+  & {
+    align-items: center;
+  }
+
+  &__figure {
+    @include o-media__figure();
+
+    a {
+      display: inline-block;
+    }
+  }
+
+  &__body {
+    @include o-media__body();
+  }
+
+  &__site-name {
+    margin-bottom: $spacer--tiny;
+    color: $brand--primary;
+    font-size: 1.5rem;
+    font-weight: $font-weight--bold;
+    line-height: $line-height--heading;
+
+    @media (min-width: $media-medium) {
+      font-size: 2rem;
+    }
+
+    a {
+      color: $brand--primary;
+      text-decoration: none;
+
+      &:hover {
+        color: $brand--primary;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__slogan {
+    color: $brand--primary;
+    font-size: 1.375rem;
+    line-height: 1;
+
+    @media (min-width: $media-medium) {
+      font-size: 1.5rem;
+    }
+  }
+
+  a {
+    color: $brand--primary;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      color: $brand--primary;
+      text-decoration: underline;
+    }
+  }
+}

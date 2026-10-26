@@ -1,0 +1,38 @@
+// Regions used by most layouts.
+.l-content {
+  grid-area: content;
+  // https://github.com/kenwheeler/slick/issues/982#issuecomment-345057850
+  min-width: 0;
+}
+
+.l-sidebar-first,
+.l-first {
+  grid-area: first;
+  min-width: 0;
+}
+
+.l-sidebar-second,
+.l-second {
+  grid-area: second;
+  min-width: 0;
+}
+
+.l-third {
+  grid-area: third;
+  min-width: 0;
+}
+
+.l-fourth {
+  grid-area: fourth;
+  min-width: 0;
+}
+
+.l-top {
+  grid-area: top;
+  min-width: 0;
+}
+
+.l-middle {
+  grid-area: middle;
+  min-width: 0;
+}

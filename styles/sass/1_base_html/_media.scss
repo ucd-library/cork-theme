@@ -1,0 +1,50 @@
+@use "../0_tools" as *;
+
+// Media Elements (image, video, etc)
+
+// Flexible images and media
+embed,
+img,
+object,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+iframe {
+  max-width: 100%;
+  margin-bottom: $spacer;
+}
+
+// http://stackoverflow.com/questions/10264463/can-a-figcaption-be-restricted-to-the-width-of-a-responsively-sized-image
+figure {
+  display: table;
+  margin: 0 0 $spacer;
+
+  // Force an immediate child so that it doesn't break stuff in ckeditor
+  > img {
+    margin-bottom: $spacer--small;
+  }
+}
+
+figcaption {
+  display: table-caption;
+  caption-side: bottom;
+  color: var(--forced-contrast, #{$gray});
+  font-size: .875rem;
+  font-style: italic;
+  line-height: 1.5;
+  text-align: center;
+}
+
+// Remove the gap between audio, canvas, iframes,
+// images, videos and the bottom of their containers:
+// https://github.com/h5bp/html5-boilerplate/issues/440
+audio,
+canvas,
+iframe,
+img,
+svg,
+video {
+  vertical-align: middle;
+}

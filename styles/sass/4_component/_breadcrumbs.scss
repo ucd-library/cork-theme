@@ -1,0 +1,50 @@
+@use "../0_tools" as *;
+
+.breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 $container-edge-space;
+  color: $brand--primary;
+  font-size: .875rem;
+  font-style: italic;
+  font-weight: $font-weight--light;
+  list-style: none;
+
+  li {
+
+    &:after {
+      margin: 0 $spacer * .6 0 $spacer--small;
+      color: $brand--primary-60;
+      content: "\2022";
+    }
+
+    &:last-child:after {
+      content: "";
+    }
+  }
+
+  a {
+    color: $brand--primary-80;
+    text-decoration: underline;
+
+    &:hover {
+      color: $brand--primary;
+    }
+  }
+
+  :last-child a {
+    color: $brand--primary-80;
+  }
+
+}
+
+.breadcrumbs__dots {
+  @include category-brand-background($brand--secondary);
+  width: 5rem;
+  height: 1rem;
+  margin: 1.5rem $container-edge-space;
+  mask: url("../images/dots.svg") no-repeat;
+}
+
+
+

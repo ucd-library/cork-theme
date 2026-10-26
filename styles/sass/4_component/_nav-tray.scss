@@ -1,0 +1,153 @@
+@use "../0_tools" as *;
+
+$nav-tray-quicklinks-width: 25rem;
+
+// Ensure scrollbar gutter is always reserved to prevent layout shift.
+html {
+  scrollbar-gutter: stable;
+}
+
+// Prevent scrolling on the body itself when nav-tray is open.
+body:has(.nav-tray[open]:not([data-nav-tray-type="quicklinks"])) {
+  overflow: hidden;
+}
+
+.nav-tray {
+  // Use an offset to move the menu from the top. This is helpful if there will
+  // be stuff above the menu like logos and header elements.
+  --nav-tray-top-offset: .5rem;
+  --nav-tray-bar-height: 3.5rem;
+  --nav-tray-height-offset: calc(var(--nav-tray-top-offset) + var(--nav-tray-bar-height));
+
+  flex-direction: column;
+  width: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: $brand--chrome url("../images/nav-tray-menu-bg.webp") no-repeat right top;
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: transform 300ms ease, display .001s allow-discrete;
+
+  // The 1800px is due to the background image being 1800px wide.
+  @media (width >= 1800px) {
+    background-size: cover;
+  }
+
+  &:open {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+
+    // Required for fade-in from display:none to work.
+    @starting-style {
+      & {
+        transform: translateY(-100%);
+      }
+    }
+  }
+
+  &::backdrop {
+    background: transparent;
+  }
+
+  &__inner {
+    padding-top: var(--nav-tray-top-offset);
+  }
+
+  &__logo {
+    a {
+      display: flex;
+    }
+  }
+
+  &__bar {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0; // Prevent the bar from shrinking when the content area is scrollable.
+    justify-content: space-between;
+    height: var(--nav-tray-bar-height);
+    margin-bottom: min(var(--nav-tray-top-offset), .5rem);
+    padding: 0 var(--container-edge-space);
+  }
+
+  &__title {
+    display: none;
+    color: $black;
+    font-size: 1.25rem;
+    font-style: italic;
+    font-weight: $font-weight--bold;
+  }
+
+  &__toggles {
+    display: flex;
+    align-items: center;
+  }
+
+  &__content {
+    display: none;
+    flex: 1;
+
+    &:not(&--menu) {
+      overflow-y: auto;
+      // Offset for the tray to scroll under the nav-tray bar.
+      height: calc(100dvh - var(--nav-tray-height-offset));
+      padding: 0 var(--container-edge-space);
+      padding-bottom: 2rem;
+      overscroll-behavior: contain;
+      scrollbar-color: rgba(0, 0, 0, .2) rgba(0, 0, 0, .025);
+      scrollbar-width: thin;
+    }
+  }
+
+  &:open[data-nav-tray-type="menu"] &__content--menu,
+  &:open[data-nav-tray-type="search"] &__content--search,
+  &:open[data-nav-tray-type="quicklinks"] &__content--quicklinks {
+    display: block;
+  }
+
+  // Search tray specific styles.
+  &[data-nav-tray-type="search"] {
+    --nav-tray-toggle-color: #65778a;
+    --nav-tray-toggle-highlight: #{$brand--primary};
+    --ucd-logo-color: #{$brand--primary};
+    background: $white url("../images/nav-tray-search-bg.webp") no-repeat left center / 45vh;
+  }
+
+  // Quick links tray specific styles.
+  &[data-nav-tray-type="quicklinks"] {
+    --nav-tray-toggle-color: #{$brand--primary};
+    --nav-tray-toggle-highlight: #{$brand--chrome};
+    background:
+      url("../images/nav-tray-quicklinks-bg1.svg") top left / 50% no-repeat,
+      $brand--secondary url("../images/nav-tray-quicklinks-bg2.webp") bottom right / 45% no-repeat;
+
+    @media (min-width: 500px) {
+      right: 0;
+      left: auto;
+      width: $nav-tray-quicklinks-width;
+      animation: nav-tray-side-slide 200ms ease forwards;
+      transform: translateY(0);
+    }
+
+    .nav-tray__logo {
+      display: none;
+    }
+
+    .nav-tray__title {
+      display: block;
+    }
+  }
+
+  @keyframes nav-tray-side-slide {
+    from {
+      width: 0;
+    }
+    to {
+      width: $nav-tray-quicklinks-width;
+    }
+  }
+
+}

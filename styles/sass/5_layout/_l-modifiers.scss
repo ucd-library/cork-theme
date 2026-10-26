@@ -1,0 +1,65 @@
+@use "../0_tools" as *;
+
+// Full Width Region to break outside container
+.l-full-width {
+  position: relative;
+  right: 50%;
+  left: 50%;
+  width: var(--full-width);
+  margin-right: calc(var(--full-width) / -2);
+  margin-left: calc(var(--full-width) / -2);
+}
+
+// Expand the element to spill outside its container.
+.l-overflow {
+  @media (min-width: $media-medium) {
+    width: 104%;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+
+  @media (min-width: $media-huge) {
+    width: 108%;
+  }
+}
+
+// Decrease the total width of the element.
+.l-shrink {
+  width: 75%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+// Force a grid even in mobile.
+.l-force {
+  display: grid;
+}
+
+// Grid Gap
+.l-gap {
+  --l-gap: #{$spacer--medium};
+
+  &--flush {
+    --l-gap: 0;
+  }
+
+  &--tiny {
+    --l-gap: #{$spacer--small};
+  }
+
+  &--small {
+    --l-gap: #{$spacer};
+  }
+
+  &--medium {
+    --l-gap: #{$spacer--large};
+  }
+
+  &--large {
+    --l-gap: #{$spacer * 3};
+  }
+
+  &--huge {
+    --l-gap: #{$spacer--huge};
+  }
+}

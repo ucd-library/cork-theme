@@ -1,0 +1,69 @@
+@use "../0_tools" as *;
+
+// Footer Navigation
+
+.nav-footer {
+  $block: &;
+  color: $white;
+
+  &--collapse {
+    & + & {
+      border-top: 1px solid rgba($brand--primary-80, .9);
+    }
+  }
+
+  &__title {
+    color: $white;
+
+    #{$block}--collapse & {
+      @include has-icon(right);
+      margin-bottom: 0;
+      padding: .75rem .5rem;
+      cursor: pointer;
+      transition: background-color .3s ease-in-out;
+
+      &:hover,
+      &:focus-visible {
+        background-color: $brand--primary-80;
+      }
+
+      &:after {
+        --fa: "\f067"; // fa-solid fa-plus
+        margin-left: auto;
+        color: $brand--secondary;
+        transition: all .4s ease-in;
+      }
+    }
+
+    &[aria-expanded="true"]:after {
+      transform: rotate(135deg);
+    }
+  }
+
+  &__menu {
+    #{$block}--collapse & {
+      display: none;
+      padding: 0 .5rem 1.5rem;
+    }
+  }
+
+  a {
+    display: block;
+    padding: $spacer--small 0;
+    color: $white;
+    line-height: $line-height--small;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__logo {
+    margin-bottom: $spacer;
+
+    img {
+      width: 70%;
+    }
+  }
+}

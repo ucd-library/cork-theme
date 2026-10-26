@@ -1,0 +1,64 @@
+@use "../0_tools" as *;
+
+.search-tray {
+  $block: &;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+
+  &__inner {
+    width: min(45rem, 100%);
+    margin-top: calc(var(--nav-tray-bar-height) * -1);
+    padding: $spacer;
+
+    // No need to offset the search tray when the common content is present.
+    #{$block}:has(#{$block}__common) & {
+      margin-top: 0;
+    }
+  }
+
+  &__common {
+    width: min(24rem, 85%);
+    margin-top: 3rem;
+    border-radius: 1rem;
+    background-color: $brand--secondary-40;
+    margin-inline: auto;
+    text-align: center;
+
+    &-title {
+      @include heading--underline();
+      padding: 1rem 1rem 0;
+      font-size: $font-size--large;
+      font-style: italic;
+      font-weight: $font-weight--bold;
+
+      &::after {
+        margin: 1.5rem auto 1rem;
+      }
+    }
+
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    li {
+      padding: .5rem;
+    }
+
+    li + li {
+      border-top: 1px solid $brand--secondary;
+    }
+
+    a {
+      color: $brand--primary;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

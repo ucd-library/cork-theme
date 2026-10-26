@@ -1,0 +1,14 @@
+@use "../0_tools" as *;
+
+.site-credits {
+  font-size: 1.15rem;
+
+  &__logo {
+    margin-bottom: $spacer;
+
+    a {
+      display: inline-block;
+    }
+  }
+
+}

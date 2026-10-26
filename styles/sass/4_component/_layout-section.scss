@@ -1,0 +1,115 @@
+@use "sass:list";
+@use "sass:color";
+@use "../0_tools" as *;
+
+// Layout Sections.
+
+// --layout-section-bg-url
+// --layout-section-bg-position
+// --layout-section-bg-size
+// --layout-section-bg-darken
+// --forced-contrast - Color to contrast a Layout Section background color.
+// --forced-contrast-heading-primary - Color for a Primary Heading to contrast a Layout Section background color.
+// --forced-contrast-heading-secondary - Color for a Secondary Heading to contrast a Layout Section background color.
+// --forced-scheme - Color for a light or dark Layout Section background.
+// --forced-scheme-contrast - Color to contrast a light or dark scheme for a Layout Section background.
+
+.layout-section {
+  &--no-gap {
+    --l-gap-override: 0;
+  }
+
+  &__bg-image {
+    background-image: var(--layout-section-bg-url, var(--lazy-bg-url));
+    background-position: var(--layout-section-bg-position, center center);
+    background-repeat: no-repeat;
+    background-size: var(--layout-section-bg-size, cover);
+
+    &--darken {
+      --layout-section-bg-darken: 25;
+      position: relative;
+      isolation: isolate;
+
+      &:before {
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: block;
+        backdrop-filter: brightness(calc((100 - var(--layout-section-bg-darken)) / 100));
+        content: "";
+      }
+    }
+  }
+
+  // Section Branding colors.
+  @for $i from 1 through list.length($section-brands) {
+    // Get the first item
+    $item: list.nth($section-brands, $i);
+    // Now fetch the name, color, and contrast from this first item
+    $brand-name: list.nth($item, 1);
+    $brand-color: list.nth($item, 2);
+    $brand-contrast: list.nth($item, 3);
+
+    // Do not use these --layout-section-* variables outside of this file.
+    // Use the provided --forced-contrast-* variables to ensure compatibility.
+    &--#{$brand-name} {
+      --layout-section-contrast: #{$brand-contrast};
+      @if #{$brand-contrast} != #{$white} {
+        --layout-section-scheme: #{$ucd-blue};
+        --layout-section-scheme-contrast: #{$white};
+      }
+      @else {
+        --layout-section-scheme: #{$white};
+        --layout-section-scheme-contrast: #{$ucd-blue};
+      }
+
+      background-color: #{$brand-color};
+    }
+  }
+
+  &--light-on-dark {
+    --layout-section-contrast: #{$white};
+    --layout-section-scheme: #{$white};
+    --layout-section-scheme-contrast: #{$ucd-blue};
+  }
+
+  &--dark-on-light {
+    --layout-section-contrast: #{$black};
+    --layout-section-contrast-heading: #{$ucd-blue};
+    --layout-section-scheme: #{$ucd-blue};
+    --layout-section-scheme-contrast: #{$white};
+  }
+
+  // This modifier allows passing down the variable that other components can
+  // choose to use to force a color contrast. This needs to be opt-in for
+  // components so that it doesn't have unintended consequences.
+  :where(&--force-contrast) {
+    --panel-bg: transparent;
+    --forced-contrast: var(--layout-section-contrast);
+    --forced-contrast-heading-primary: var(--layout-section-contrast-heading, var(--layout-section-contrast));
+    --forced-contrast-heading-secondary: var(--layout-section-contrast-heading, var(--layout-section-contrast));
+    --forced-scheme: var(--layout-section-scheme);
+    --forced-scheme-contrast: var(--layout-section-scheme-contrast);
+    color: var(--forced-contrast);
+
+    a {
+      color: var(--forced-contrast, inherit);
+
+      &:hover {
+        color: var(--forced-contrast, inherit);
+      }
+    }
+  }
+
+}
+
+// Add top margin into sibling layouts that do not sit below a layout that adds
+// its own margin. Also do not add margin to colored backgrounds sitting below
+// other colored backgrounds.
+.layout:where(:not([class*="u-space-my"], [class*="u-space-mb"])) + .layout:where(:not(.layout-section--force-contrast)),
+.layout:where(:not(.layout-section--force-contrast):not([class*="u-space-my"], [class*="u-space-mb"])) + .layout:where(.layout-section--force-contrast) {
+  margin-top: $panel-spacer;
+}

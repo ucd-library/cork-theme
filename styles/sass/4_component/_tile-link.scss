@@ -1,0 +1,246 @@
+@use "../0_tools" as *;
+
+.tile-link {
+  $block: &;
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 1rem;
+  aspect-ratio: 1/1;
+  color: inherit;
+  container-name: tile-link-wrapper;
+  container-type: inline-size;
+  text-align: center;
+
+  img {
+    width: 100%;
+    transition: all $transition-time ease-in-out;
+  }
+
+  &__overlay {
+    @include force-anti-alias();
+    position: absolute;
+    z-index: 2;
+    top: 98%;
+    left: -112.5%;
+    width: 200%;
+    height: 200%;
+    background-color: var(--category-brand, $ucd-blue);
+    content: " ";
+    opacity: .75;
+    transform: rotate(45deg);
+    transition: all $transition-time ease-in-out;
+  }
+
+  &__title {
+    position: absolute;
+    z-index: 4;
+    bottom: 50%;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 $spacer;
+    text-align: center;
+    text-shadow: 0 0 2px rgba(0, 0, 0, .9);
+    transition: all $transition-time ease-in-out;
+
+    @media (hover: hover) {
+      bottom: 45%;
+    }
+  }
+
+  &__title-heading {
+    margin: 0;
+    color: $white;
+    font-size: clamp(21px, 8cqi, 8cqi);
+    font-weight: $font-weight--bold;
+    line-height: 1;
+  }
+
+  &__description {
+    position: absolute;
+    z-index: 4;
+    top: 42.5%;
+    display: none;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 $spacer;
+    color: $white;
+    font-size: clamp(15px, 2.4cqi, 2.4cqi);
+    font-weight: normal;
+    line-height: 1.1;
+    opacity: 0;
+    text-align: center;
+    text-shadow: 0 0 1px rgba(0, 0, 0, .9);
+    transition: all $transition-time ease-in-out;
+
+    @media (hover: hover) {
+      display: block;
+    }
+
+    @container tile-link-wrapper (inline-size > 1200px) {
+      padding: 0 $spacer--large;
+    }
+
+    :last-child {
+      margin: 0;
+    }
+  }
+
+  &__indicator {
+    position: absolute;
+    z-index: 3;
+    top: 55%;
+    left: 40%;
+    width: 20%;
+    height: 20%;
+    margin: auto;
+    opacity: 1;
+    transition: all .2s ease-in-out;
+
+    svg {
+      width: 100%;
+      opacity: .75;
+
+      path {
+        fill: $white;
+      }
+    }
+
+    @media (hover: hover) {
+      top: 40%;
+      left: -10px;
+      display: block;
+      opacity: 0;
+
+      svg {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__fallback-image {
+    width: 100%;
+    height: 100%;
+    background-color: $brand--primary-80;
+  }
+
+  &:hover,
+  &:focus-visible {
+    cursor: pointer;
+    text-decoration: none;
+
+    img {
+      transform: scale(1.05);
+    }
+
+    #{$block}__indicator {
+      top: 40%;
+      left: 40%;
+      width: 20%;
+      height: 20%;
+      opacity: 1;
+
+      svg path {
+        fill: var(--category-brand-contrast-color, $white);
+      }
+    }
+
+    #{$block}__title {
+      bottom: 65%;
+      text-shadow: 0 0 0 rgba(0, 0, 0, 1);
+
+      &-heading {
+        color: var(--category-brand-contrast-color, $white);
+      }
+    }
+
+    #{$block}__description {
+      top: 67%;
+      color: var(--category-brand-contrast-color, $white);
+      opacity: 1;
+    }
+
+    #{$block}__overlay {
+      opacity: .9;
+      transform: scale(3) rotate(45deg);
+    }
+  }
+
+  // Modifier: Portrait
+  &--portrait {
+    border-radius: 0;
+    aspect-ratio: 9/16;
+    text-align: left;
+
+    #{$block}__overlay {
+      left: 0;
+      transform: none;
+    }
+
+    #{$block}__body {
+      position: absolute;
+      z-index: 4;
+      bottom: 18%;
+      left: 0;
+      width: 84%;
+      margin: 0 8%;
+      transition: all $transition-time ease-in-out;
+
+      @media (hover: hover) {
+        bottom: 6%;
+      }
+    }
+
+    #{$block}__title {
+      position: static;
+      padding: 0;
+      text-align: left;
+    }
+
+    #{$block}__title-heading {
+      margin: 0 0 $spacer--small;
+      font-size: clamp(21px, 7cqi, 8cqi);
+    }
+
+    #{$block}__description {
+      position: static;
+      display: block;
+      padding: 0;
+      font-size: clamp(15px, 5.4cqi, 5.4cqi);
+      opacity: 1;
+      text-align: left;
+    }
+
+    #{$block}__indicator {
+      top: auto;
+      bottom: 0;
+      left: 8%;
+      width: 16%;
+      height: 16%;
+      margin: 0;
+
+      @media (hover: hover) {
+        left: 8%;
+        left: -10px;
+      }
+    }
+
+    &:hover,
+    &:focus-visible {
+      #{$block}__indicator {
+        top: auto;
+        left: 8%;
+        width: 16%;
+        height: 16%;
+      }
+
+      #{$block}__body {
+        bottom: 18%;
+      }
+
+      #{$block}__overlay {
+        transform: scale(3);
+      }
+    }
+  }
+}

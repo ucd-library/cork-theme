@@ -1,0 +1,124 @@
+@use "../0_tools" as *;
+
+.search-facets {
+  $block: #{&};
+  border-block-end: 1px solid color-mix(in oklch, $brand--primary-80 70%, $white);
+  margin-block: .5rem;
+  padding-block: .5rem;
+
+  &[open] {
+    border-block-end: none;
+  }
+
+  &__title {
+    @include heading--secondary;
+    position: relative;
+    padding-right: 1.5rem;
+    cursor: pointer;
+    list-style: none; // Remove default marker from details element.
+
+    &::before,
+    &::after {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      width: 1rem;
+      height: 0;
+      border-radius: 2px;
+      border-block-start: 3px solid color-mix(in oklch, $brand--primary-80 90%, $white);
+      content: "";
+    }
+
+    &::after {
+      transform: rotate(90deg);
+      transform-origin: 50%;
+      transition: all .2s ease-in;
+    }
+
+    #{$block}[open] &::after {
+      transform: rotate(0deg);
+    }
+  }
+
+  &__list {
+    overflow: auto;
+    max-height: 11rem;
+    margin: 0;
+    padding: 1rem 0;
+    list-style: none;
+    scrollbar-color: color-mix(in oklch, $brand--primary-80 50%, $white) transparent;
+
+    #{$block}[open] & {
+      animation: search-facets-animate-down .2s linear forwards;
+    }
+  }
+
+  &::details-content {
+    overflow: clip;
+    height: 0;
+    transition: height .5s ease, content-visibility .5s ease allow-discrete;
+  }
+
+  &[open]::details-content {
+    height: auto;
+  }
+
+  &__item + &__item {
+    margin-top: $spacer--tiny;
+  }
+
+  &__label {
+    display: inline;
+    cursor: pointer;
+    font-weight: $font-weight;
+  }
+
+  &__input {
+    display: inline-grid;
+    place-content: center;
+    width: 1.125rem;
+    border: 1px solid $brand--primary-70;
+    border-radius: 2px;
+    accent-color: $brand--secondary;
+    appearance: none;
+    aspect-ratio: 1;
+    cursor: pointer;
+    translate: 0 .125em;
+
+    // Ensure the checkbox is visible when printing.
+    @media print {
+      appearance: auto;
+    }
+
+    &::before {
+      width: .9rem;
+      height: .9rem;
+      // Using box-shadow instead of background-color allows the checkmark to be
+      // visible when printing.
+      box-shadow: inset 1rem 1rem $brand--primary;
+      content: "";
+      mask: url("../images/checkmark.svg") no-repeat center / contain;
+      transform: scale(0);
+      transition: transform 120ms ease-in-out;
+    }
+
+    &:checked {
+      background-color: $brand--secondary;
+
+      &::before {
+        transform: scale(1);
+      }
+    }
+  }
+
+  @keyframes search-facets-animate-down {
+    0% {
+      opacity: 0;
+      transform: translateY(-1rem);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

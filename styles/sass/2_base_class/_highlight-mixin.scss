@@ -1,0 +1,24 @@
+// Text Highlight Mixins
+@use "sass:color";
+@use "../0_tools" as *;
+
+// Add arrows to a list
+@mixin highlight-info() {
+  background-color: color-mix(in oklch, $rec-pool 25%, $white);
+  color: $brand--primary;
+}
+
+@mixin highlight-success() {
+  background-color: color-mix(in oklch, $farmers-market 45%, $white);
+  color: $brand--success;
+}
+
+@mixin highlight-warning() {
+  background-color: color-mix(in oklch, $sunflower 45%, $white);
+  color: $brand--warning;
+}
+
+@mixin highlight-danger() {
+  background-color: color-mix(in oklch, $rose 75%, $white);
+  color: $brand--danger;
+}

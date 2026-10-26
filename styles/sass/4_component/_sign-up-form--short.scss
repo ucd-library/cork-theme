@@ -1,0 +1,31 @@
+@use "sass:math";
+
+@use "../0_tools" as *;
+
+//styles for e-newsletter form
+.sign-up-form--short {
+  width: auto;
+  padding: $spacer * 2;
+  background: $brand--primary-80;
+
+  legend {
+    margin-bottom: math.div($spacer--tiny, 2);
+    color: $brand--secondary;
+    font-size: 1.25rem;
+    font-weight: $font-weight--bold;
+  }
+
+  label {
+    margin-bottom: $spacer--tiny;
+    color: $white;
+    font-size: 1rem;
+    font-weight: $font-weight;
+  }
+
+  input {
+    display: block;
+    width: 60%;
+    margin-bottom: $spacer;
+    border: 1px solid $brand--primary-30;
+  }
+}

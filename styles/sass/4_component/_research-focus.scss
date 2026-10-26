@@ -1,0 +1,70 @@
+@use "../0_tools" as *;
+
+.research-focus {
+  padding-bottom: $spacer;
+  background-color: $white;
+
+  &__body {
+    padding: 0 $spacer * 3 $spacer--medium $spacer * 3;
+    column-count: 1;
+    text-align: left;
+
+    @media (min-width: $media-small) {
+      column-count: 3;
+      column-gap: $spacer--medium;
+    }
+  }
+
+  &__image {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  &__title {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: $spacer * .6 $spacer;
+    background: $quad;
+    color: $white;
+    cursor: pointer;
+    font-size: $font-size--large;
+    font-style: inherit;
+    font-weight: $font-weight--bold;
+    text-align: left;
+
+    @media (min-width: $media-small) {
+      position: absolute;
+      bottom: $spacer * 2;
+      width: 70%;
+      font-size: 1.5625rem;
+      line-height: 1.3;
+      text-align: right;
+    }
+
+    &:hover {
+      color: $white;
+      text-decoration: none;
+    }
+
+  }
+
+  &__subtitle {
+    display: block;
+    padding: $spacer;
+    color: $brand--primary;
+    font-weight: $font-weight--light;
+
+    @media (min-width: $media-small) {
+      font-size: 1.25rem;
+    }
+  }
+}

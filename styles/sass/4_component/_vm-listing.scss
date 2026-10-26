@@ -1,0 +1,42 @@
+@use "../0_tools" as *;
+@use "../3_objects/o-media" as *;
+
+// Media List (view mode)
+.vm-listing {
+  @include o-media();
+
+  & {
+    margin-bottom: $spacer;
+    color: var(--forced-contrast, #{$gray});
+  }
+
+  &__figure {
+    @include o-media__figure();
+    overflow: hidden;
+    max-width: 25%;
+  }
+
+  &__body {
+    @include o-media__body();
+  }
+
+  &__title {
+    @include reset-list-titles();
+    color: var(--forced-contrast-heading-primary, #{$brand--primary});
+    line-height: 1.2;
+
+    a {
+      color: var(--forced-contrast-heading-primary, #{$brand--primary});
+      text-decoration: none;
+
+      &:hover {
+        color: var(--forced-contrast-heading-primary, #{$brand--primary-80});
+        text-decoration: underline;
+      }
+    }
+
+    &--external a {
+      @include external-link-icon();
+    }
+  }
+}

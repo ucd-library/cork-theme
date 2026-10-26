@@ -1,0 +1,21 @@
+// Tables
+@use "../0_tools" as *;
+@use "tables-mixin" as *;
+
+// Assign mixins to classes
+.table--bordered {
+  @include table--bordered();
+}
+
+.table--striped {
+  @include table--striped();
+}
+
+// Placed here since it has to come after the potential zebra striping
+.table--hover {
+  @include table--hover();
+}
+
+.table--admin {
+  @include table--admin();
+}

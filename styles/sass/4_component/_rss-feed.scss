@@ -1,0 +1,45 @@
+@use "../0_tools" as *;
+@use "../2_base_class/buttons-mixin" as *;
+@use "../2_base_class/lists-mixin" as *;
+@use "../3_objects/o-media" as *;
+
+.rss-feed {
+  &__list {
+    @include list-bordered();
+    margin-bottom: $spacer;
+  }
+
+  &__item:has(.rss-feed__figure) {
+    display: flex;
+    gap: $spacer;
+  }
+
+  &__figure {
+    flex-shrink: 0;
+    max-width: 20%;
+
+    img {
+      width: 135px;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+    }
+  }
+
+  &__title {
+    @include reset-list-titles();
+    line-height: 1.2;
+  }
+
+  &__body p:last-child {
+    margin-bottom: 0;
+  }
+
+  &__more {
+    @include btn--primary();
+  }
+}
+
+.feed-icons {
+  margin-top: $spacer;
+  margin-bottom: $spacer;
+}

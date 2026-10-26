@@ -1,0 +1,17 @@
+@use "../0_tools" as *;
+
+.event {
+  &__date {
+    @include heading--underline();
+    font-size: 1.5rem;
+    font-weight: $font-weight--extra-bold;
+
+    @media (min-width: $media-narrow) {
+      font-size: 1.65rem;
+    }
+  }
+
+  &__location {
+    font-weight: $font-weight--bold;
+  }
+}

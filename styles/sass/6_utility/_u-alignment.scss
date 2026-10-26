@@ -1,0 +1,53 @@
+@use "../0_tools" as *;
+
+// Align Right
+@mixin u-align--right() {
+  float: right !important;
+  margin-bottom: $spacer;
+  margin-left: $spacer;
+}
+
+.u-align--right {
+  @include u-align--right();
+}
+
+// Align Left
+@mixin u-align--left() {
+  float: left !important;
+  margin-right: $spacer;
+  margin-bottom: $spacer;
+}
+
+.u-align--left {
+  @include u-align--left();
+}
+
+.u-align--stack {
+  float: none !important;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+// Align Center
+@mixin u-align--center() {
+  margin: 0 auto $spacer !important;
+  text-align: center !important;
+
+  // Fix figure and figcaptions when aligned center
+  figure {
+    display: block;
+
+    // Force an immediate child so that it doesn't break stuff in ckeditor
+    > img {
+      width: auto;
+    }
+  }
+
+  figcaption {
+    display: block;
+  }
+}
+
+.u-align--center {
+  @include u-align--center();
+}

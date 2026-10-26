@@ -1,0 +1,12 @@
+@use "../0_tools" as *;
+
+// Links
+a {
+  @include link-style();
+  outline: 0;
+
+  &:active {
+    color: $link-color-active;
+    outline: none;
+  }
+}
