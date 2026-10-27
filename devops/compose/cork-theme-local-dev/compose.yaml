@@ -1,0 +1,14 @@
+x-variables:
+  main-image: &main-image localhost/local-dev/cork-theme:local-dev
+services:
+  app:
+    image: *main-image
+    env_file:
+      - .env
+    environment:
+      APP_ENV: ${APP_ENV:-dev}
+    volumes:
+      - ../../../services:/services
+      - /services/node_modules
+    ports:
+      - ${APP_HOST_PORT:-3000}:${APP_CONTAINER_PORT:-3000}
