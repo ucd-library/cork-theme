@@ -50,9 +50,9 @@ git diff "$RANGE" -- "$LOG_FILE" \
   | awk '/^\+\+\+/ { next } /^\+/ { print substr($0, 2) }' \
   | awk 'found || /^## / { found = 1; print }'
 
-NAME_STATUS="$(git diff --name-status -M "$RANGE" -- "$TARGET_DIR" | sed "s|$TARGET_DIR/||g")"
+NAME_STATUS="$(git diff --name-status -M "$RANGE" -- $(sync_target_dirs) | sed "s|$STYLES_DIR/||g")"
 
-heading "Files campus changed (in $TARGET_DIR)"
+heading "Files campus changed (in $STYLES_DIR)"
 echo "Added:"
 awk '$1 == "A" { print $2 }' <<< "$NAME_STATUS" | indent
 echo "Modified:"
@@ -65,8 +65,8 @@ awk '$1 == "D" { print $2 }' <<< "$NAME_STATUS" | indent
 heading "Files we customised that campus also changed"
 echo "These contain our '$EDIT_FENCE' edits. Check that our edits still make sense."
 CHANGED="$(awk '$1 != "A" { print $2 }' <<< "$NAME_STATUS")"
-CUSTOMISED="$(git grep -l "$EDIT_FENCE" "$MAIN_BRANCH" -- "$TARGET_DIR" \
-  | sed "s|^$MAIN_BRANCH:$TARGET_DIR/||" || true)"
+CUSTOMISED="$(git grep -l "$EDIT_FENCE" "$MAIN_BRANCH" -- "$SASS_TARGET_DIR" \
+  | sed "s|^$MAIN_BRANCH:$STYLES_DIR/||" || true)"
 if [[ -n "$CHANGED" && -n "$CUSTOMISED" ]]; then
   grep -Fx -f <(echo "$CUSTOMISED") <<< "$CHANGED" | indent || echo "  (none)"
 else
@@ -82,7 +82,7 @@ if [[ "$MERGE_STATUS" == 0 ]]; then
   echo "No conflicts expected. The merge should go through cleanly."
 elif [[ "$MERGE_STATUS" == 1 ]]; then
   echo "These files will have conflicts that need fixing by hand during the merge:"
-  tail -n +2 <<< "$MERGE_OUTPUT" | sort -u | sed "s|$TARGET_DIR/||" | indent
+  tail -n +2 <<< "$MERGE_OUTPUT" | sort -u | sed "s|$STYLES_DIR/||" | indent
 else
   echo "Could not preview the merge:"
   echo "$MERGE_OUTPUT" | indent
@@ -90,6 +90,6 @@ fi
 
 heading "Next step"
 echo "To see the full line-by-line changes:"
-echo "  git diff $RANGE -- $TARGET_DIR"
+echo "  git diff $RANGE -- $STYLES_DIR"
 echo "When you are ready to bring these changes into $MAIN_BRANCH:"
 echo "  ./devops/cmds/merge-upstream-styles.sh"
