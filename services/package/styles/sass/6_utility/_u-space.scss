@@ -67,6 +67,14 @@
           #{$type}-#{$u-space-dir}: 0 !important;
         }
       }
+
+      // ucdlib-edit-start: auto XY spacing, e.g. .u-space-mx--auto
+      &--auto {
+        @each $u-space-dir in $props {
+          #{$type}-#{$u-space-dir}: auto !important;
+        }
+      }
+      // ucdlib-edit-end
     }
 
   }
@@ -124,6 +132,12 @@
       &--flush {
         #{$type}-#{$direction}: 0 !important;
       }
+
+      // ucdlib-edit-start: auto directional spacing, e.g. .u-space-ml--auto
+      &--auto {
+        #{$type}-#{$direction}: auto !important;
+      }
+      // ucdlib-edit-end
     }
 
   }

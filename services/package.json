@@ -11,8 +11,16 @@
     "./*": "./package/*"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^7.3.1",
     "commander": "^15.0.0",
+    "fontverter": "^2.0.0",
+    "harfbuzzjs": "^1.6.4",
+    "normalize-scss": "^8.0.0",
     "postcss": "^8.5.32",
-    "sass": "^1.106.1"
+    "sass": "^1.106.1",
+    "subset-font": "^2.9.0"
+  },
+  "dependencies": {
+    "lit": "^3.3.3"
   }
 }

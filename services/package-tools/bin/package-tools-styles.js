@@ -13,4 +13,24 @@ program
   .description('Build styles/css/css-properties.css from campus custom properties plus our additions')
   .action(styles.cssProperties.bind(styles));
 
+program
+  .command('campus-css')
+  .description('Build campus stylesheets as-is: styles/css/style.css and styles/css/print.css')
+  .action(styles.campusCss.bind(styles));
+
+program
+  .command('ucdlib-css')
+  .description('Build our stylesheet, styles/css/style-ucdlib.css')
+  .action(styles.ucdlibCss.bind(styles));
+
+program
+  .command('colors')
+  .description('Build styles/colors.js, the campus palette as JS, from sass/_variables.scss')
+  .action(styles.colors.bind(styles));
+
+program
+  .command('lit')
+  .description('Build a Lit css.js module in styles/js/ for each Sass partial')
+  .action(styles.lit.bind(styles));
+
 program.parse(process.argv);

@@ -1,0 +1,28 @@
+//------------------------------------
+//  Colors
+//------------------------------------
+
+// Not a stylesheet. `package-tools styles colors` compiles this and reads the output to build styles/colors.js
+// from campus's palette, so the JS stays in step with _variables.scss.
+
+@use "sass:meta";
+@use "sass:list";
+@use "../sass/variables";
+
+// Every color variable, e.g. --ucd-blue-90: #14447a
+:root {
+  @each $name, $value in meta.module-variables("variables") {
+    @if meta.type-of($value) == color {
+      --#{$name}: #{$value};
+    }
+  }
+}
+
+// One rule per category brand: [class-name, color, contrast-color, brand-text-on-white]
+@each $brand in variables.$category-brands {
+  .brand-#{list.nth($brand, 1)} {
+    --color: #{list.nth($brand, 2)};
+    --contrast: #{list.nth($brand, 3)};
+    --text-on-white: #{list.nth($brand, 4)};
+  }
+}

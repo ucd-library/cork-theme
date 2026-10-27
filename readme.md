@@ -44,13 +44,22 @@ If some files need fixing by hand, the script tells you which ones and how. To b
 
 ### 5. Rebuild and review
 
-Rebuild the compiled CSS, and look over what changed in it. *(Build step coming soon.)*
-
-### 6. Push
+Rebuild everything generated from the styles, such as the compiled CSS and the Lit `css.js` modules. The local dev container must be running.
 
 ```bash
-git push origin main
+./devops/cmds/run-package-tool.sh styles run-all
 ```
+
+You can verify what changed with:
+```bash
+git status
+git diff --stat
+```
+Look over what changed in `services/package/styles/` before committing. This is where problems the merge can't detect show up, such as a renamed class or a new rule that overrides one of ours. 
+
+### 6. Add, Commit, and Push
+
+Now, commit and push all changes to the main branch.
 
 ### Notes
 

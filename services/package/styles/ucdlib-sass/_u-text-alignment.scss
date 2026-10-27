@@ -1,0 +1,33 @@
+//------------------------------------
+//  Text alignment utilities
+//------------------------------------
+
+// Underlined headings move their underline to match the alignment.
+
+.u-text-align--right {
+  text-align: right !important;
+
+  &.heading--underline::after {
+    margin-left: auto;
+  }
+  &.heading--weighted-underline::after {
+    margin-left: auto;
+  }
+}
+
+.u-text-align--left {
+  text-align: left !important;
+}
+
+.u-text-align--center {
+  text-align: center !important;
+
+  &.heading--underline::after {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  &.heading--weighted-underline::after {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

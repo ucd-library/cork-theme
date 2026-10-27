@@ -1,0 +1,18 @@
+//------------------------------------
+//  1_base_html, without fonts
+//------------------------------------
+
+// Campus's sass/1_base_html/_index.scss minus "fonts": we serve fonts ourselves.
+// Keep this list in step with campus's index; the upstream check report flags changes to it.
+
+@forward "../sass/1_base_html/reset";
+@forward "../sass/1_base_html/accessibility";
+@forward "../sass/1_base_html/root";
+@forward "../sass/1_base_html/forms";
+@forward "../sass/1_base_html/headings";
+@forward "../sass/1_base_html/links";
+@forward "../sass/1_base_html/lists";
+@forward "../sass/1_base_html/main";
+@forward "../sass/1_base_html/media";
+@forward "../sass/1_base_html/tables";
+@forward "../sass/1_base_html/text";

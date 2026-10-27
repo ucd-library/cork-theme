@@ -55,7 +55,9 @@ Merged campus styles into $MAIN_BRANCH:
 $IMPORTS
 
 Next steps:
-  1. Rebuild the compiled css and css.js (build service not set up yet).
-  2. Review what changed in the compiled output with git diff.
+  1. Rebuild everything generated from the styles (the local dev container must be running):
+       ./devops/cmds/run-package-tool.sh styles run-all
+  2. Review what changed in services/package/styles/ with git status and git diff,
+     then commit the rebuilt files.
   3. Push: git push origin $MAIN_BRANCH $VENDOR_BRANCH
 EOF

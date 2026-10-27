@@ -1,0 +1,11 @@
+//------------------------------------
+//  Variable configuration
+//------------------------------------
+
+// Overrides for campus's !default variables. Configuration only applies on the first load of
+// _variables, so this must be the first @use in any entry file that needs it.
+
+@use "../sass/variables" with (
+  // Campus sets this to 0 because their design no longer uses o-box; we still do.
+  $o-box-spacer: .75rem
+);

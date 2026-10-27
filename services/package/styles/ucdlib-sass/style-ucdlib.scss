@@ -1,0 +1,38 @@
+//------------------------------------
+//  UC Davis Library stylesheet
+//------------------------------------
+
+// Source for styles/css/style-ucdlib.css, built with `package-tools styles ucdlib-css`.
+// Mirrors campus's sass/style.scss, minus fonts, plus our variable configuration and utilities.
+// Keep the layer order in step with campus's style.scss.
+
+// Must come first: configures campus variables.
+@use "config";
+
+// Normalize to "reset" browser defaults
+@use "normalize-scss/sass/normalize/import-now";
+
+// Base HTML (without fonts)
+@use "base-html";
+
+// Base Classes
+@use "../sass/2_base_class" as base_class;
+
+// Objects
+@use "../sass/3_objects" as objects;
+
+// Components
+@use "../sass/4_component" as components;
+
+// Layouts
+@use "../sass/5_layout" as layout;
+
+// Utility Overrides
+@use "../sass/6_utility" as utility;
+
+// Hacks
+@use "../sass/hacks";
+
+// Our utilities
+@use "u-aspect";
+@use "u-text-alignment";

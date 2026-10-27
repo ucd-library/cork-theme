@@ -1,0 +1,37 @@
+//------------------------------------
+//  Aspect ratio utilities
+//------------------------------------
+
+// Landscape ratios: the image fills the width.
+$aspect_ratios: ("1x1": 100%, "4x3": 75%, "16x9": 56.25%);
+
+@each $name, $padding in $aspect_ratios {
+  .aspect--#{$name} {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding-top: $padding;
+  }
+  .aspect--#{$name} > img {
+    position: absolute;
+    top: 0;
+  }
+}
+
+// Portrait ratios: the image fills the height and is cropped to fit.
+$portrait_aspect_ratios: ("520x580": 112%);
+
+@each $name, $padding in $portrait_aspect_ratios {
+  .aspect--#{$name} {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding-top: $padding;
+  }
+  .aspect--#{$name} > img {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    object-fit: cover;
+  }
+}
