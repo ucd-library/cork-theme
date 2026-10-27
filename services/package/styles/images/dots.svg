@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 78 8">
+  <defs>
+    <circle id="dot" cx="4" cy="4" r="3.2" />
+  </defs>
+
+  <g fill="white">
+<use href="#dot" x="0" />
+<use href="#dot" x="14" />
+<use href="#dot" x="28" />
+<use href="#dot" x="42" />
+<use href="#dot" x="56" />
+  </g>
+</svg>
