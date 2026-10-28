@@ -8,19 +8,39 @@
     "package"
   ],
   "exports": {
+    "./utils/mixins": "./package/utils/mixins/index.js",
     "./*": "./package/*"
+  },
+  "scripts": {
+    "client-watch": "cd ./client/build && webpack --config webpack-watch.config.js --watch",
+    "client-build-dev": "cd ./client/build && webpack --config webpack-watch.config.js",
+    "client-build-dist": "cd ./client/build && webpack --config webpack-dist.config.js",
+    "start-client": "node ./client/index.js"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^7.3.1",
+    "@ucd-lib/cork-app-build": "^0.5.0",
+    "@ucd-lib/cork-app-state": "^3.2.0",
+    "@ucd-lib/cork-app-utils": "^6.6.0",
+    "@ucd-lib/cork-icon": "^1.5.0",
+    "@ucd-lib/logger": "^0.0.7",
+    "@ucd-lib/spa-router-middleware": "^0.3.0",
     "commander": "^15.0.0",
+    "express": "^5.3.0",
     "fontverter": "^2.0.0",
     "harfbuzzjs": "^1.6.4",
     "normalize-scss": "^8.0.0",
     "postcss": "^8.5.32",
     "sass": "^1.106.1",
-    "subset-font": "^2.9.0"
+    "subset-font": "^2.9.0",
+    "uuid": "^14.0.3",
+    "webpack": "^5.112.2",
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "lit": "^3.3.3"
+  },
+  "allowScripts": {
+    "@ucd-lib/cork-icon@1.5.0": true
   }
 }

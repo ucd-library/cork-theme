@@ -20,7 +20,11 @@ COPY services/package-lock.json .
 RUN npm install
 
 # Copy source code
+COPY services/client ./client
 COPY services/package ./package
 COPY services/package-tools ./package-tools
+
+# Build the client
+RUN npm run client-build-dist
 
 CMD ["bash", "-c", "tail -f /dev/null"]
