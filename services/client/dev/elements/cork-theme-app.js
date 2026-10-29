@@ -1,6 +1,9 @@
 import { LitElement } from 'lit';
 import {render, styles} from "./cork-theme-app.tpl.js";
 
+// global css
+import '../css/index.js';
+
 import { Registry, LitCorkUtils, Mixin } from '@ucd-lib/cork-app-utils';
 import { MainDomElement } from '@ucd-lib/cork-theme/utils/mixins';
 

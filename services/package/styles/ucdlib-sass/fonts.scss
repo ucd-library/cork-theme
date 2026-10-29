@@ -1,0 +1,34 @@
+//------------------------------------
+//  Fonts
+//------------------------------------
+
+// Source for styles/css/fonts.css and styles/js/ucdlib-sass/fonts.css.js, built with `package-tools styles`.
+// Mirrors campus's sass/1_base_html/_fonts.scss (which style-ucdlib.css leaves out), but loads the fonts from
+// the cork-theme app instead of campus's font server, which only allows certain hosts.
+
+@use "../sass/0_tools" as *;
+
+// Base URL of the hosted fonts. Override with @use "…/fonts" with ($fonts-url: "…").
+$fonts-url: "https://cork-theme.library.ucdavis.edu/fonts" !default;
+
+// Proxima Nova
+@include font-face(Proxima-Nova, "#{$fonts-url}/proximanova/proximanova-regular-webfont", 400, normal);
+@include font-face(Proxima-Nova, "#{$fonts-url}/proximanova/proximanova-bold-webfont", 700, normal);
+@include font-face(Proxima-Nova, "#{$fonts-url}/proximanova/proximanova-extrabold-webfont", 800, normal);
+@include font-face(Proxima-Nova, "#{$fonts-url}/proximanova/proximanova-regularit-webfont", 400, italic);
+@include font-face(Proxima-Nova, "#{$fonts-url}/proximanova/proximanova-boldit-webfont", 700, italic);
+@include font-face(Proxima-Nova, "#{$fonts-url}/proximanova/proximanova-extraboldit-webfont", 800, italic);
+@include font-face(proxima-nova, "#{$fonts-url}/proximanova/proximanova-light-webfont", 200, normal);
+@include font-face(proxima-nova, "#{$fonts-url}/proximanova/proximanova-lightit-webfont", 200, italic);
+
+// Ryman Eco (campus's fonts, copied to the app by `package-tools styles client-fonts`)
+@font-face {
+  font-display: swap;
+  font-family: "Ryman Eco";
+  font-stretch: normal;
+  font-style: normal;
+  font-weight: 400;
+  src: url("#{$fonts-url}/campus/ryman-eco.woff2") format("woff2"),
+    url("#{$fonts-url}/campus/ryman-eco.woff") format("woff");
+  unicode-range: U+0020-00FE;
+}

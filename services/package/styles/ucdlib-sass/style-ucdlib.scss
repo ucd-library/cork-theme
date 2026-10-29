@@ -15,8 +15,14 @@
 // Base HTML (without fonts)
 @use "base-html";
 
+// Our custom properties, added to campus's :root
+@use "custom-properties";
+
 // Base Classes
 @use "../sass/2_base_class" as base_class;
+
+// Heading level classes (.h1–.h6)
+@use "heading-classes";
 
 // Objects
 @use "../sass/3_objects" as objects;

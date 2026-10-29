@@ -1,0 +1,32 @@
+//------------------------------------
+//  Heading level classes
+//------------------------------------
+
+// The look of h1–h6 without the semantics, e.g. <p class="h2">.
+// Built from campus's h1()–h6() mixins, the same ones that style the h1–h6 elements.
+
+@use "../sass/0_tools" as *;
+
+.h1 {
+  @include h1();
+}
+
+.h2 {
+  @include h2();
+}
+
+.h3 {
+  @include h3();
+}
+
+.h4 {
+  @include h4();
+}
+
+.h5 {
+  @include h5();
+}
+
+.h6 {
+  @include h6();
+}

@@ -33,4 +33,9 @@ program
   .description('Build a Lit css.js module in styles/js/ for each Sass partial')
   .action(styles.lit.bind(styles));
 
+program
+  .command('client-fonts')
+  .description('Copy campus fonts (styles/fonts) to the client app\'s public/fonts/campus')
+  .action(styles.clientFonts.bind(styles));
+
 program.parse(process.argv);

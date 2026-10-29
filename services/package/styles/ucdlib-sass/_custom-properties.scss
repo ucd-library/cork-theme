@@ -1,0 +1,56 @@
+//------------------------------------
+//  Custom properties
+//------------------------------------
+
+// Our additions to campus's :root custom properties (sass/1_base_html/_root.scss).
+// Used by css-properties.scss and style-ucdlib.scss, so both stylesheets have them.
+
+@use "../sass/0_tools" as *;
+
+// Our additions: properties campus does not define, named with campus's single-hyphen convention.
+:root {
+  // UC Davis tints.
+  // These are fixed brand values; --brand-primary-* and --brand-secondary-* are the overridable equivalents.
+  --ucd-blue-100: #{$ucd-blue-100};
+  --ucd-blue-90: #{$ucd-blue-90};
+  --ucd-blue-80: #{$ucd-blue-80};
+  --ucd-blue-70: #{$ucd-blue-70};
+  --ucd-blue-60: #{$ucd-blue-60};
+  --ucd-blue-50: #{$ucd-blue-50};
+  --ucd-blue-40: #{$ucd-blue-40};
+  --ucd-blue-30: #{$ucd-blue-30};
+  --ucd-blue-20: #{$ucd-blue-20};
+  --ucd-blue-10: #{$ucd-blue-10};
+
+  --ucd-gold-100: #{$ucd-gold-100};
+  --ucd-gold-90: #{$ucd-gold-90};
+  --ucd-gold-80: #{$ucd-gold-80};
+  --ucd-gold-70: #{$ucd-gold-70};
+  --ucd-gold-60: #{$ucd-gold-60};
+  --ucd-gold-50: #{$ucd-gold-50};
+  --ucd-gold-40: #{$ucd-gold-40};
+  --ucd-gold-30: #{$ucd-gold-30};
+  --ucd-gold-20: #{$ucd-gold-20};
+  --ucd-gold-10: #{$ucd-gold-10};
+
+  // Links.
+  --link-color: #{$link-color};
+  --link-color-hover: #{$link-color-hover};
+  --link-color-active: #{$link-color-active};
+  --link-color-visited: #{$link-color-visited};
+  --link-color-focus: #{$link-color-focus};
+  --link-color-secondary: #{$link-color--secondary};
+  --link-color-hover-secondary: #{$link-color-hover--secondary};
+
+  // Typography.
+  --font-size-base: #{$font-size-base};
+
+  // Components.
+  --border-radius: #{$border-radius};
+  --border-radius-large: #{$border-radius--large};
+  --border-radius-small: #{$border-radius--small};
+
+  --table-border-color: #{$table-border-color};
+  --table-bg-accent: #{$table-bg-accent};
+  --table-bg-hover: #{$table-bg-hover};
+}

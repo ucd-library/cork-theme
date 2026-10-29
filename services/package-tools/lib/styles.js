@@ -11,6 +11,10 @@ const STYLES_DIR = fileURLToPath(new URL('../../package/styles/', import.meta.ur
 const NODE_MODULES_DIR = fileURLToPath(new URL('../../node_modules/', import.meta.url));
 const FONT_AWESOME_DIR = path.join(NODE_MODULES_DIR, '@fortawesome/fontawesome-free');
 
+// The client app serves campus's fonts (synced to styles/fonts) from here, at /fonts/campus/
+const CLIENT_FONTS_DIR = fileURLToPath(new URL('../../client/public/fonts/campus/', import.meta.url));
+const CLIENT_FONT_EXTENSIONS = ['.woff2', '.woff'];
+
 // Campus's icons are Font Awesome Free glyphs, referenced by codepoint in the Private Use Area.
 // Families and weights match Font Awesome's own CSS; the first is the default (classic) family.
 const ICON_FONTS = [
@@ -69,6 +73,7 @@ class Styles {
     await this.ucdlibCss(opts);
     await this.colors(opts);
     await this.lit(opts);
+    await this.clientFonts(opts);
   }
 
   /**
@@ -109,6 +114,8 @@ class Styles {
    * @description Builds our stylesheet, ucdlib-sass/style-ucdlib.scss to css/style-ucdlib.css.
    * Small images are inlined (see _inlineSmallImages), and a subset of Font Awesome with just the icons it uses
    * is added at the top (see _iconFont). The icon font is also written on its own, to css/font-awesome-subset.css.
+   * Also builds css/fonts.css from ucdlib-sass/fonts.scss: the theme fonts, which style-ucdlib.css leaves out,
+   * loaded from the hosted cork-theme app.
    * @param {Object} opts - Command options (none yet).
    * @returns {Promise<void>}
    */
@@ -122,6 +129,9 @@ class Styles {
     const charset = css.match(CHARSET_RULE)?.[0] || '';
     css = charset + iconCss + '\n' + css.slice(charset.length);
     await this._write('css/style-ucdlib.css', css, { command: 'ucdlib-css', source });
+
+    const fontsSource = 'ucdlib-sass/fonts.scss';
+    await this._write('css/fonts.css', this._compile(fontsSource), { command: 'ucdlib-css', source: fontsSource });
   }
 
   /**
@@ -277,6 +287,25 @@ ${fontFaces.join('\n')}
   _colorTitle(id) {
     if ( COLOR_TITLES[id] ) return COLOR_TITLES[id];
     return id.replace(/^ucd-/, '').split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  }
+
+  /**
+   * @description Copies campus's fonts (styles/fonts, e.g. Ryman Eco) to the client app's public/fonts/campus/,
+   * where client/dev/css/fonts.css loads them. Only web font formats are copied, and the destination is cleared
+   * first so fonts campus removes don't linger.
+   * @param {Object} opts - Command options (none yet).
+   * @returns {Promise<void>}
+   */
+  async clientFonts(opts={}) {
+    await fs.rm(CLIENT_FONTS_DIR, { recursive: true, force: true });
+    await fs.mkdir(CLIENT_FONTS_DIR, { recursive: true });
+
+    const fontsDir = path.join(STYLES_DIR, 'fonts');
+    for ( const file of (await fs.readdir(fontsDir)).sort() ) {
+      if ( !CLIENT_FONT_EXTENSIONS.includes(path.extname(file).toLowerCase()) ) continue;
+      await fs.copyFile(path.join(fontsDir, file), path.join(CLIENT_FONTS_DIR, file));
+      console.log(`Copied styles/fonts/${file} to client/public/fonts/campus/`);
+    }
   }
 
   /**

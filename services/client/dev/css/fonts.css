@@ -1,0 +1,90 @@
+/*
+ * Theme fonts, served by this app. Mirrors campus's sass/1_base_html/_fonts.scss
+ * (which style-ucdlib.css leaves out) with local URLs.
+ * - public/fonts/proximanova/: Proxima Nova, added by hand.
+ * - public/fonts/campus/: campus's fonts, copied by `package-tools styles client-fonts`. Do not edit.
+ * Font Awesome icons used by the theme are embedded in style-ucdlib.css.
+ */
+
+@font-face {
+  font-display: swap;
+  font-family: Proxima-Nova;
+  font-style: normal;
+  font-weight: 400;
+  src: url("/fonts/proximanova/proximanova-regular-webfont.woff2") format("woff2"),
+    url("/fonts/proximanova/proximanova-regular-webfont.woff") format("woff");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Proxima-Nova;
+  font-style: normal;
+  font-weight: 700;
+  src: url("/fonts/proximanova/proximanova-bold-webfont.woff2") format("woff2"),
+    url("/fonts/proximanova/proximanova-bold-webfont.woff") format("woff");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Proxima-Nova;
+  font-style: normal;
+  font-weight: 800;
+  src: url("/fonts/proximanova/proximanova-extrabold-webfont.woff2") format("woff2"),
+    url("/fonts/proximanova/proximanova-extrabold-webfont.woff") format("woff");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Proxima-Nova;
+  font-style: italic;
+  font-weight: 400;
+  src: url("/fonts/proximanova/proximanova-regularit-webfont.woff2") format("woff2"),
+    url("/fonts/proximanova/proximanova-regularit-webfont.woff") format("woff");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Proxima-Nova;
+  font-style: italic;
+  font-weight: 700;
+  src: url("/fonts/proximanova/proximanova-boldit-webfont.woff2") format("woff2"),
+    url("/fonts/proximanova/proximanova-boldit-webfont.woff") format("woff");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Proxima-Nova;
+  font-style: italic;
+  font-weight: 800;
+  src: url("/fonts/proximanova/proximanova-extraboldit-webfont.woff2") format("woff2"),
+    url("/fonts/proximanova/proximanova-extraboldit-webfont.woff") format("woff");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: proxima-nova;
+  font-style: normal;
+  font-weight: 200;
+  src: url("/fonts/proximanova/proximanova-light-webfont.woff2") format("woff2"),
+    url("/fonts/proximanova/proximanova-light-webfont.woff") format("woff");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: proxima-nova;
+  font-style: italic;
+  font-weight: 200;
+  src: url("/fonts/proximanova/proximanova-lightit-webfont.woff2") format("woff2"),
+    url("/fonts/proximanova/proximanova-lightit-webfont.woff") format("woff");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Ryman Eco";
+  font-stretch: normal;
+  font-style: normal;
+  font-weight: 400;
+  src: url("/fonts/campus/ryman-eco.woff2") format("woff2"),
+    url("/fonts/campus/ryman-eco.woff") format("woff");
+  unicode-range: U+0020-00FE;
+}
