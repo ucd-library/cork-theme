@@ -7,7 +7,7 @@ The Lit element mixins moved from `@ucd-lib/theme-elements` to `utils/mixins/` i
 1. Find imports of the old mixins:
 
    ```
-   grep -rnE "theme-elements/utils/mixins" --include=*.js src
+   grep -rnE "theme-elements/utils/mixins|MainDomElement\b" --include=*.js src
    ```
 
 2. Change the import path:
@@ -17,10 +17,12 @@ The Lit element mixins moved from `@ucd-lib/theme-elements` to `utils/mixins/` i
    | `@ucd-lib/theme-elements/utils/mixins` | `@ucd-lib/cork-theme/utils/mixins` |
    | `@ucd-lib/theme-elements/utils/mixins/index.js` | `@ucd-lib/cork-theme/utils/mixins` |
 
-   For example:
+3. Rename `MainDomElement` to `MainDomElementMixin` wherever it is imported or used. For example:
 
    ```js
-   import { Mixin, MainDomElement } from '@ucd-lib/cork-theme/utils/mixins';
+   import { Mixin, MainDomElementMixin } from '@ucd-lib/cork-theme/utils/mixins';
+
+   export default class MyElement extends Mixin(LitElement).with(MainDomElementMixin) {
    ```
 
 ## Moved so far
@@ -28,7 +30,7 @@ The Lit element mixins moved from `@ucd-lib/theme-elements` to `utils/mixins/` i
 | Mixin | Changes |
 | --- | --- |
 | `Mixin` | None |
-| `MainDomElement` | None when imported from `utils/mixins`. If imported directly from `main-dom-element.js`, it is now the default export: change `import { MainDomElement } from '.../main-dom-element.js'` to `import MainDomElement from '@ucd-lib/cork-theme/utils/mixins/main-dom-element.js'`, or import it from `utils/mixins` instead. |
+| `MainDomElement` | Renamed to `MainDomElementMixin`, and its file from `main-dom-element.js` to `MainDomElementMixin.js`. If imported directly from the file, it is now the default export: change `import { MainDomElement } from '.../main-dom-element.js'` to `import MainDomElementMixin from '@ucd-lib/cork-theme/utils/mixins/MainDomElementMixin.js'`, or import it from `utils/mixins` instead. |
 
 ## Not yet moved
 

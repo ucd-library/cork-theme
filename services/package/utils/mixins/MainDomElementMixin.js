@@ -1,12 +1,12 @@
 /**
- * @function MainDomElement
+ * @function MainDomElementMixin
  * @param {Class} superClass - LitElement or child class.
  * @description set render context for lit element to main DOM instead of the
  * default shadow root
  * 
  * @returns {Class} LitElement updated createRenderRoot function.
  */
-const MainDomElement = (superClass) => class extends superClass {
+const MainDomElementMixin = (superClass) => class extends superClass {
 
   /**
    * @method createRenderRoot
@@ -33,4 +33,4 @@ const MainDomElement = (superClass) => class extends superClass {
 
 };
 
-export default MainDomElement;
+export default MainDomElementMixin;

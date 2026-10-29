@@ -1,7 +1,7 @@
 import Mixin from './mixin.js';
-import MainDomElement  from './main-dom-element.js';
+import MainDomElementMixin from './MainDomElementMixin.js';
 
 export {
   Mixin, 
-  MainDomElement
+  MainDomElementMixin
 };

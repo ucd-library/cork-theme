@@ -12,6 +12,6 @@ export function styles() {
 
 export function render() { 
 return html`
-  <p>hello world</p>
+  <cork-header></cork-header>
 
 `;}

@@ -5,7 +5,10 @@ import {render, styles} from "./cork-theme-app.tpl.js";
 import '../css/index.js';
 
 import { Registry, LitCorkUtils, Mixin } from '@ucd-lib/cork-app-utils';
-import { MainDomElement } from '@ucd-lib/cork-theme/utils/mixins';
+import { MainDomElementMixin } from '@ucd-lib/cork-theme/utils/mixins';
+
+// elements
+import '@ucd-lib/cork-theme/elements/cork-header.js';
 
 // icon elements and model
 import '@ucd-lib/cork-icon';
@@ -15,7 +18,7 @@ import '../lib/cork/models/AppStateModel.js';
 Registry.ready();
 
 export default class CorkThemeApp extends Mixin(LitElement)
-  .with(LitCorkUtils, MainDomElement) {
+  .with(LitCorkUtils, MainDomElementMixin) {
 
   static get properties() {
     return {

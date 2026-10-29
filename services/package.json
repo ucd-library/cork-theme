@@ -9,6 +9,7 @@
   ],
   "exports": {
     "./utils/mixins": "./package/utils/mixins/index.js",
+    "./utils/controllers": "./package/utils/controllers/index.js",
     "./*": "./package/*"
   },
   "scripts": {
