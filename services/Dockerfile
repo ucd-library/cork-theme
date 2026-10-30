@@ -23,6 +23,7 @@ RUN npm install
 COPY services/client ./client
 COPY services/package ./package
 COPY services/package-tools ./package-tools
+COPY docs /docs
 
 # Build the client
 RUN npm run client-build-dist

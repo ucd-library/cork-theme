@@ -9,6 +9,7 @@ services:
       APP_ENV: ${APP_ENV:-dev}
     volumes:
       - ../../../services:/services
+      - ../../../docs:/docs
       - /services/node_modules
     ports:
       - ${APP_HOST_PORT:-3000}:${APP_CONTAINER_PORT:-3000}

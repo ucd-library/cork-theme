@@ -4,7 +4,7 @@ import {render, styles} from "./cork-header.tpl.js";
 import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controllers';
 
 /**
- * @description A site header component.
+ * @description The primary site header component.
  * @property {String} backgroundImageUrl - Overrides the header bar's default background image. Attribute: background-image-url.
  */
 export default class CorkHeader extends LitElement {

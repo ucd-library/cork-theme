@@ -2,6 +2,7 @@ import express from 'express';
 
 import {logReqMiddleware} from '@ucd-lib/logger';
 
+import docsRoutes from './controllers/docs.js';
 import staticRoutes from './controllers/static.js';
 import config from './dev/lib/config.js';
 import logger from './dev/lib/logger.js';
@@ -22,6 +23,7 @@ const app = express();
 app.use(corsMiddleware);
 app.use(logReqMiddleware(logger));
 app.use(contextMiddleware);
+docsRoutes(app);
 staticRoutes(app);
 
 app.listen(config.app.containerPort, () => {
