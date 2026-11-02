@@ -5,7 +5,7 @@ export default class CorkQuickLinks extends LitElement {
 
   static get properties() {
     return {
-      
+      headerComponentLabel: { type: String, attribute: 'header-component-label' },
     }
   }
 
@@ -16,9 +16,11 @@ export default class CorkQuickLinks extends LitElement {
   constructor() {
     super();
     this.render = render.bind(this);
+    this.headerComponentLabel = 'Quick Links';
   }
 
 }
 
-if ( !customElements.get('cork-quick-links') )
+if ( !customElements.get('cork-quick-links') ) {
   customElements.define('cork-quick-links', CorkQuickLinks);
+}

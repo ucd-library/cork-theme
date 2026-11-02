@@ -9,11 +9,19 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
  * @property {HTMLElement|null} ele - The light DOM child currently assigned to the slot, or null if there is none.
  * @property {String} corkComponentName - Tag name of the cork element that is assigned to this slot automatically (e.g. 'cork-primary-nav').
  * @property {String} [navTrayName] - Name of the nav tray that this component toggles, if any (e.g. 'menu').
+ * @property {Object} [defaultAttributes] - Default attributes to apply to the component if not found as properties or attributes on the element itself.
+ * @property {String} [label] - Human readable label for the component
+ * @property {Boolean} [showLabelInNavTrayBar] - Whether to show the label in the nav tray bar.
  */
 
 /**
  * @description The primary site header component that accepts various slotted header components
  * @property {String} backgroundImageUrl - Overrides the header bar's default background image. Attribute: background-image-url.
+ * @property {String} navTrayMenuBackgroundImageUrl - Overrides the menu tray's default background image. Attribute: nav-tray-menu-background-image-url.
+ * @property {String} navTraySearchBackgroundImageUrl - Overrides the search tray's default background image. Attribute: nav-tray-search-background-image-url.
+ * @property {String} navTrayQuicklinksBackgroundImageUrl - Overrides the quick links tray's default main (bottom right) background image. Attribute: nav-tray-quicklinks-background-image-url.
+ * @property {String} navTrayQuicklinksAccentImageUrl - Overrides the quick links tray's default accent (top left outline) image. Attribute: nav-tray-quicklinks-accent-image-url.
+ * @property {String} selectedNavComponentName - Name of the component whose nav tray is currently open. One of the keys of _slottedComponents.
  * @slot primary-nav - Main menu. A child cork-primary-nav is assigned here automatically.
  * @slot search - Search form. A child cork-search is assigned here automatically.
  * @slot quick-links - Quick links section. A child cork-quick-links is assigned here automatically.
@@ -27,6 +35,12 @@ export default class CorkHeader extends LitElement {
   static get properties() {
     return {
       backgroundImageUrl: { type: String, attribute: 'background-image-url' },
+      navTrayMenuBackgroundImageUrl: { type: String, attribute: 'nav-tray-menu-background-image-url' },
+      navTraySearchBackgroundImageUrl: { type: String, attribute: 'nav-tray-search-background-image-url' },
+      navTrayQuicklinksBackgroundImageUrl: { type: String, attribute: 'nav-tray-quicklinks-background-image-url' },
+      navTrayQuicklinksAccentImageUrl: { type: String, attribute: 'nav-tray-quicklinks-accent-image-url' },
+      selectedNavComponentName: { type: String},
+      _selectedNavComponent: { state: true },
       _slottedComponents: { type: Object }
     }
   }
@@ -38,6 +52,10 @@ export default class CorkHeader extends LitElement {
   constructor() {
     super();
     this.backgroundImageUrl = '';
+    this.navTrayMenuBackgroundImageUrl = '';
+    this.navTraySearchBackgroundImageUrl = '';
+    this.navTrayQuicklinksBackgroundImageUrl = '';
+    this.navTrayQuicklinksAccentImageUrl = '';
     this.render = render.bind(this);
 
     this.ctl = {
@@ -57,26 +75,70 @@ export default class CorkHeader extends LitElement {
         name: 'primary-nav', 
         ele: null, 
         corkComponentName: 'cork-primary-nav',
-        navTrayName: 'menu'
+        navTrayName: 'menu',
+        defaultAttributes: {
+          label: 'Menu',
+        }
       },
       search: {
         name: 'search', 
         ele: null, 
         corkComponentName: 'cork-search',
-        navTrayName: 'search'
+        navTrayName: 'search',
+        defaultAttributes: {
+          label: 'Search'
+        }
       },
       quickLinks: {
         name: 'quick-links', 
         ele: null, 
         corkComponentName: 'cork-quick-links',
-        navTrayName: 'quicklinks'
+        navTrayName: 'quicklinks',
+        defaultAttributes: {
+          label: 'Quick Links',
+          showLabelInNavTrayBar: true
+        }
       },
       brandingBar: {
         name: 'branding-bar', 
         ele: null, 
-        corkComponentName: 'cork-branding-bar' 
+        corkComponentName: 'cork-branding-bar',
+        defaultAttributes: {
+          label: 'Branding Bar'
+        }
       }
     };
+  }
+
+  willUpdate(props){
+    if ( props.has('selectedNavComponentName') ) {
+      this._onSelectedNavComponentNameChange(props.get('selectedNavComponentName'));
+    }
+  }
+
+  _onSelectedNavComponentNameChange(prevVal){
+      const selectedComponent = Object.values(this._slottedComponents).find(c => c.name === this.selectedNavComponentName);
+      if ( this.selectedNavComponentName && !selectedComponent ) {
+        console.warn(`CorkHeader: selectedNavComponentName "${this.selectedNavComponentName}" does not match any slotted component.`);
+        this.selectedNavComponentName = prevVal;
+        return;
+      }
+      this._selectedNavComponent = selectedComponent;
+
+      const tray = this.renderRoot.querySelector('.nav-tray');
+      if ( this.selectedNavComponentName ){
+        tray.dataset.navTrayType = this._selectedNavComponent?.navTrayName || '';
+        tray.showModal();
+        // todo focus first element
+      } else {
+        tray.close();
+        const currentType = tray.dataset?.navTrayType;
+        delete tray.dataset.navTrayType;
+        if ( currentType ) {
+          const toggleButton = this.renderRoot.querySelector(`.header__toggles .nav-tray-toggle[data-toggle="${currentType}"]`);
+          if ( toggleButton ) toggleButton.focus();
+        }
+      }
   }
 
   /**
@@ -96,6 +158,8 @@ export default class CorkHeader extends LitElement {
 
       if ( ele !== slot.ele ) {
         slot.ele = ele;
+        slot.label = ele?.headerComponentLabel || ele?.getAttribute('header-component-label') || slot.defaultAttributes?.label || slot.name;
+        slot.showLabelInNavTrayBar = ele?.showLabelInNavTrayBar || ele?.getAttribute('show-label-in-nav-tray-bar') || slot.defaultAttributes?.showLabelInNavTrayBar || false;
         requestUpdate = true;
       }
     }
@@ -103,7 +167,11 @@ export default class CorkHeader extends LitElement {
   }
 
   _onToggleButtonClick(component) {
-    console.log('toggle button clicked for', component);
+    if ( this.selectedNavComponentName === component.name ) {
+      this.selectedNavComponentName = null;
+    } else {
+      this.selectedNavComponentName = component.name;
+    }
   }
 
 }

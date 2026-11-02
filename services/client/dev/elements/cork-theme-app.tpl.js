@@ -15,7 +15,7 @@ return html`
   <cork-header>
     <div slot='primary-nav'>Primary Navigation</div>
     <div slot='search'>Search</div>
-    <div slot='quick-links'>Quick Links</div>
+    <cork-quick-links></cork-quick-links>
   </cork-header>
 
 `;}
