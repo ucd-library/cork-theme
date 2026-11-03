@@ -9,7 +9,7 @@ export default css`
 .footer {
   margin-top: 2rem;
   padding: 3rem var(--container-edge-space) 6rem;
-  background: #144478 url("../images/footer-bg.webp") no-repeat center bottom 20rem;
+  background: #144478 var(--cork-image-footer-bg, none) no-repeat center bottom 20rem;
   color: #fff;
 }
 @media (min-width: 768px) {

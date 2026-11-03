@@ -25,7 +25,7 @@ body:has(.nav-tray[open]:not([data-nav-tray-type=quicklinks])) {
   margin: 0;
   padding: 0;
   border: 0;
-  background: #144478 url("../images/nav-tray-menu-bg.webp") no-repeat right top;
+  background: #144478 var(--cork-image-nav-tray-menu-bg, none) no-repeat right top;
   opacity: 0;
   transform: translateY(-100%);
   transition: transform 300ms ease, display 0.001s allow-discrete;
@@ -94,12 +94,12 @@ body:has(.nav-tray[open]:not([data-nav-tray-type=quicklinks])) {
   --nav-tray-toggle-color: #65778a;
   --nav-tray-toggle-highlight: #022851;
   --ucd-logo-color: #022851;
-  background: #fff url("../images/nav-tray-search-bg.webp") no-repeat left center/45vh;
+  background: #fff var(--cork-image-nav-tray-search-bg, none) no-repeat left center/45vh;
 }
 .nav-tray[data-nav-tray-type=quicklinks] {
   --nav-tray-toggle-color: #022851;
   --nav-tray-toggle-highlight: #144478;
-  background: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzcyIiBoZWlnaHQ9IjI3NCIgdmlld0JveD0iMCAwIDM3MiAyNzQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIG9wYWNpdHk9IjAuMyIgZD0iTS0zNC4xNDQgMTA0LjIxOUwxMjQuNjg1IC03NC44NTE1TDI3OS41MDkgLTc4LjM5ODhMMTc1LjM4MSA0MS43MDgyTDM2Ny41NzYgMzcuMzA0NkwxOC4wMDU4IDI2OS4wNTJMMTM2LjY5MyAxMDAuMzA1TC0zNC4xNDQgMTA0LjIxOVoiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K") top left/50% no-repeat, #ffbf00 url("../images/nav-tray-quicklinks-bg2.webp") bottom right/45% no-repeat;
+  background: var(--cork-image-nav-tray-quicklinks-bg1, url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzcyIiBoZWlnaHQ9IjI3NCIgdmlld0JveD0iMCAwIDM3MiAyNzQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIG9wYWNpdHk9IjAuMyIgZD0iTS0zNC4xNDQgMTA0LjIxOUwxMjQuNjg1IC03NC44NTE1TDI3OS41MDkgLTc4LjM5ODhMMTc1LjM4MSA0MS43MDgyTDM2Ny41NzYgMzcuMzA0NkwxOC4wMDU4IDI2OS4wNTJMMTM2LjY5MyAxMDAuMzA1TC0zNC4xNDQgMTA0LjIxOVoiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K")) top left/50% no-repeat, #ffbf00 var(--cork-image-nav-tray-quicklinks-bg2, none) bottom right/45% no-repeat;
 }
 @media (min-width: 500px) {
   .nav-tray[data-nav-tray-type=quicklinks] {

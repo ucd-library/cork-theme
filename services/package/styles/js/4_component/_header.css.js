@@ -23,7 +23,7 @@ export default css`
   overflow: hidden;
   height: 3.25rem;
   padding: 1px 1rem;
-  background: #13639e url("../images/header-bar1.webp") no-repeat left top;
+  background: #13639e var(--cork-image-header-bar1, none) no-repeat left top;
   background-size: cover;
   gap: 1rem;
   transition: height 0.3s ease-in-out;
@@ -38,22 +38,22 @@ export default css`
   justify-content: flex-end;
 }
 .header__bar--backdrop2 {
-  background-image: url("../images/header-bar2.webp");
+  background-image: var(--cork-image-header-bar2, none);
 }
 .header__bar--backdrop3 {
-  background-image: url("../images/header-bar3.webp");
+  background-image: var(--cork-image-header-bar3, none);
 }
 .header__bar--backdrop4 {
-  background-image: url("../images/header-bar4.webp");
+  background-image: var(--cork-image-header-bar4, none);
 }
 .header__bar--backdrop5 {
-  background-image: url("../images/header-bar5.webp");
+  background-image: var(--cork-image-header-bar5, none);
 }
 .header__bar--backdrop6 {
-  background-image: url("../images/header-bar6.webp");
+  background-image: var(--cork-image-header-bar6, none);
 }
 .header__bar--backdrop7 {
-  background-image: url("../images/header-bar7.webp");
+  background-image: var(--cork-image-header-bar7, none);
 }
 .sticky-header .header__bar {
   position: fixed;

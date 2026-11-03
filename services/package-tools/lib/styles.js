@@ -14,9 +14,8 @@ const FONT_AWESOME_DIR = path.join(NODE_MODULES_DIR, '@fortawesome/fontawesome-f
 // How apps import files in the styles dir, via the package's "./*" export
 const STYLES_IMPORT_PATH = '@ucd-lib/cork-theme/styles';
 
-// The client app serves campus's fonts (synced to styles/fonts) from here, at /fonts/campus/
-const CLIENT_FONTS_DIR = fileURLToPath(new URL('../../client/public/fonts/campus/', import.meta.url));
-const CLIENT_FONT_EXTENSIONS = ['.woff2', '.woff'];
+// Font folders, in lookup order: ours (Proxima Nova), then campus's (synced). Paths in fonts.scss are relative to these.
+const FONT_DIRS = ['ucdlib-fonts', 'fonts'];
 
 // Campus's icons are Font Awesome Free glyphs, referenced by codepoint in the Private Use Area.
 // Families and weights match Font Awesome's own CSS; the first is the default (classic) family.
@@ -30,8 +29,10 @@ const ICON_CODEPOINT_MAX = 0xf8ff;
 // @charset must stay the first statement in a CSS file
 const CHARSET_RULE = /^@charset "[^"]+";\s*/;
 
-// Images at or under this size are inlined as data URIs; larger ones keep their relative URL.
+// Images at or under this size are inlined as data URIs; larger ones are loaded from a host (see _resolveImages).
 const INLINE_IMAGE_MAX_BYTES = 8 * 1024;
+// Prefix of the custom property for each image in style-ucdlib.css and the css.js modules, e.g. --cork-image-header-bar1
+const IMAGE_PROPERTY_PREFIX = '--cork-image-';
 const IMAGE_MIME_TYPES = {
   '.svg': 'image/svg+xml',
   '.gif': 'image/gif',
@@ -76,7 +77,8 @@ class Styles {
     await this.ucdlibCss(opts);
     await this.colors(opts);
     await this.lit(opts);
-    await this.clientFonts(opts);
+    await this.imageProperties(opts);
+    await this.fontFaces(opts);
   }
 
   /**
@@ -101,21 +103,21 @@ class Styles {
 
   /**
    * @description Builds campus's stylesheets as-is: sass/style.scss to css/style.css, and sass/print.scss to css/print.css.
-   * Small images are inlined (see _inlineSmallImages); the styles themselves are unmodified.
+   * Small images are inlined (see _resolveImages); larger ones keep their relative URL, and the styles are unmodified.
    * @param {Object} opts - Command options (none yet).
    * @returns {Promise<void>}
    */
   async campusCss(opts={}) {
     for ( const name of ['style', 'print'] ) {
       const source = `sass/${name}.scss`;
-      const css = await this._inlineSmallImages(this._compile(source));
+      const css = await this._resolveImages(this._compile(source));
       await this._write(`css/${name}.css`, css, { command: 'campus-css', source });
     }
   }
 
   /**
    * @description Builds our stylesheet, ucdlib-sass/style-ucdlib.scss to css/style-ucdlib.css.
-   * Small images are inlined (see _inlineSmallImages), and a subset of Font Awesome with just the icons it uses
+   * Images become custom properties (see _resolveImages), and a subset of Font Awesome with just the icons it uses
    * is added at the top (see _iconFont). The icon font is also written on its own, to css/font-awesome-subset.css.
    * Also builds css/fonts.css from ucdlib-sass/fonts.scss: the theme fonts, which style-ucdlib.css leaves out,
    * loaded from the hosted cork-theme app.
@@ -124,7 +126,7 @@ class Styles {
    */
   async ucdlibCss(opts={}) {
     const source = 'ucdlib-sass/style-ucdlib.scss';
-    let css = await this._inlineSmallImages(this._compile(source));
+    let css = await this._resolveImages(this._compile(source), { cssVariables: true });
     const iconCss = await this._iconFont(css);
 
     await this._write('css/font-awesome-subset.css', iconCss, { command: 'ucdlib-css', source });
@@ -293,29 +295,80 @@ ${fontFaces.join('\n')}
   }
 
   /**
-   * @description Copies campus's fonts (styles/fonts, e.g. Ryman Eco) to the client app's public/fonts/campus/,
-   * where client/dev/css/fonts.css loads them. Only web font formats are copied, and the destination is cleared
-   * first so fonts campus removes don't linger.
+   * @description Builds styles/image-properties.js, listing each image that style-ucdlib.css and the css.js modules
+   * load from a host (those too large to inline) with its custom property,
+   * e.g. { property: '--cork-image-header-bar1', file: 'header-bar1.webp' }.
+   * setImageCssCustomProperties() sets the properties, and copyImages() copies the files (see utils/assets).
    * @param {Object} opts - Command options (none yet).
    * @returns {Promise<void>}
    */
-  async clientFonts(opts={}) {
-    await fs.rm(CLIENT_FONTS_DIR, { recursive: true, force: true });
-    await fs.mkdir(CLIENT_FONTS_DIR, { recursive: true });
+  async imageProperties(opts={}) {
+    const source = 'ucdlib-sass/style-ucdlib.scss';
+    const images = await this._listImages(this._compile(source));
+    const entries = Object.values(images)
+      .filter(image => !image.dataUri)
+      .map(image => ({ property: image.property, file: image.file }))
+      .sort((a, b) => a.file.localeCompare(b.file));
 
-    const fontsDir = path.join(STYLES_DIR, 'fonts');
-    for ( const file of (await fs.readdir(fontsDir)).sort() ) {
-      if ( !CLIENT_FONT_EXTENSIONS.includes(path.extname(file).toLowerCase()) ) continue;
-      await fs.copyFile(path.join(fontsDir, file), path.join(CLIENT_FONTS_DIR, file));
-      console.log(`Copied styles/fonts/${file} to client/public/fonts/campus/`);
+    const js = `export default [\n${entries.map(entry => `  ${JSON.stringify(entry)}`).join(',\n')}\n];`;
+    await this._write('image-properties.js', js, { command: 'image-properties', source });
+  }
+
+  /**
+   * @description Builds styles/font-faces.js, the faces in ucdlib-sass/fonts.scss as data for the FontFace API,
+   * e.g. { family: 'Proxima-Nova', style: 'normal', weight: '400', display: 'swap', src: [{ path, format }] },
+   * with paths relative to the fonts host. setFontFaces() loads them, and copyFonts() copies the files
+   * (see utils/assets). Fails if a font file isn't in one of FONT_DIRS.
+   * @param {Object} opts - Command options (none yet).
+   * @returns {Promise<void>}
+   */
+  async fontFaces(opts={}) {
+    const source = 'ucdlib-sass/fonts.scss';
+    const { css } = sass.compileString('@use "fonts" with ($fonts-url: "");\n', {
+      url: pathToFileURL(path.join(STYLES_DIR, 'ucdlib-sass', '_font-faces-wrapper.scss')),
+      style: 'expanded',
+      loadPaths: [NODE_MODULES_DIR],
+      quietDeps: true,
+      // ucdlib-css already shows any warnings from fonts.scss
+      logger: sass.Logger.silent
+    });
+
+    const descriptors = {
+      'font-family': 'family',
+      'font-style': 'style',
+      'font-weight': 'weight',
+      'font-stretch': 'stretch',
+      'font-display': 'display',
+      'unicode-range': 'unicodeRange'
+    };
+    const faces = [];
+    postcss.parse(css).walkAtRules('font-face', rule => {
+      const face = {};
+      rule.walkDecls(decl => {
+        if ( decl.prop === 'src' ) {
+          face.src = [...decl.value.matchAll(/url\("?([^")]+)"?\)\s*format\("?([^")]+)"?\)/g)]
+            .map(([, url, format]) => ({ path: url.replace(/^\//, ''), format }));
+        } else if ( descriptors[decl.prop] ) {
+          face[descriptors[decl.prop]] = decl.value.replace(/^["']|["']$/g, '');
+        }
+      });
+      faces.push(face);
+    });
+
+    for ( const { path: fontPath } of faces.flatMap(face => face.src) ) {
+      const found = await Promise.all(FONT_DIRS.map(dir => fs.access(path.join(STYLES_DIR, dir, fontPath)).then(() => true, () => false)));
+      if ( !found.includes(true) ) throw new Error(`Font ${fontPath} (from ${source}) not found in styles/${FONT_DIRS.join(' or styles/')}`);
     }
+
+    const js = `export default [\n${faces.map(face => `  ${JSON.stringify(face)}`).join(',\n')}\n];`;
+    await this._write('font-faces.js', js, { command: 'font-faces', source });
   }
 
   /**
    * @description Builds a Lit css.js module in styles/js/ for each Sass file in sass/ and ucdlib-sass/
    * (e.g. sass/4_component/_breadcrumbs.scss to js/4_component/_breadcrumbs.css.js, and
    * ucdlib-sass/_u-aspect.scss to js/ucdlib-sass/_u-aspect.css.js).
-   * Each partial is compiled with our variable configuration, and small images are inlined.
+   * Each partial is compiled with our variable configuration, and images become custom properties (see _resolveImages).
    * Entry files are skipped, as are partials with no CSS output (e.g. mixins only). js/ is cleared first,
    * so modules for removed campus partials don't linger.
    * @param {Object} opts - Command options (none yet).
@@ -337,7 +390,7 @@ ${fontFaces.join('\n')}
 
     let count = 0;
     for ( const source of await this._listPartials() ) {
-      const css = await this._inlineSmallImages(this._compilePartial(source, { logger }));
+      const css = await this._resolveImages(this._compilePartial(source, { logger }), { cssVariables: true });
       if ( !css.trim() ) continue;
 
       const dir = path.dirname(source).replace(/^sass(\/|$)/, '');
@@ -384,27 +437,57 @@ ${fontFaces.join('\n')}
   }
 
   /**
-   * @description Replaces relative image URLs (../images/...) with base64 data URIs when the image is at most
-   * INLINE_IMAGE_MAX_BYTES, so they work wherever the CSS ends up (copied, bundled, or in Lit components).
-   * Larger images keep their relative URL. Fails if a referenced image is missing.
+   * @description Resolves relative image URLs (../images/...), so images work wherever the CSS ends up
+   * (copied, bundled, or in Lit components). By default, images at most INLINE_IMAGE_MAX_BYTES become base64
+   * data URIs and larger ones keep their relative URL (campus's stylesheets, which sit next to images/).
+   * With opts.cssVariables, every image becomes its custom property, e.g. var(--cork-image-header-bar1, none):
+   * the fallback is the data URI for small images and none for large ones, so with no host set, a background
+   * shorthand keeps its color and just has no image. Fails if a referenced image is missing.
    * @param {String} css - Compiled CSS, as written to styles/css/.
-   * @returns {Promise<String>} CSS with small images inlined.
+   * @param {Object} opts - Options.
+   * @param {Boolean} opts.cssVariables - Replace images with custom properties (style-ucdlib.css and css.js modules).
+   * @returns {Promise<String>} CSS with images resolved.
    */
-  async _inlineSmallImages(css) {
+  async _resolveImages(css, opts={}) {
+    const images = await this._listImages(css);
+    return css.replace(RELATIVE_IMAGE_URL, (match, quote, url) => {
+      const { property, dataUri } = images[url];
+      const value = dataUri ? `url("${dataUri}")` : null;
+      if ( opts.cssVariables ) return `var(${property}, ${value || 'none'})`;
+      return value || match;
+    });
+  }
+
+  /**
+   * @description Finds the relative image URLs (../images/...) in compiled CSS.
+   * Fails if an image is missing, or if two images would share a custom property (e.g. bar.svg and bar.webp).
+   * @param {String} css - Compiled CSS, as written to styles/css/.
+   * @returns {Promise<Object>} Keyed by URL: { file, property, dataUri }, where dataUri is null for images
+   * larger than INLINE_IMAGE_MAX_BYTES (or of an unknown type).
+   */
+  async _listImages(css) {
     const cssDir = path.join(STYLES_DIR, 'css');
-    const dataUris = {};
+    const images = {};
+    const properties = {};
 
     for ( const [, , url] of css.matchAll(RELATIVE_IMAGE_URL) ) {
-      if ( url in dataUris ) continue;
-      const file = path.resolve(cssDir, url);
-      const mime = IMAGE_MIME_TYPES[path.extname(file).toLowerCase()];
-      const { size } = await fs.stat(file);
-      dataUris[url] = ( mime && size <= INLINE_IMAGE_MAX_BYTES ) ?
-        `data:${mime};base64,${(await fs.readFile(file)).toString('base64')}` :
-        null;
-    }
+      if ( url in images ) continue;
+      const filePath = path.resolve(cssDir, url);
+      const file = path.basename(filePath);
+      const property = IMAGE_PROPERTY_PREFIX + path.basename(file, path.extname(file));
+      if ( properties[property] && properties[property] !== file ) {
+        throw new Error(`Images ${properties[property]} and ${file} would both use ${property}`);
+      }
+      properties[property] = file;
 
-    return css.replace(RELATIVE_IMAGE_URL, (match, quote, url) => dataUris[url] ? `url("${dataUris[url]}")` : match);
+      const mime = IMAGE_MIME_TYPES[path.extname(file).toLowerCase()];
+      const { size } = await fs.stat(filePath);
+      const dataUri = ( mime && size <= INLINE_IMAGE_MAX_BYTES ) ?
+        `data:${mime};base64,${(await fs.readFile(filePath)).toString('base64')}` :
+        null;
+      images[url] = { file, property, dataUri };
+    }
+    return images;
   }
 
   /**

@@ -7,9 +7,13 @@
   "files": [
     "package"
   ],
+  "bin": {
+    "cork-theme": "./package/bin/cork-theme.js"
+  },
   "exports": {
     "./utils/mixins": "./package/utils/mixins/index.js",
     "./utils/controllers": "./package/utils/controllers/index.js",
+    "./utils/assets": "./package/utils/assets/index.js",
     "./*": "./package/*"
   },
   "scripts": {

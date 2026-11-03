@@ -15,12 +15,16 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
  */
 
 /**
- * @description The primary site header component that accepts various slotted header components
- * @property {String} backgroundImageUrl - Overrides the header bar's default background image. Attribute: background-image-url.
- * @property {String} navTrayMenuBackgroundImageUrl - Overrides the menu tray's default background image. Attribute: nav-tray-menu-background-image-url.
- * @property {String} navTraySearchBackgroundImageUrl - Overrides the search tray's default background image. Attribute: nav-tray-search-background-image-url.
- * @property {String} navTrayQuicklinksBackgroundImageUrl - Overrides the quick links tray's default main (bottom right) background image. Attribute: nav-tray-quicklinks-background-image-url.
- * @property {String} navTrayQuicklinksAccentImageUrl - Overrides the quick links tray's default accent (top left outline) image. Attribute: nav-tray-quicklinks-accent-image-url.
+ * @description The primary site header component that accepts various slotted header components.
+ * Its background images come from the --cork-image-* custom properties: call setImageCssCustomProperties() from
+ * '@ucd-lib/cork-theme/utils/assets' to load them. Without it, the header keeps its colors and has no images.
+ * The image properties below override one image for this element only.
+ * @property {String} backdrop - Campus's header bar variant, '1' (default) to '7'. Attribute: backdrop.
+ * @property {String} backgroundImageUrl - Overrides the header bar's background image, whichever backdrop is picked. Attribute: background-image-url.
+ * @property {String} navTrayMenuBackgroundImageUrl - Overrides the menu tray's background image. Attribute: nav-tray-menu-background-image-url.
+ * @property {String} navTraySearchBackgroundImageUrl - Overrides the search tray's background image. Attribute: nav-tray-search-background-image-url.
+ * @property {String} navTrayQuicklinksBackgroundImageUrl - Overrides the quick links tray's main (bottom right) background image. Attribute: nav-tray-quicklinks-background-image-url.
+ * @property {String} navTrayQuicklinksAccentImageUrl - Overrides the quick links tray's accent (top left outline) image. Attribute: nav-tray-quicklinks-accent-image-url.
  * @property {String} selectedNavComponentName - Name of the component whose nav tray is currently open. One of the keys of _slottedComponents.
  * @slot primary-nav - Main menu. A child cork-primary-nav is assigned here automatically.
  * @slot search - Search form. A child cork-search is assigned here automatically.
@@ -28,12 +32,20 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
  * @slot branding-bar - Branding bar. A child cork-branding-bar is assigned here automatically.
  * @example
  * import '@ucd-lib/cork-theme/elements/cork-header.js';
- * <cork-header></cork-header>
+ * import { setImageCssCustomProperties } from '@ucd-lib/cork-theme/utils/assets';
+ * setImageCssCustomProperties('/images/cork-theme');
+ *
+ * <cork-header backdrop="3">
+ *   <cork-primary-nav>…</cork-primary-nav>
+ *   <cork-search></cork-search>
+ *   <cork-quick-links>…</cork-quick-links>
+ * </cork-header>
  */
 export default class CorkHeader extends LitElement {
 
   static get properties() {
     return {
+      backdrop: { type: String },
       backgroundImageUrl: { type: String, attribute: 'background-image-url' },
       navTrayMenuBackgroundImageUrl: { type: String, attribute: 'nav-tray-menu-background-image-url' },
       navTraySearchBackgroundImageUrl: { type: String, attribute: 'nav-tray-search-background-image-url' },
@@ -51,6 +63,7 @@ export default class CorkHeader extends LitElement {
 
   constructor() {
     super();
+    this.backdrop = '1';
     this.backgroundImageUrl = '';
     this.navTrayMenuBackgroundImageUrl = '';
     this.navTraySearchBackgroundImageUrl = '';

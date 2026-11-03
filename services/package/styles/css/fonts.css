@@ -64,6 +64,6 @@
   font-stretch: normal;
   font-style: normal;
   font-weight: 400;
-  src: url("https://cork-theme.library.ucdavis.edu/fonts/campus/ryman-eco.woff2") format("woff2"), url("https://cork-theme.library.ucdavis.edu/fonts/campus/ryman-eco.woff") format("woff");
+  src: url("https://cork-theme.library.ucdavis.edu/fonts/ryman-eco.woff2") format("woff2"), url("https://cork-theme.library.ucdavis.edu/fonts/ryman-eco.woff") format("woff");
   unicode-range: U+0020-00FE;
 }

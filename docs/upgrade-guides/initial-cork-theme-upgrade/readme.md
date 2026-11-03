@@ -4,6 +4,7 @@ Changes an app must make when moving from `@ucd-lib/theme-sass` and `@ucd-lib/th
 
 - [CSS Custom Properties](css-properties.md): new import path, `html` to `:root`, renamed and removed properties.
 - [Stylesheets](stylesheets.md): new paths for `style-ucdlib.css` and `style.css`.
+- [Images and Fonts](images-and-fonts.md): copy the theme's images and fonts into the app, and point the theme at them.
 - [Lit Styles](lit-styles.md): new paths for `*.css.js` modules, and campus partials that were removed.
 - [Colors](colors.md): new path for `colors.js`, and new brand fields.
 - [Mixins](mixins.md): new path for the Lit element mixins, and `MainDomElement` renamed (in progress).

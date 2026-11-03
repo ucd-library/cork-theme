@@ -34,8 +34,13 @@ program
   .action(styles.lit.bind(styles));
 
 program
-  .command('client-fonts')
-  .description('Copy campus fonts (styles/fonts) to the client app\'s public/fonts/campus')
-  .action(styles.clientFonts.bind(styles));
+  .command('image-properties')
+  .description('Build styles/image-properties.js, the hosted images and their --cork-image-* custom properties')
+  .action(styles.imageProperties.bind(styles));
+
+program
+  .command('font-faces')
+  .description('Build styles/font-faces.js, the faces in ucdlib-sass/fonts.scss for the FontFace API')
+  .action(styles.fontFaces.bind(styles));
 
 program.parse(process.argv);

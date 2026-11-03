@@ -15,10 +15,11 @@ Update the import or copy path of each stylesheet the app uses:
 
 ## Notes
 
-- `style-ucdlib.css` still does not include fonts (Proxima Nova, Ryman Eco), as before. The fonts are now served by the cork-theme app at `https://cork-theme.library.ucdavis.edu/fonts`, and the package has a ready-made stylesheet for them. Use one of:
+- `style-ucdlib.css` still does not include fonts (Proxima Nova, Ryman Eco), as before. The recommended way to load them is `setFontFaces()`, from the app's own copy of the fonts: see [Images and Fonts](images-and-fonts.md). Alternatively, the fonts are served by the cork-theme app at `https://cork-theme.library.ucdavis.edu/fonts`, and the package has a ready-made stylesheet for them. Use one of:
   - CSS: `@ucd-lib/cork-theme/styles/css/fonts.css`
   - Lit: `@ucd-lib/cork-theme/styles/js/ucdlib-sass/fonts.css.js`. Browsers ignore `@font-face` inside a shadow root, so adopt it on the document, not in a component's `static styles`: `document.adoptedStyleSheets = [...document.adoptedStyleSheets, fonts.styleSheet];`
-  - Sass, to load the fonts from somewhere else: `@use "pkg:@ucd-lib/cork-theme/styles/ucdlib-sass/fonts" with ($fonts-url: "https://example.edu/fonts");`
+  - Sass, to load the fonts from somewhere else: `@use "pkg:@ucd-lib/cork-theme/styles/ucdlib-sass/fonts" with ($fonts-url: "https://example.edu/fonts");`. The folder must have the layout `npx cork-theme copy-fonts` creates (`proximanova/…`, `ryman-eco.woff2`).
+- Large images in `style-ucdlib.css` (header bar, nav trays, footer) are now `--cork-image-*` custom properties and show no image until the app sets them: see [Images and Fonts](images-and-fonts.md). `style.css` is unchanged and still uses relative `../images/` URLs.
 - `@ucd-lib/cork-theme/styles/css/print.css` is new: campus's print stylesheet.
 - `style-ucdlib.css` now includes `.h1`–`.h6` classes, which give an element the look of a heading level without its semantics (e.g. `<p class="h2">`). They are built from campus's own heading styles. Apps that defined these classes themselves (e.g. in a `headings.css`) can delete them. Campus's redesign changed some heading styles: `h3` is now blue rather than gray, and links in headings use `:focus-visible` rather than `:focus`.
 - `style-ucdlib.css` now includes every custom property in `css-properties.css` (campus's and ours). An app that loads `style-ucdlib.css` does not also need `css-properties.css`.
