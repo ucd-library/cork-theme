@@ -46,6 +46,7 @@ Each item has `title`, `href`, `target`, `disabled`, `ariaLabel`, `fields` (e.g.
 - `item.render({ classes })` renders the item's own button, link, or (with no href) span, with click handling done. `classes` is a string or a `classMap` object, and a plain string works as shorthand: `item.render('menu__link')`.
 - Elements that render items themselves use `item.click` as a button's click listener (e.g. `@click=${item.click}`). It passes the click through to `ele`, so click handlers on the user's buttons still run.
 - Links aren't passed through: the shadow DOM link navigates by its `href`, so click handlers on the user's `<a>` elements don't run. SPA routers that use `event.composedPath()`, such as cork-app-state's, still intercept them.
+- `item.matchesCoordinates(navPosition)` is true if the item is at exactly that position. `item.containsCoordinates(navPosition)` is also true for its ancestors, e.g. for highlighting the branch leading to a focused item.
 - `is-open`, `mobile-only`, `desktop-only` and icons aren't supported yet.
 
 ## Not yet moved

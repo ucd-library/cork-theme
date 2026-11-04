@@ -1,8 +1,6 @@
-import { html } from 'lit';
-import { classMap } from 'lit/directives/class-map.js';
-import { ifDefined } from 'lit/directives/if-defined.js';
-
 import MutationObserverController from './MutationObserverController.js';
+
+import { renderItem, renderDrillDown, drillDownStyles } from './NavController.tpl.js';
 
 /**
  * @typedef {Object} NavItem
@@ -18,7 +16,9 @@ import MutationObserverController from './MutationObserverController.js';
  * @property {Function} click - For button items: passes a click through to the light DOM button, so its listeners run. Use as the shadow DOM button's click listener, e.g. @click=${item.click}.
  * Does nothing for other items: links rely on their shadow DOM href, so listeners on a light DOM link don't run.
  * @property {Function} render - Renders the item's own link/button (not its sub items) for the host's shadow DOM, e.g. ${item.render({classes: 'menu__link'})}.
- * Takes an opts object, where opts.classes is a class string or a classMap object, or just a class string, e.g. ${item.render('menu__link')}. See NavController._renderItem.
+ * Takes an opts object, where opts.classes is a class string or a classMap object, or just a class string, e.g. ${item.render('menu__link')}.
+ * @property {Function} matchesCoordinates - Takes a navPosition (e.g. [1, 0, 2]). Returns true if the item is at exactly that position.
+ * @property {Function} containsCoordinates - Takes a navPosition. Returns true if the item is at that position or is one of its ancestors, e.g. [1] and [1, 0] contain [1, 0, 2].
  */
 
 /**
@@ -64,11 +64,14 @@ export default class NavController {
    * @param {LitElement} host - 'this' from a Lit element
    * @param {Object} opts - Options.
    * @param {String} opts.fieldAttribute - Attribute that marks a field element. Default: 'data-nav'
+   * @param {String} opts.hostFocusedCoordinatesProperty - Property name for the host's focused nav item coordinates. Default: 'focusedNavItem'
+   * 
    */
   constructor(host, opts={}){
     (this.host = host).addController(this);
     this.fieldAttribute = opts.fieldAttribute || 'data-nav';
     this.navItems = [];
+    this.hostFocusedCoordinatesProperty = opts.hostFocusedCoordinatesProperty || 'focusedNavItem';
 
     this.mutationObserver = new MutationObserverController(
       this.host,
@@ -81,6 +84,12 @@ export default class NavController {
       },
       this._onMutation.bind(this)
     );
+
+    this.renderDrillDown = renderDrillDown.bind(this);
+  }
+
+  static get drillDownStyles() {
+    return drillDownStyles();
   }
 
   /**
@@ -281,48 +290,31 @@ export default class NavController {
       if ( !item.ele?.matches('button') ) return;
       item.ele.click();
     };
-    item.render = (opts={}) => this._renderItem(item, opts);
+    item.render = (opts={}) => renderItem.call(this, item, opts);
+    item.matchesCoordinates = (coordinates) => this._matchesCoordinates(item, coordinates);
+    item.containsCoordinates = (coordinates) => this._containsCoordinates(item, coordinates);
     return item;
   }
 
   /**
-   * @description Renders an item's own element for the host's shadow DOM: a button, anchor, or span.
-   * Automatically wires up button clicks and relevant attributes. Does not render sub items.
-   * Called by item.render.
+   * @description Whether an item is at the given coordinates. Called by item.matchesCoordinates.
    * @param {NavItem} item - The item.
-   * @param {Object|String} opts - Options. A string is treated as opts.classes.
-   * @param {String|Object} opts.classes - Classes to apply: a space-separated string, or a classMap object.
-   * @returns {TemplateResult}
+   * @param {Number[]} coordinates - A navPosition, e.g. [1, 0, 2].
+   * @returns {Boolean}
    */
-  _renderItem(item, opts={}){
-    if ( typeof opts === 'string' ) opts = { classes: opts };
-    let classes = {};
-    if ( typeof opts.classes === 'string' ) {
-      classes = Object.fromEntries(opts.classes.split(/\s+/).filter(Boolean).map(c => [c, true]));
-    } else if ( opts.classes ) {
-      classes = opts.classes;
-    }
+  _matchesCoordinates(item, coordinates=[]){
+    return coordinates.length === item.navPosition.length && this._containsCoordinates(item, coordinates);
+  }
 
-    const ariaLabel = ifDefined(item.ariaLabel ?? undefined);
-
-    if ( item.ele?.matches('button') ) {
-      return html`
-        <button
-          type="button"
-          class=${classMap(classes)}
-          aria-label=${ariaLabel}
-          ?disabled=${item.disabled}
-          @click=${item.click}>${item.title}</button>`;
-    }
-    if ( item.href ) {
-      return html`
-        <a
-          href=${item.href}
-          target=${ifDefined(item.target ?? undefined)}
-          class=${classMap(classes)}
-          aria-label=${ariaLabel}>${item.title}</a>`;
-    }
-    return html`<span class=${classMap(classes)}>${item.title}</span>`;
+  /**
+   * @description Whether an item is at the given coordinates, or is an ancestor of the item there.
+   * e.g. for highlighting the branch that leads to the focused item. Called by item.containsCoordinates.
+   * @param {NavItem} item - The item.
+   * @param {Number[]} coordinates - A navPosition, e.g. [1, 0, 2].
+   * @returns {Boolean}
+   */
+  _containsCoordinates(item, coordinates=[]){
+    return coordinates.length >= item.navPosition.length && item.navPosition.every((v, i) => v === coordinates[i]);
   }
 
   /**
@@ -350,5 +342,9 @@ export default class NavController {
    */
   _cleanText(text){
     return (text || '').replace(/\s+/g, ' ').trim();
+  }
+
+  _onDrillDownToggleClick(item){
+    console.log('toggle drill down', item);
   }
 }
