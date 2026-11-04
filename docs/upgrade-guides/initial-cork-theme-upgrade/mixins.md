@@ -32,6 +32,8 @@ The Lit element mixins moved from `@ucd-lib/theme-elements` to `utils/mixins/` i
 | `Mixin` | None |
 | `MainDomElement` | Renamed to `MainDomElementMixin`, and its file from `main-dom-element.js` to `MainDomElementMixin.js`. If imported directly from the file, it is now the default export: change `import { MainDomElement } from '.../main-dom-element.js'` to `import MainDomElementMixin from '@ucd-lib/cork-theme/utils/mixins/MainDomElementMixin.js'`, or import it from `utils/mixins` instead. |
 
-## Not yet moved
+## Replaced
 
-- `NavElement`
+| Mixin | Replacement |
+| --- | --- |
+| `NavElement` | `NavController`. See [Controllers](controllers.md#navcontroller). |

@@ -8,4 +8,6 @@ Changes an app must make when moving from `@ucd-lib/theme-sass` and `@ucd-lib/th
 - [Lit Styles](lit-styles.md): new paths for `*.css.js` modules, and campus partials that were removed.
 - [Colors](colors.md): new path for `colors.js`, and new brand fields.
 - [Mixins](mixins.md): new path for the Lit element mixins, and `MainDomElement` renamed (in progress).
-- [Controllers](controllers.md): new path for the Lit reactive controllers (in progress).
+- [Controllers](controllers.md): new path for the Lit reactive controllers, and the new `NavController` (in progress).
+- [Elements](elements.md): `ucd-theme-*` elements replaced by `cork-*` elements, starting with quick links (in progress).
+- [Nav Markup](nav-markup.md): the new markup for menus: nested `li` items, `data-nav` fields, and buttons.

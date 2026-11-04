@@ -72,7 +72,7 @@ export default class CorkHeader extends LitElement {
     this.render = render.bind(this);
 
     this.ctl = {
-      mutationObserver: new MutationObserverController(this)
+      mutationObserver: new MutationObserverController(this, {childList: true}, this._onChildListMutation)
     }
 
     /**
@@ -123,12 +123,21 @@ export default class CorkHeader extends LitElement {
     };
   }
 
+  /**
+   * @description Standard Lit lifecycle method
+   * @param {Map} props - Map of changed properties and their previous values
+   */
   willUpdate(props){
     if ( props.has('selectedNavComponentName') ) {
       this._onSelectedNavComponentNameChange(props.get('selectedNavComponentName'));
     }
   }
 
+  /**
+   * @description Callback for when the selectedNavComponentName property changes.
+   * @param {string} prevVal - The previous value of the selectedNavComponentName property.
+   * @returns {void}
+   */
   _onSelectedNavComponentNameChange(prevVal){
       const selectedComponent = Object.values(this._slottedComponents).find(c => c.name === this.selectedNavComponentName);
       if ( this.selectedNavComponentName && !selectedComponent ) {
@@ -179,6 +188,10 @@ export default class CorkHeader extends LitElement {
     if (requestUpdate) this.requestUpdate();
   }
 
+  /**
+   * @description Callback for when a nav toggle button is clicked.
+   * @param {Object} component - A record from this._slottedComponents
+   */
   _onToggleButtonClick(component) {
     if ( this.selectedNavComponentName === component.name ) {
       this.selectedNavComponentName = null;

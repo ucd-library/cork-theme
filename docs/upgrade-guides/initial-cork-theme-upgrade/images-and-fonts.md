@@ -39,6 +39,32 @@ Large theme images (the header bar and its variants, the nav tray backgrounds, t
 
   Always give a full `url(...)` value. An invalid value (such as a bare path) makes the browser drop the whole `background` declaration, color included.
 
+## Building the Sass yourself
+
+The `--cork-image-*` properties, the embedded small images and the embedded Font Awesome icons are added by the package's own build, after Sass compiles. An app that compiles the package's Sass itself (e.g. `@use "pkg:@ucd-lib/cork-theme/styles/ucdlib-sass/style-ucdlib";`) gets campus's plain output instead. So:
+
+- **Images:** the compiled CSS keeps campus's relative URLs, `url("../images/<file>")`, for every image, large and small. Copy them all with `--all`, and serve them as an `images/` folder next to the folder holding the compiled CSS. For example, with the CSS at `/css/app.css`, serve the images at `/images/`:
+
+  ```dockerfile
+  RUN npx cork-theme copy-images ./public/images --all
+  ```
+
+  Without `--all`, only the large images are copied. `setImageCssCustomProperties()` has no effect here, since the properties aren't in the CSS. From Node, use `copyImages(dest, { all: true })`.
+- **Fonts:** compile `fonts.scss` with your fonts folder, and copy the fonts there:
+
+  ```scss
+  @use "pkg:@ucd-lib/cork-theme/styles/ucdlib-sass/fonts" with ($fonts-url: "/fonts/cork-theme");
+  ```
+
+  ```dockerfile
+  RUN npx cork-theme copy-fonts ./public/fonts/cork-theme
+  ```
+
+  Or skip `fonts.scss` and call `setFontFaces('/fonts/cork-theme')`, as in [Steps](#steps).
+- **Font Awesome icons:** the icons the theme's CSS uses come from a font subset that isn't in the Sass. Load `@ucd-lib/cork-theme/styles/css/font-awesome-subset.css` alongside the compiled CSS, or load Font Awesome 7 Free.
+
+The `.css.js` modules and `css/style-ucdlib.css` are already built, so none of this applies to apps that use them.
+
 ## How it works
 
 In `style-ucdlib.css` and the `css.js` modules, every image is a custom property named after its file: `--cork-image-<file name without extension>`, e.g. `--cork-image-nav-tray-menu-bg`.

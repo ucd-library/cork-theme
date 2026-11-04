@@ -15,7 +15,14 @@ return html`
   <cork-header>
     <div slot='primary-nav'>Primary Navigation</div>
     <div slot='search'>Search</div>
-    <cork-quick-links></cork-quick-links>
+    <cork-quick-links highlight two-columns>
+      <button @click=${() => alert('Hello!')}>I'm a button</button>
+      <a href='/foo'>Foo</a>
+      <a href='#'>Bar</a>
+      <a href='#'>Baz</a>
+      <a href='#'>Qux</a>
+      <button @click=${() => alert('Hello!')}>I'm a button</button>
+    </cork-quick-links>
   </cork-header>
 
 `;}

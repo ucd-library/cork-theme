@@ -14,12 +14,19 @@ const FONT_DIRS = ['ucdlib-fonts', 'fonts'];
  * @description Copies the images listed in styles/image-properties.js to a directory, for an app to serve and
  * pass to setImageCssCustomProperties().
  * @param {String} dest - Directory to copy into. Created if needed.
- * @param {Object} opts - Options (none yet).
+ * @param {Object} opts - Options.
+ * @param {Boolean} opts.all - Copy the whole images folder instead, for apps that compile the package's Sass
+ * themselves (their CSS references every image by relative URL).
  * @returns {Promise<String[]>} Paths of the copied files.
  */
 export async function copyImages(dest, opts={}) {
-  const files = imageProperties.map(({ file }) => ({ from: path.join(STYLES_DIR, 'images', file), to: file }));
-  return copyFiles(files, dest);
+  const imagesDir = path.join(STYLES_DIR, 'images');
+  const names = opts.all ?
+    (await fs.readdir(imagesDir, { recursive: true, withFileTypes: true }))
+      .filter(entry => entry.isFile())
+      .map(entry => path.relative(imagesDir, path.join(entry.parentPath, entry.name))) :
+    imageProperties.map(({ file }) => file);
+  return copyFiles(names.sort().map(name => ({ from: path.join(imagesDir, name), to: name })), dest);
 }
 
 /**

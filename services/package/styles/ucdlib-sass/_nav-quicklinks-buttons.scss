@@ -1,0 +1,89 @@
+//------------------------------------
+//  Quick links buttons
+//------------------------------------
+
+// Styles buttons in .nav-quicklinks exactly like its links, e.g. for NavController button items.
+// Mirrors every `a` rule in campus's sass/4_component/_nav-quicklinks.scss: keep in step with it when syncing upstream styles.
+// Disabled buttons have no hover/focus background (links have no disabled state to copy).
+
+@use "../sass/0_tools" as *;
+
+.nav-quicklinks {
+  button {
+    // Reset browser button defaults, so the button starts out like a block link
+    appearance: none;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+
+    // Same as campus's `a`
+    display: block;
+    padding: $spacer--small $spacer--medium;
+    color: $black;
+    font-weight: $font-weight;
+    line-height: 1.35;
+    text-decoration: underline;
+    transition: background-color .25s ease-out;
+
+    &:not(:disabled):hover,
+    &:focus-visible {
+      background: $poppy;
+    }
+
+    &:disabled {
+      cursor: default;
+    }
+  }
+
+  &--highlight {
+    li:nth-child(-n + 3) {
+      button {
+        padding: .75rem;
+        border-radius: .5rem;
+        background-color: $poppy;
+        color: $brand--primary;
+        font-size: 1.25rem;
+        font-weight: $font-weight--bold;
+        margin-inline: var(--container-edge-space);
+        // A fixed width doesn't shrink for margins, as a block link's does
+        width: calc(100% - var(--container-edge-space) * 2);
+        text-decoration: none;
+
+        &:not(:disabled):hover,
+        &:focus-visible {
+          background: $brand--primary;
+          color: $white;
+        }
+
+        &::before {
+          color: $white;
+          font-size: .75em;
+        }
+      }
+    }
+  }
+
+  // Style the quicklinks like the WWW homesite does
+  &--home-site {
+    button {
+      @include has-icon();
+    }
+
+    li:first-child button:before {
+      --fa: "\f406";
+    }
+
+    li:nth-child(2) button:before {
+      --fa: "\f058";
+    }
+
+    li:nth-child(3) button:before {
+      --fa: "\f06b";
+    }
+  }
+}
