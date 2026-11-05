@@ -14,6 +14,8 @@
     "./utils/mixins": "./package/utils/mixins/index.js",
     "./utils/controllers": "./package/utils/controllers/index.js",
     "./utils/assets": "./package/utils/assets/index.js",
+    "./elements/*.js": "./package/elements/*.js",
+    "./elements/*": "./package/elements/*/index.js",
     "./*": "./package/*"
   },
   "scripts": {

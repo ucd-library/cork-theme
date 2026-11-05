@@ -2,11 +2,22 @@
 
 The `ucd-theme-*` elements from `@ucd-lib/theme-elements` are replaced by `cork-*` elements in `@ucd-lib/cork-theme`. This section is in progress and grows as more elements move over.
 
-Element imports are side-effect imports of the element's file:
+Import an element by its folder to register it:
 
 ```js
-import '@ucd-lib/cork-theme/elements/cork-quick-links.js';
+import '@ucd-lib/cork-theme/elements/cork-quick-links';
 ```
+
+The import also returns the element's class. To get the class without registering the element (e.g. to subclass it under your own tag name), import its class file instead, and register it with its static `define()`:
+
+```js
+import CorkQuickLinks from '@ucd-lib/cork-theme/elements/cork-quick-links/cork-quick-links.js';
+
+class MyQuickLinks extends CorkQuickLinks {}
+MyQuickLinks.define('my-quick-links');
+```
+
+`define()` does nothing if the tag name is already registered. A class can only be registered under one tag name, so subclass it to use another.
 
 Menu elements read their links with a new markup format: see [Nav Markup](nav-markup.md).
 
@@ -25,7 +36,7 @@ Menu elements read their links with a new markup format: see [Nav Markup](nav-ma
 2. Change the import and the tag:
 
    ```js
-   import '@ucd-lib/cork-theme/elements/cork-quick-links.js';
+   import '@ucd-lib/cork-theme/elements/cork-quick-links';
    ```
 
    ```html

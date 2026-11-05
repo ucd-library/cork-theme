@@ -31,7 +31,9 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
  * @slot quick-links - Quick links section. A child cork-quick-links is assigned here automatically.
  * @slot branding-bar - Branding bar. A child cork-branding-bar is assigned here automatically.
  * @example
- * import '@ucd-lib/cork-theme/elements/cork-header.js';
+ * import '@ucd-lib/cork-theme/elements/cork-header';
+ * // or the class only, without registering the element:
+ * // import CorkHeader from '@ucd-lib/cork-theme/elements/cork-header/cork-header.js';
  * import { setImageCssCustomProperties } from '@ucd-lib/cork-theme/utils/assets';
  * setImageCssCustomProperties('/images/cork-theme');
  *
@@ -200,8 +202,14 @@ export default class CorkHeader extends LitElement {
     }
   }
 
-}
+  /**
+   * @description Registers the element as a custom element, unless the tag name is already registered.
+   * A class can only be registered once, under one tag name. To register it under another name as well, subclass it first,
+   * e.g. class MyElement extends CorkHeader {}; MyElement.define('my-element');
+   * @param {String} tagName - Tag name to register. Default: 'cork-header'
+   */
+  static define(tagName='cork-header'){
+    if ( !customElements.get(tagName) ) customElements.define(tagName, this);
+  }
 
-if ( !customElements.get('cork-header') ) { 
-  customElements.define('cork-header', CorkHeader);
-} 
+}

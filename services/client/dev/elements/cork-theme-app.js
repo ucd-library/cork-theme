@@ -8,9 +8,9 @@ import { Registry, LitCorkUtils, Mixin } from '@ucd-lib/cork-app-utils';
 import { MainDomElementMixin } from '@ucd-lib/cork-theme/utils/mixins';
 
 // elements
-import '@ucd-lib/cork-theme/elements/cork-header.js';
-import '@ucd-lib/cork-theme/elements/cork-quick-links.js';
-import '@ucd-lib/cork-theme/elements/cork-primary-nav.js';
+import '@ucd-lib/cork-theme/elements/cork-header';
+import '@ucd-lib/cork-theme/elements/cork-quick-links';
+import '@ucd-lib/cork-theme/elements/cork-primary-nav';
 
 // icon elements and model
 import '@ucd-lib/cork-icon';

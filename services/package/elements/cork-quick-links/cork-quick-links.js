@@ -12,7 +12,9 @@ import { NavController } from '@ucd-lib/cork-theme/utils/controllers';
  * @property {Boolean} homeSite - Adds the ucdavis home site's icons to the first three links. Attribute: home-site.
  * @slot - Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM.
  * @example
- * import '@ucd-lib/cork-theme/elements/cork-quick-links.js';
+ * import '@ucd-lib/cork-theme/elements/cork-quick-links';
+ * // or the class only, without registering the element:
+ * // import CorkQuickLinks from '@ucd-lib/cork-theme/elements/cork-quick-links/cork-quick-links.js';
  *
  * <cork-quick-links highlight two-columns>
  *   <a href="/hours">Hours</a>
@@ -72,8 +74,14 @@ export default class CorkQuickLinks extends LitElement {
     }
   }
 
-}
+  /**
+   * @description Registers the element as a custom element, unless the tag name is already registered.
+   * A class can only be registered once, under one tag name. To register it under another name as well, subclass it first,
+   * e.g. class MyElement extends CorkQuickLinks {}; MyElement.define('my-element');
+   * @param {String} tagName - Tag name to register. Default: 'cork-quick-links'
+   */
+  static define(tagName='cork-quick-links'){
+    if ( !customElements.get(tagName) ) customElements.define(tagName, this);
+  }
 
-if ( !customElements.get('cork-quick-links') ) {
-  customElements.define('cork-quick-links', CorkQuickLinks);
 }
