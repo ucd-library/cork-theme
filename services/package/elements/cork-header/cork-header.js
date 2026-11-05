@@ -141,28 +141,28 @@ export default class CorkHeader extends LitElement {
    * @returns {void}
    */
   _onSelectedNavComponentNameChange(prevVal){
-      const selectedComponent = Object.values(this._slottedComponents).find(c => c.name === this.selectedNavComponentName);
-      if ( this.selectedNavComponentName && !selectedComponent ) {
-        console.warn(`CorkHeader: selectedNavComponentName "${this.selectedNavComponentName}" does not match any slotted component.`);
-        this.selectedNavComponentName = prevVal;
-        return;
-      }
-      this._selectedNavComponent = selectedComponent;
+    const selectedComponent = Object.values(this._slottedComponents).find(c => c.name === this.selectedNavComponentName);
+    if ( this.selectedNavComponentName && !selectedComponent ) {
+      console.warn(`CorkHeader: selectedNavComponentName "${this.selectedNavComponentName}" does not match any slotted component.`);
+      this.selectedNavComponentName = prevVal;
+      return;
+    }
+    this._selectedNavComponent = selectedComponent;
 
-      const tray = this.renderRoot.querySelector('.nav-tray');
-      if ( this.selectedNavComponentName ){
-        tray.dataset.navTrayType = this._selectedNavComponent?.navTrayName || '';
-        tray.showModal();
-        // todo focus first element
-      } else {
-        tray.close();
-        const currentType = tray.dataset?.navTrayType;
-        delete tray.dataset.navTrayType;
-        if ( currentType ) {
-          const toggleButton = this.renderRoot.querySelector(`.header__toggles .nav-tray-toggle[data-toggle="${currentType}"]`);
-          if ( toggleButton ) toggleButton.focus();
-        }
+    const tray = this.renderRoot.querySelector('.nav-tray');
+    if ( this.selectedNavComponentName ){
+      tray.dataset.navTrayType = this._selectedNavComponent?.navTrayName || '';
+      tray.showModal();
+      // todo focus first element
+    } else {
+      tray.close();
+      const currentType = tray.dataset?.navTrayType;
+      delete tray.dataset.navTrayType;
+      if ( currentType ) {
+        const toggleButton = this.renderRoot.querySelector(`.header__toggles .nav-tray-toggle[data-toggle="${currentType}"]`);
+        if ( toggleButton ) toggleButton.focus();
       }
+    }
   }
 
   /**
@@ -200,6 +200,26 @@ export default class CorkHeader extends LitElement {
     } else {
       this.selectedNavComponentName = component.name;
     }
+  }
+
+  /**
+   * @description Callback for clicks on the nav tray dialog modal. Closes the tray if the click was outside it.
+   * @param {MouseEvent} e - The click event.
+   */
+  _onNavTrayClick(e) {
+    const tray = e.currentTarget;
+    if ( e.target !== tray ) return;
+    const rect = tray.getBoundingClientRect();
+    const inside = e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
+    if ( !inside ) this.selectedNavComponentName = null;
+  }
+
+  /**
+   * @description Callback for the nav tray dialog's close event.
+   * Clears selectedNavComponentName if the dialog closed itself (e.g. with the Escape key), to keep the toggles in sync.
+   */
+  _onNavTrayClose() {
+    if ( this.selectedNavComponentName ) this.selectedNavComponentName = null;
   }
 
   /**

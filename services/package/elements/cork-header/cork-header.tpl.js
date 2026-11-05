@@ -72,7 +72,12 @@ export function render() {
         ${toggleButtons.map(buttonName => _renderToggleButton.call(this, buttonName))}
       </div>
     </div>
-    <dialog class="nav-tray" aria-label="Navigation Tray" style=${styleMap(navTrayStyles)}>
+    <dialog
+      class="nav-tray"
+      aria-label="Navigation Tray"
+      style=${styleMap(navTrayStyles)}
+      @click=${this._onNavTrayClick}
+      @close=${this._onNavTrayClose}>
       <div class="nav-tray__inner">
         <div class="nav-tray__bar">
           <div class="nav-tray__logo">

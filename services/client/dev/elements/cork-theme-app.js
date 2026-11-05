@@ -89,7 +89,7 @@ export default class CorkThemeApp extends Mixin(LitElement)
    * @description Close the app's primary nav menu
    */
   closeNav(){
-    // todo
+    // todo: create popstate on header element
   }
 
 }

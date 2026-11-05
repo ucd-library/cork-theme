@@ -73,6 +73,14 @@ return html`
         </li>
         <li><button @click=${() => alert('Hello!')}>Top-level button</button></li>
         <li>Inert top-level item</li>
+        <li>
+          <button @click=${() => alert('Hello!')}>Button with subnav</button>
+          <ul>
+            <li><a href='/foo'>Foo</a></li>
+            <li><button @click=${() => alert('Hello!')}>Bar</button></li>
+            <li><a>Baz</a></li>
+          </ul>
+        </li>
       </ul>
     </cork-primary-nav>
     <div slot='search'>Search</div>

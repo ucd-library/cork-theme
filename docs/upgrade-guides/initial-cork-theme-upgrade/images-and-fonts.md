@@ -22,7 +22,7 @@ Large theme images (the header bar and its variants, the nav tray backgrounds, t
    setFontFaces('/fonts/cork-theme');
    ```
 
-   Both take any base URL, e.g. a CDN. The browser only downloads the images actually shown (e.g. a nav tray image when its tray first opens).
+   Both take any base URL, e.g. a CDN. `setImageCssCustomProperties()` sets the properties in a `:root` rule, in a `<style id="cork-theme-image-properties">` tag at the start of `<head>`, so the app's own CSS can override any of them. The browser only downloads the images actually shown (e.g. a nav tray image when its tray first opens).
 
 3. Remove any old font loading (e.g. a `fonts.css` pointing at campus's font server), and any copying of `@ucd-lib/theme-sass` images.
 

@@ -75,9 +75,7 @@ export default class CorkQuickLinks extends LitElement {
   }
 
   /**
-   * @description Registers the element as a custom element, unless the tag name is already registered.
-   * A class can only be registered once, under one tag name. To register it under another name as well, subclass it first,
-   * e.g. class MyElement extends CorkQuickLinks {}; MyElement.define('my-element');
+   * @description Registers the element as a custom element.
    * @param {String} tagName - Tag name to register. Default: 'cork-quick-links'
    */
   static define(tagName='cork-quick-links'){

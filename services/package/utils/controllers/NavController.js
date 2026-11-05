@@ -344,7 +344,21 @@ export default class NavController {
     return (text || '').replace(/\s+/g, ' ').trim();
   }
 
-  _onDrillDownToggleClick(item){
-    console.log('toggle drill down', item);
+  /**
+   * @description Handle a click on a drill-down menu toggle button.
+   * @param {NavItem} item - The nav item that was clicked.
+   * @param {Boolean} moveUp - If closing the item, move up the hierachy instead of closing all ancestors.
+   */
+  _onDrillDownToggleClick(item, moveUp=false){
+    if ( item.containsCoordinates(this.host[this.hostFocusedCoordinatesProperty]) ) {
+      if ( moveUp ) {
+        this.host[this.hostFocusedCoordinatesProperty] = item.navPosition.slice(0, -1);
+      } else {
+        this.host[this.hostFocusedCoordinatesProperty] = [];
+      }
+    } else {
+      this.host[this.hostFocusedCoordinatesProperty] = [...item.navPosition];
+    }
+    this.host.requestUpdate();
   }
 }

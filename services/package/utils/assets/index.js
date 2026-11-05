@@ -22,21 +22,34 @@ export function optionalCssUrl(url) {
 }
 
 /**
- * @description Points the theme's large images at a host or directory, by setting each --cork-image-* custom css property. 
+ * @description Points the theme's large images at a host or directory, by setting each --cork-image-* custom css property.
  * @param {String} host - Base URL of the images, e.g. '/images/cork-theme' or 'https://cdn.example.edu/images'.
  * Holds the files copied by `npx cork-theme copy-images`.
  * @param {Object} opts - Options.
- * @param {HTMLElement} opts.element - Element to set the properties on. Default: document.documentElement.
+ * @param {Document|ShadowRoot} opts.root - Where to add the style tag. Default: document.
+ * @param {String} opts.selector - Selector the properties are set on. Default: ':root', or ':host' if opts.root is a shadow root.
  * @returns {Object} The properties set, keyed by name.
  */
 export function setImageCssCustomProperties(host, opts={}) {
-  const element = opts.element || document.documentElement;
+  const root = opts.root || document;
+  const isShadowRoot = root instanceof ShadowRoot;
+  const selector = opts.selector || (isShadowRoot ? ':host' : ':root');
   const base = host.replace(/\/+$/, '');
   const set = {};
   for ( const { property, file } of imageProperties ) {
     set[property] = cssUrl(`${base}/${file}`);
-    element.style.setProperty(property, set[property]);
   }
+
+  const id = 'cork-theme-image-properties';
+  let style = root.getElementById(id);
+  if ( !style ) {
+    style = document.createElement('style');
+    style.id = id;
+    ( isShadowRoot ? root : root.head ).prepend(style);
+  }
+  const declarations = Object.entries(set).map(([property, value]) => `  ${property}: ${value};`).join('\n');
+  style.textContent = `${selector} {\n${declarations}\n}`;
+
   return set;
 }
 
