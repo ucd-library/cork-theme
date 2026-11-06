@@ -88,10 +88,21 @@
     align-items: center;
   }
 
-  // Navbar
-  &__navbar {
-    background-color: $brand--primary;
-    box-shadow: 0 2px 1px oklch(from $brand--primary l c h / .15);
+  // Inline Main Menu; small screens use the nav tray instead.
+  &__nav-lite {
+    display: none;
+    margin-left: auto;
+
+    @media (min-width: $media-narrow) {
+      display: block;
+    }
+  }
+
+  // The inline Main Menu replaces the menu tray toggle where it's visible.
+  &--has-nav-lite .nav-tray-toggle--menu {
+    @media (min-width: $media-narrow) {
+      display: none;
+    }
   }
 }
 

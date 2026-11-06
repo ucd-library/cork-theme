@@ -52,11 +52,10 @@
   &__stroke {
     animation: circle-ranking-progress 1s ease-out forwards;
     fill: none;
-    scale: .9;
     stroke: var(--category-brand, #{$tahoe});
     stroke-linecap: round;
     stroke-width: .8;
-    transform: rotate(124deg);
+    transform: rotate(124deg) scale(.9);
     transform-origin: center;
   }
 

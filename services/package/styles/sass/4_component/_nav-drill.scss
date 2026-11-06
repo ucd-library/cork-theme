@@ -483,11 +483,11 @@
 
   .nav-drill__submenu--expanded:where(:has(.nav-drill__submenu--expanded)) {
     :where(
-    .nav-drill__description,
-    .nav-drill__list a,
-    .nav-drill__list button,
-    .nav-drill__nolink
-  ) {
+      .nav-drill__description,
+      .nav-drill__list a,
+      .nav-drill__list button,
+      .nav-drill__nolink
+    ) {
       opacity: .5;
     }
 
@@ -498,12 +498,12 @@
   }
 
   .nav-drill__submenu--expanded:not(:has(.nav-drill__submenu--expanded)) :where(
-  .nav-drill__description,
-  .nav-drill__description a,
-  .nav-drill__list a,
-  .nav-drill__list button,
-  .nav-drill__nolink
-) {
+    .nav-drill__description,
+    .nav-drill__description a,
+    .nav-drill__list a,
+    .nav-drill__list button,
+    .nav-drill__nolink
+  ) {
     opacity: 1;
   }
 

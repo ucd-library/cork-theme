@@ -50,7 +50,7 @@ textarea {
   appearance: none;
 }
 
-// This was altered previously in the reset.
+// Firefox focus ring for buttons.
 button,
 [type="button"],
 [type="reset"],
@@ -70,9 +70,5 @@ button,
   width: auto;
   height: auto;
   margin-right: .3em;
-}
-
-// Override content-box in Normalize (* isn't specific enough)
-[type="search"] {
-  box-sizing: border-box;
+  padding: 0;
 }

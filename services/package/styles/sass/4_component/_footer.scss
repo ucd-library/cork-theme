@@ -57,7 +57,7 @@
   }
 
   &__flex {
-    @include flex-columns(4, 250px, 4vw);
+    @include flex-columns(4, 250px, 4vw, $stretch: true);
     flex-grow: 1;
     margin-bottom: $spacer--large;
     row-gap: $spacer;

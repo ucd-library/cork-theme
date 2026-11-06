@@ -419,7 +419,14 @@
   outline-offset: 0;
 }
 
-@mixin flex-columns($columns: 3, $min-width: 250px, $gap: 16px) {
+// $stretch: true lets items grow to fill the row instead of reserving empty columns.
+@mixin flex-columns($columns: 3, $min-width: 250px, $gap: 16px, $stretch: false) {
+  $repeat: auto-fill;
+
+  @if $stretch {
+    $repeat: auto-fit;
+  }
+
   --flex-columns: #{$columns};
   --flex-min-width: #{$min-width};
   // A fixed pixel works best to not have weird resizing issues.
@@ -431,6 +438,6 @@
   --flex-calculated-min-width: min(100%, var(--flex-min-width));
 
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(max(var(--flex-calculated-min-width), var(--flex-max-width)), 1fr));
+  grid-template-columns: repeat(#{$repeat}, minmax(max(var(--flex-calculated-min-width), var(--flex-max-width)), 1fr));
   gap: var(--flex-gap);
 }

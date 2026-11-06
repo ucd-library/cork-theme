@@ -52,7 +52,11 @@
     $first: true;
     @each $condition in $query {
       $parsed: breakpoint-condition($condition);
-      $query-string: if($first, $parsed, "#{$query-string} and #{$parsed}");
+      @if $first {
+        $query-string: $parsed;
+      } @else {
+        $query-string: "#{$query-string} and #{$parsed}";
+      }
       $first: false;
     }
   } @else {
