@@ -11,6 +11,7 @@ import { MainDomElementMixin } from '@ucd-lib/cork-theme/utils/mixins';
 import '@ucd-lib/cork-theme/elements/cork-header';
 import '@ucd-lib/cork-theme/elements/cork-quick-links';
 import '@ucd-lib/cork-theme/elements/cork-primary-nav';
+import '@ucd-lib/cork-theme/elements/cork-nav-lite';
 
 // icon elements and model
 import '@ucd-lib/cork-icon';

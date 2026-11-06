@@ -59,7 +59,13 @@ Look over what changed in `services/package/styles/` before committing. This is 
 
 ### 6. Add, Commit, and Push
 
-Now, commit and push all changes to the main branch.
+Now, commit and push the generated content to the main branch, e.g.
+```bash
+git add --all
+git commit -m 'generated files from upstream merge (e039219)'
+git push
+```
+
 
 ### Notes
 

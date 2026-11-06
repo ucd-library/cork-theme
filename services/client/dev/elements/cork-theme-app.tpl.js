@@ -92,6 +92,12 @@ return html`
       <a href='#'>Qux</a>
       <button @click=${() => alert('Hello!')}>I'm a button</button>
     </cork-quick-links>
+
+    <cork-nav-lite>
+      <a href='#'>Bar</a>
+      <a href='#'>Baz</a>
+      <button @click=${() => alert('Hello!')}>I'm a button</button>
+    </cork-nav-lite>
   </cork-header>
 
 `;}

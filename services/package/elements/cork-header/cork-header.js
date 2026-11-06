@@ -31,6 +31,8 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
  * @slot search - Search form. A child cork-search is assigned here automatically.
  * @slot quick-links - Quick links section. A child cork-quick-links is assigned here automatically.
  * @slot branding-bar - Branding bar. A child cork-branding-bar is assigned here automatically.
+ * @slot nav-lite - Inline main menu in the header bar, shown on larger screens in place of the menu tray toggle. A child cork-nav-lite is assigned here automatically.
+ * If the menu tray is open when its toggle is hidden (e.g. the window is widened), the tray closes.
  * @example
  * import '@ucd-lib/cork-theme/elements/cork-header';
  * // or the class only, without registering the element:
@@ -73,6 +75,7 @@ export default class CorkHeader extends LitElement {
     this.navTrayQuicklinksBackgroundImageUrl = '';
     this.navTrayQuicklinksAccentImageUrl = '';
     this.render = render.bind(this);
+    this._onWindowResize = this._onWindowResize.bind(this);
 
     this.ctl = {
       mutationObserver: new MutationObserverController(this, {childList: true}, this._onChildListMutation)
@@ -93,7 +96,7 @@ export default class CorkHeader extends LitElement {
         corkComponentName: 'cork-primary-nav',
         navTrayName: 'menu',
         defaultAttributes: {
-          label: 'Menu',
+          label: 'Main Menu',
         }
       },
       search: {
@@ -122,8 +125,32 @@ export default class CorkHeader extends LitElement {
         defaultAttributes: {
           label: 'Branding Bar'
         }
+      },
+      navLite: {
+        name: 'nav-lite',
+        ele: null,
+        corkComponentName: 'cork-nav-lite',
+        defaultAttributes: {
+          label: 'Main Menu'
+        }
       }
     };
+  }
+
+  /**
+   * @description Standard custom element lifecycle method. Adds the window resize listener.
+   */
+  connectedCallback(){
+    super.connectedCallback();
+    window.addEventListener('resize', this._onWindowResize);
+  }
+
+  /**
+   * @description Standard custom element lifecycle method. Removes the window resize listener.
+   */
+  disconnectedCallback(){
+    window.removeEventListener('resize', this._onWindowResize);
+    super.disconnectedCallback();
   }
 
   /**
@@ -219,6 +246,18 @@ export default class CorkHeader extends LitElement {
     const rect = tray.getBoundingClientRect();
     const inside = e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
     if ( !inside ) this.selectedNavComponentName = null;
+  }
+
+  /**
+   * @description Callback for the window resize event. Closes the open nav tray if its toggle button is hidden,
+   * e.g. the menu toggle on wide screens when a nav-lite menu is in the header bar, which would leave the tray with no close button.
+   * Only acts when a nav-lite component is slotted, as campus's nav-tray.js does.
+   */
+  _onWindowResize() {
+    if ( !this.selectedNavComponentName || !this._slottedComponents.navLite.ele ) return;
+    const type = this._selectedNavComponent?.navTrayName;
+    const toggleButton = this.renderRoot.querySelector(`.nav-tray__toggles .nav-tray-toggle[data-toggle="${type}"]`);
+    if ( toggleButton && !toggleButton.checkVisibility() ) this.selectedNavComponentName = null;
   }
 
   /**

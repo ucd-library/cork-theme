@@ -9,5 +9,6 @@ Changes an app must make when moving from `@ucd-lib/theme-sass` and `@ucd-lib/th
 - [Colors](colors.md): new path for `colors.js`, and new brand fields.
 - [Mixins](mixins.md): new path for the Lit element mixins, and `MainDomElement` renamed (in progress).
 - [Controllers](controllers.md): new path for the Lit reactive controllers, and the new `NavController` (in progress).
-- [Elements](elements.md): `ucd-theme-*` elements replaced by `cork-*` elements: header, primary nav and quick links so far (in progress).
+- [Elements](elements.md): `ucd-theme-*` elements replaced by `cork-*` elements, and how to import and register them (in progress).
+- [Header](header.md): `cork-header` and its components: primary nav, nav lite and quick links.
 - [Nav Markup](nav-markup.md): the new markup for menus: nested `li` items, `data-nav` fields, and buttons.

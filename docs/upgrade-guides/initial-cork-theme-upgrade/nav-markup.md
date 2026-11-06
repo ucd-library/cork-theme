@@ -1,6 +1,6 @@
 # Nav Markup
 
-Elements that show a menu, such as `cork-primary-nav` and `cork-quick-links`, read their links from their light DOM children with `NavController` (see [Controllers](controllers.md#navcontroller)). The markup they accept differs from the old `@ucd-lib/theme-elements` elements, which used the `NavElement` mixin or their own parsing.
+Elements that show a menu, such as `cork-primary-nav`, `cork-nav-lite` and `cork-quick-links`, read their links from their light DOM children with `NavController` (see [Controllers](controllers.md#navcontroller)). The markup they accept differs from the old `@ucd-lib/theme-elements` elements, which used the `NavElement` mixin or their own parsing.
 
 ## What changed
 
@@ -105,7 +105,7 @@ Read from the element that supplies the title:
 
 Direct children of a `li` with `data-nav="<name>"`. Their text, not their markup, is stored as a field: `<span data-nav="description">` becomes the `description` field. Fields aren't read from flat `a`/`button` elements.
 
-Each element decides which fields it shows. `cork-primary-nav` shows `description`. `cork-quick-links` shows titles only.
+Each element decides which fields it shows. `cork-primary-nav` shows `description`. `cork-nav-lite` and `cork-quick-links` show titles only.
 
 An element can use a different attribute name, with NavController's `fieldAttribute` option. Its docs say if it does.
 
