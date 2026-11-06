@@ -57,6 +57,14 @@ export default class CorkPrimaryNav extends LitElement {
     return styles();
   }
 
+  /**
+   * @description Lit shadow root options. delegatesFocus forwards focus() on the element to its first focusable control,
+   * e.g. when cork-header opens its nav tray.
+   */
+  static get shadowRootOptions() {
+    return { ...LitElement.shadowRootOptions, delegatesFocus: true };
+  }
+
   constructor() {
     super();
     this.render = render.bind(this);
@@ -64,8 +72,16 @@ export default class CorkPrimaryNav extends LitElement {
     this.focusedNavItem = [];
 
     this.ctl = {
-      nav: new NavController(this)
+      nav: new NavController(this, { closeSubmenusOnEscape: true, setChildHeight: true })
     }
+  }
+
+  /**
+   * @description Called by cork-header when its nav tray hides this element. Collapses any open submenus,
+   * so the menu reopens collapsed.
+   */
+  onNavTrayHide(){
+    this.focusedNavItem = [];
   }
 
   /**

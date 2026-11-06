@@ -1,6 +1,7 @@
 import { html, css } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { classMap } from 'lit/directives/class-map.js';
+import { ref } from 'lit/directives/ref.js';
 
 import navDrillCss from '@ucd-lib/cork-theme/styles/js/4_component/_nav-drill.css.js';
 import navPrimaryCss from '@ucd-lib/cork-theme/styles/js/4_component/_nav-primary.css.js';
@@ -39,7 +40,7 @@ export function drillDownStyles() {
 
 /**
  * @description Renders an item's own element for the host's shadow DOM: a button, anchor, or span.
- * Automatically wires up button clicks and relevant attributes. Does not render sub items.
+ * Automatically wires up button clicks and relevant attributes, and records the element as item.renderedEles.item. Does not render sub items.
  * Called by item.render.
  * @param {NavItem} item - The item.
  * @param {Object|String} opts - Options. A string is treated as opts.classes.
@@ -60,10 +61,12 @@ export function renderItem(item, opts={}){
 
   const ariaLabel = ifDefined(item.ariaLabel ?? undefined);
   const classAtr = ifDefined(classes.trim().replace(/\s+/g, ' ') || undefined);
+  const eleRef = ref(ele => { item.renderedEles.item = ele; });
 
   if ( eleType === 'button' ) {
     return html`
       <button
+        ${eleRef}
         type="button"
         class=${classAtr}
         aria-label=${ariaLabel}
@@ -73,12 +76,13 @@ export function renderItem(item, opts={}){
   if ( eleType === 'a' ) {
     return html`
       <a
+        ${eleRef}
         href=${item.href}
         target=${ifDefined(item.target ?? undefined)}
         class=${classAtr}
         aria-label=${ariaLabel}>${item.title}${opts.suffixTemplate ? opts.suffixTemplate : html``}</a>`;
   }
-  return html`<span class=${classAtr}>${item.title}${opts.suffixTemplate ? opts.suffixTemplate : html``}</span>`;
+  return html`<span ${eleRef} class=${classAtr}>${item.title}${opts.suffixTemplate ? opts.suffixTemplate : html``}</span>`;
 }
 
 /**
@@ -87,7 +91,7 @@ export function renderItem(item, opts={}){
  */
 export function renderDrillDown(){
   return html`
-    <div class="nav-drill__inner">
+    <div class="nav-drill__inner" ${ref(ele => { this._drillDownInnerEle = ele; })}>
       <ul class="nav-drill__list">
         ${this.navItems.map(item => html`
           <li>${renderDrillDownTopItem.call(this, item)}</li>
@@ -112,7 +116,7 @@ function renderDrillDownSubMenu(item){
   }
 
   return html`
-    <div class=${classMap(menuClasses)} id="nav-drill-submenu-${item.navPosition.join('-')}">
+    <div class=${classMap(menuClasses)} id="nav-drill-submenu-${item.navPosition.join('-')}" ${ref(ele => { item.renderedEles.submenu = ele; })}>
       <div class="nav-drill__submenu-wrapper">
         <div class="nav-drill__description">
           <button class="nav-drill__submenu-close" aria-label="Close ${item.title} menu" @click=${() => this._onDrillDownToggleClick(item, true)}></button>
@@ -126,7 +130,12 @@ function renderDrillDownSubMenu(item){
             html`
               <li>
                 <div>
-                  <button class="nav-drill__submenu-toggle" aria-controls="nav-drill-submenu-${subItem.navPosition.join('-')}" aria-expanded=${subItem.containsCoordinates(this.host[this.hostFocusedCoordinatesProperty])} @click=${() => this._onDrillDownToggleClick(subItem)}>
+                  <button 
+                    class="nav-drill__submenu-toggle" 
+                    ${ref(ele => { subItem.renderedEles.linkToSubmenu = ele; })} 
+                    aria-controls="nav-drill-submenu-${subItem.navPosition.join('-')}" 
+                    aria-expanded=${subItem.containsCoordinates(this.host[this.hostFocusedCoordinatesProperty])} 
+                    @click=${() => this._onDrillDownToggleClick(subItem)}>
                     ${subItem.title}
                   </button>
                 </div>
@@ -156,7 +165,12 @@ function renderDrillDownTopItem(item){
   if ( item.subItems.length ){
     return html`
       <div class=${wrapperClass}>
-        <button class="nav-drill__submenu-toggle" aria-controls="nav-drill-submenu-${item.navPosition.join('-')}" aria-expanded=${item.containsCoordinates(this.host[this.hostFocusedCoordinatesProperty])} @click=${() => this._onDrillDownToggleClick(item)}>
+        <button 
+          class="nav-drill__submenu-toggle" 
+          ${ref(ele => { item.renderedEles.linkToSubmenu = ele; })} 
+          aria-controls="nav-drill-submenu-${item.navPosition.join('-')}" 
+          aria-expanded=${item.containsCoordinates(this.host[this.hostFocusedCoordinatesProperty])} 
+          @click=${() => this._onDrillDownToggleClick(item)}>
           ${item.title}
           ${line}
         </button>

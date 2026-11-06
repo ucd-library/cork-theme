@@ -47,7 +47,19 @@ Each item has `title`, `href`, `target`, `disabled`, `ariaLabel`, `fields` (e.g.
 - Elements that render items themselves use `item.click` as a button's click listener (e.g. `@click=${item.click}`). It passes the click through to `ele`, so click handlers on the user's buttons still run.
 - Links aren't passed through: the shadow DOM link navigates by its `href`, so click handlers on the user's `<a>` elements don't run. SPA routers that use `event.composedPath()`, such as cork-app-state's, still intercept them.
 - `item.matchesCoordinates(navPosition)` is true if the item is at exactly that position. `item.containsCoordinates(navPosition)` is also true for its ancestors, e.g. for highlighting the branch leading to a focused item.
+- `item.renderedEles` holds the item's elements in the shadow DOM once rendered: `item` (from `item.render()`), and in the drill-down `linkToSubmenu` (the toggle button) and `submenu`. `item.focus(key)` focuses one of them (default `item`) and returns whether it took focus, e.g. `item.focus('linkToSubmenu')`.
 - `is-open`, `mobile-only`, `desktop-only` and icons aren't supported yet.
+
+For a drill-down (`renderDrillDown()`), two behaviors from campus's nav-drill.js are opt-in:
+
+```js
+new NavController(this, { closeSubmenusOnEscape: true, setChildHeight: true });
+```
+
+- `closeSubmenusOnEscape`: Escape closes the submenu that has focus (moving up a level), or all submenus if focus isn't in one, instead of closing the `cork-header` tray.
+- `setChildHeight`: on narrow screens (999px or less), sizes the open submenus to the deepest one, since submenus from level 3 down are absolutely positioned.
+
+Opening or closing a submenu always moves focus into it (its own link, or its first focusable item) or back to its toggle, and scrolls the other submenus back to the top. `cork-primary-nav` turns both options on.
 
 ## Not yet moved
 

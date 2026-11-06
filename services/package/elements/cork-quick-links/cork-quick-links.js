@@ -39,6 +39,14 @@ export default class CorkQuickLinks extends LitElement {
     return styles();
   }
 
+  /**
+   * @description Lit shadow root options. delegatesFocus forwards focus() on the element to its first focusable control,
+   * e.g. when cork-header opens its nav tray.
+   */
+  static get shadowRootOptions() {
+    return { ...LitElement.shadowRootOptions, delegatesFocus: true };
+  }
+
   constructor() {
     super();
     this.render = render.bind(this);

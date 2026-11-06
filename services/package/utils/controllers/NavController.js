@@ -19,6 +19,12 @@ import { renderItem, renderDrillDown, drillDownStyles } from './NavController.tp
  * Takes an opts object, where opts.classes is a class string or a classMap object, or just a class string, e.g. ${item.render('menu__link')}.
  * @property {Function} matchesCoordinates - Takes a navPosition (e.g. [1, 0, 2]). Returns true if the item is at exactly that position.
  * @property {Function} containsCoordinates - Takes a navPosition. Returns true if the item is at that position or is one of its ancestors, e.g. [1] and [1, 0] contain [1, 0, 2].
+ * @property {Object} renderedEles - The item's elements in the host's shadow DOM, set when they render. Empty until then.
+ * @property {HTMLElement} [renderedEles.item] - The link, button, or span rendered by item.render.
+ * @property {HTMLElement} [renderedEles.linkToSubmenu] - Drill-down only: the toggle button that opens the item's submenu.
+ * @property {HTMLElement} [renderedEles.submenu] - Drill-down only: the item's submenu.
+ * @property {Function} focus - Focuses one of the item's renderedEles. Takes an opts object, where opts.key is the renderedEles key (default 'item'),
+ * or just the key, e.g. item.focus('linkToSubmenu'). 
  */
 
 /**
@@ -65,13 +71,17 @@ export default class NavController {
    * @param {Object} opts - Options.
    * @param {String} opts.fieldAttribute - Attribute that marks a field element. Default: 'data-nav'
    * @param {String} opts.hostFocusedCoordinatesProperty - Property name for the host's focused nav item coordinates. Default: 'focusedNavItem'
-   * 
+   * @param {Boolean} opts.closeSubmenusOnEscape - Drill-down: the Escape key closes the submenu that has focus (or all submenus, if none has focus). Default: false
+   * @param {Boolean} opts.setChildHeight - Drill-down: on narrow screens, sizes the expanded submenus to the deepest one, since submenus from level 3 down are absolutely positioned. Default: false
    */
   constructor(host, opts={}){
     (this.host = host).addController(this);
     this.fieldAttribute = opts.fieldAttribute || 'data-nav';
     this.navItems = [];
     this.hostFocusedCoordinatesProperty = opts.hostFocusedCoordinatesProperty || 'focusedNavItem';
+    this.closeSubmenusOnEscape = opts.closeSubmenusOnEscape || false;
+    this.setChildHeight = opts.setChildHeight || false;
+    this._onKeydown = this._onKeydown.bind(this);
 
     this.mutationObserver = new MutationObserverController(
       this.host,
@@ -90,6 +100,81 @@ export default class NavController {
 
   static get drillDownStyles() {
     return drillDownStyles();
+  }
+
+  /**
+   * @description Lit controller lifecycle method. Adds the Escape key listener, if opts.closeSubmenusOnEscape is set.
+   */
+  hostConnected(){
+    if ( this.closeSubmenusOnEscape ) this.host.addEventListener('keydown', this._onKeydown);
+  }
+
+  /**
+   * @description Lit controller lifecycle method. Removes the Escape key listener.
+   */
+  hostDisconnected(){
+    this.host.removeEventListener('keydown', this._onKeydown);
+  }
+
+  /**
+   * @description Lit controller lifecycle method.
+   */
+  hostUpdated(){
+    this.setNavDrillChildHeight();
+
+  }
+
+  /**
+   * @description Sets --nav-drill-child-height CSS variable for drill down navigation.
+   * Needed to ensure that level 3+ submenus are properly sized on narrow screens.
+   */
+  setNavDrillChildHeight(){
+    if ( !this.setChildHeight || !this._drillDownInnerEle ) return;
+    const coordinates = this.host[this.hostFocusedCoordinatesProperty] || [];
+    const coordinatesKey = coordinates.join(',');
+    if ( coordinatesKey === this._childHeightCoordinates ) return;
+    this._childHeightCoordinates = coordinatesKey;
+
+    // Reset first, so the submenu is measured at its natural height
+    const inner = this._drillDownInnerEle;
+    inner.style.setProperty('--nav-drill-child-height', 'auto');
+    if ( this.host.offsetWidth > 999 ) return;
+
+    // A level 2 submenu that is still opening measures 0, so stays auto
+    const height = this.getNavItem(coordinates)?.renderedEles.submenu?.offsetHeight || 0;
+    if ( height > 0 ) inner.style.setProperty('--nav-drill-child-height', `${height}px`);
+  }
+
+  /**
+   * @description Keydown listener on the host, added if opts.closeSubmenusOnEscape is set.
+   */
+  _onKeydown(e){
+    this._closeDrillDownOnEscape(e);
+  }
+
+  /**
+   * @description On Escape, closes the expanded submenu that has focus (moving up a level), or all submenus if focus is outside them.
+   * Prevents the default, so the Escape doesn't also close a dialog the host is in.
+   * @param {KeyboardEvent} e - The keydown event.
+   * @returns 
+   */
+  _closeDrillDownOnEscape(e){
+    if ( e.key !== 'Escape' ) return;
+    const coordinates = this.host[this.hostFocusedCoordinatesProperty] || [];
+    if ( !coordinates.length ) return;
+    e.preventDefault();
+
+    // Walk up the expanded branch, from the deepest submenu, to find the one that has focus
+    const activeEle = this.host.renderRoot.activeElement;
+    for ( let i = coordinates.length; i > 0; i-- ) {
+      const item = this.getNavItem(coordinates.slice(0, i));
+      if ( item?.renderedEles.submenu?.contains(activeEle) ) {
+        this._onDrillDownToggleClick(item, true);
+        return;
+      }
+    }
+    this.host[this.hostFocusedCoordinatesProperty] = [];
+    this.host.requestUpdate();
   }
 
   /**
@@ -268,7 +353,7 @@ export default class NavController {
   }
 
   /**
-   * @description Makes an item with defaults for any missing properties, and its click function.
+   * @description Makes an item with defaults for any missing properties, and its functions.
    * @param {Object} props - Properties of the item.
    * @returns {NavItem}
    */
@@ -283,6 +368,7 @@ export default class NavController {
       subItems: [],
       navPosition: [],
       ele: null,
+      renderedEles: {},
       ...props
     };
     // Passes a click through to the light DOM button. Links aren't passed through, so clicks keep their native behavior
@@ -293,7 +379,23 @@ export default class NavController {
     item.render = (opts={}) => renderItem.call(this, item, opts);
     item.matchesCoordinates = (coordinates) => this._matchesCoordinates(item, coordinates);
     item.containsCoordinates = (coordinates) => this._containsCoordinates(item, coordinates);
+    item.focus = (opts={}) => this._focusItem(item, opts);
     return item;
+  }
+
+  /**
+   * @description Focuses one of an item's rendered elements. Called by item.focus.
+   * @param {NavItem} item - The item.
+   * @param {Object|String} opts - Options. A string is treated as opts.key.
+   * @param {String} opts.key - Key of the element in item.renderedEles. Default: 'item'
+   * @returns {Boolean} True if the element took focus. Spans, disabled buttons, and unrendered elements don't.
+   */
+  _focusItem(item, opts={}){
+    if ( typeof opts === 'string' ) opts = { key: opts };
+    const ele = item.renderedEles[opts.key || 'item'];
+    if ( !ele ) return false;
+    ele.focus({ preventScroll: true });
+    return this.host.renderRoot.activeElement === ele;
   }
 
   /**
@@ -350,7 +452,8 @@ export default class NavController {
    * @param {Boolean} moveUp - If closing the item, move up the hierachy instead of closing all ancestors.
    */
   _onDrillDownToggleClick(item, moveUp=false){
-    if ( item.containsCoordinates(this.host[this.hostFocusedCoordinatesProperty]) ) {
+    const opened = !item.containsCoordinates(this.host[this.hostFocusedCoordinatesProperty]);
+    if ( !opened ) {
       if ( moveUp ) {
         this.host[this.hostFocusedCoordinatesProperty] = item.navPosition.slice(0, -1);
       } else {
@@ -360,5 +463,35 @@ export default class NavController {
       this.host[this.hostFocusedCoordinatesProperty] = [...item.navPosition];
     }
     this.host.requestUpdate();
+
+    // Scroll the other submenus back to the top. When closing, skip the submenu being closed and the one it's in, so they don't jump.
+    const parentSubmenu = this.getNavItem(item.navPosition.slice(0, -1))?.renderedEles.submenu;
+    const stack = [...this.navItems];
+    while ( stack.length ) {
+      const navItem = stack.pop();
+      stack.push(...navItem.subItems);
+      const submenu = navItem.renderedEles.submenu;
+      if ( !submenu || (!opened && (submenu === item.renderedEles.submenu || submenu === parentSubmenu)) ) continue;
+      if ( submenu.scrollTop > 0 && submenu.offsetHeight > 0 ) submenu.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    this._focusAfterToggle(item, opened);
+  }
+
+  /**
+   * @description Moves focus after a drill-down submenu opens or closes, once the host has rendered.
+   * Opened: the item's own link/button in the submenu, or else its first focusable sub item. Closed: the item's toggle button.
+   * @param {NavItem} item - The item whose submenu was toggled.
+   * @param {Boolean} opened - Whether the submenu opened.
+   */
+  async _focusAfterToggle(item, opened){
+    await this.host.updateComplete;
+    // Give the submenu's transition a moment to start, as campus does
+    await new Promise(resolve => setTimeout(resolve, 100));
+    if ( opened ) {
+      item.focus() || item.subItems.some(subItem => subItem.focus(subItem.subItems.length ? 'linkToSubmenu' : 'item'));
+    } else {
+      item.focus('linkToSubmenu');
+    }
   }
 }

@@ -19,6 +19,7 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
  * Its background images come from the --cork-image-* custom properties: call setImageCssCustomProperties() from
  * '@ucd-lib/cork-theme/utils/assets' to load them. Without it, the header keeps its colors and has no images.
  * The image properties below override one image for this element only.
+ * When a slotted component's nav tray is hidden (closed, or switched to another tray), the header calls its onNavTrayHide() method, if it has one.
  * @property {String} backdrop - Campus's header bar variant, '1' (default) to '7'. Attribute: backdrop.
  * @property {String} backgroundImageUrl - Overrides the header bar's background image, whichever backdrop is picked. Attribute: background-image-url.
  * @property {String} navTrayMenuBackgroundImageUrl - Overrides the menu tray's background image. Attribute: nav-tray-menu-background-image-url.
@@ -136,7 +137,7 @@ export default class CorkHeader extends LitElement {
   }
 
   /**
-   * @description Callback for when the selectedNavComponentName property changes.
+   * @description Callback for when the selectedNavComponentName property changes. Opens or closes the nav tray.
    * @param {string} prevVal - The previous value of the selectedNavComponentName property.
    * @returns {void}
    */
@@ -149,11 +150,17 @@ export default class CorkHeader extends LitElement {
     }
     this._selectedNavComponent = selectedComponent;
 
+    // Let the component that was showing know it's hidden (tray closed, or switched to another), e.g. to reset its state
+    if ( prevVal && prevVal !== this.selectedNavComponentName ) {
+      Object.values(this._slottedComponents).find(c => c.name === prevVal)?.ele?.onNavTrayHide?.();
+    }
+
     const tray = this.renderRoot.querySelector('.nav-tray');
     if ( this.selectedNavComponentName ){
       tray.dataset.navTrayType = this._selectedNavComponent?.navTrayName || '';
       tray.showModal();
-      // todo focus first element
+      // Focus the tray's content. Its controls are in the slotted element's shadow DOM, which forwards focus to them (delegatesFocus)
+      this._selectedNavComponent?.ele?.focus();
     } else {
       tray.close();
       const currentType = tray.dataset?.navTrayType;
