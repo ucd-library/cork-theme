@@ -94,9 +94,19 @@ export default css`
   display: flex;
   align-items: center;
 }
-.header__navbar {
-  background-color: #022851;
-  box-shadow: 0 2px 1px oklch(from #022851 l c h/0.15);
+.header__nav-lite {
+  display: none;
+  margin-left: auto;
+}
+@media (min-width: 768px) {
+  .header__nav-lite {
+    display: block;
+  }
+}
+@media (min-width: 768px) {
+  .header--has-nav-lite .nav-tray-toggle--menu {
+    display: none;
+  }
 }
 
 .site-logo {

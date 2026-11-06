@@ -3,6 +3,6 @@
 //------------------------------------
 
 // Standalone normalize, built only as js/ucdlib-sass/normalize.css.js for Lit elements.
-// The full stylesheets load normalize themselves.
+// The full stylesheets load campus's normalize through 1_base_html.
 
-@use "normalize-scss/sass/normalize/import-now";
+@use "../sass/1_base_html/normalize";

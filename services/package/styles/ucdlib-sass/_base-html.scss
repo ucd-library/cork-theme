@@ -5,7 +5,7 @@
 // Campus's sass/1_base_html/_index.scss minus "fonts": we serve fonts ourselves.
 // Keep this list in step with campus's index; the upstream check report flags changes to it.
 
-@forward "../sass/1_base_html/reset";
+@forward "../sass/1_base_html/normalize";
 @forward "../sass/1_base_html/accessibility";
 @forward "../sass/1_base_html/root";
 @forward "../sass/1_base_html/forms";

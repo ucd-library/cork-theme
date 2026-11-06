@@ -77,7 +77,7 @@ export default css`
   --flex-max-width: calc((100% - var(--flex-total-gap)) / var(--flex-columns));
   --flex-calculated-min-width: min(100%, var(--flex-min-width));
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(max(var(--flex-calculated-min-width), var(--flex-max-width)), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(max(var(--flex-calculated-min-width), var(--flex-max-width)), 1fr));
   gap: var(--flex-gap);
   flex-grow: 1;
   margin-bottom: 2rem;

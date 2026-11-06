@@ -58,9 +58,6 @@ export default css`
   color: #000;
   transition: block-size 0.3s ease, padding-block 0.3s ease, content-visibility 0.3s ease allow-discrete;
 }
-.accordion__item::details-content > :last-child {
-  margin-bottom: 0;
-}
 .accordion__item[open]::details-content {
   block-size: auto;
   padding-block: 0.5rem;
@@ -102,7 +99,7 @@ export default css`
   background-color: transparent;
   color: var(--category-brand-contrast-color, var(--forced-contrast, var(--list-faq-a)));
 }
-.accordion--faq .accordion__item::details-content::before {
+.accordion--faq .accordion__item > summary + *::before {
   display: inline-block;
   float: left;
   width: var(--list-faq-prefix-spacing);

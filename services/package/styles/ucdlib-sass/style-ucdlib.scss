@@ -9,10 +9,7 @@
 // Must come first: configures campus variables.
 @use "config";
 
-// Normalize to "reset" browser defaults
-@use "normalize-scss/sass/normalize/import-now";
-
-// Base HTML (without fonts)
+// Base HTML (without fonts), including campus's normalize
 @use "base-html";
 
 // Our custom properties, added to campus's :root

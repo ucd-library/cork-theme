@@ -47,11 +47,10 @@ export default css`
 .circle-ranking__stroke {
   animation: circle-ranking-progress 1s ease-out forwards;
   fill: none;
-  scale: 0.9;
   stroke: var(--category-brand, #00b2e3);
   stroke-linecap: round;
   stroke-width: 0.8;
-  transform: rotate(124deg);
+  transform: rotate(124deg) scale(0.9);
   transform-origin: center;
 }
 .circle-ranking__media {

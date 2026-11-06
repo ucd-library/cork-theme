@@ -83,9 +83,6 @@ button,
   width: auto;
   height: auto;
   margin-right: 0.3em;
-}
-
-[type=search] {
-  box-sizing: border-box;
+  padding: 0;
 }
 `;

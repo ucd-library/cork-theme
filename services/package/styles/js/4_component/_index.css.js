@@ -165,9 +165,6 @@ export default css`
   color: #000;
   transition: block-size 0.3s ease, padding-block 0.3s ease, content-visibility 0.3s ease allow-discrete;
 }
-.accordion__item::details-content > :last-child {
-  margin-bottom: 0;
-}
 .accordion__item[open]::details-content {
   block-size: auto;
   padding-block: 0.5rem;
@@ -209,7 +206,7 @@ export default css`
   background-color: transparent;
   color: var(--category-brand-contrast-color, var(--forced-contrast, var(--list-faq-a)));
 }
-.accordion--faq .accordion__item::details-content::before {
+.accordion--faq .accordion__item > summary + *::before {
   display: inline-block;
   float: left;
   width: var(--list-faq-prefix-spacing);
@@ -806,11 +803,10 @@ export default css`
 .circle-ranking__stroke {
   animation: circle-ranking-progress 1s ease-out forwards;
   fill: none;
-  scale: 0.9;
   stroke: var(--category-brand, #00b2e3);
   stroke-linecap: round;
   stroke-width: 0.8;
-  transform: rotate(124deg);
+  transform: rotate(124deg) scale(0.9);
   transform-origin: center;
 }
 .circle-ranking__media {
@@ -1427,7 +1423,7 @@ export default css`
   --flex-max-width: calc((100% - var(--flex-total-gap)) / var(--flex-columns));
   --flex-calculated-min-width: min(100%, var(--flex-min-width));
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(max(var(--flex-calculated-min-width), var(--flex-max-width)), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(max(var(--flex-calculated-min-width), var(--flex-max-width)), 1fr));
   gap: var(--flex-gap);
   flex-grow: 1;
   margin-bottom: 2rem;
@@ -1588,9 +1584,19 @@ export default css`
   display: flex;
   align-items: center;
 }
-.header__navbar {
-  background-color: #022851;
-  box-shadow: 0 2px 1px oklch(from #022851 l c h/0.15);
+.header__nav-lite {
+  display: none;
+  margin-left: auto;
+}
+@media (min-width: 768px) {
+  .header__nav-lite {
+    display: block;
+  }
+}
+@media (min-width: 768px) {
+  .header--has-nav-lite .nav-tray-toggle--menu {
+    display: none;
+  }
 }
 
 .site-logo {
@@ -3402,6 +3408,54 @@ li:has(.nav-drill__submenu--expanded) .nav-drill__submenu-toggle:after {
 }
 .nav-footer__logo img {
   width: 70%;
+}
+
+.nav-lite {
+  --nav-lite-color: #fff;
+  --nav-lite-highlight: #ffbf00;
+}
+.nav-lite__list {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  gap: 1rem;
+  list-style: none;
+}
+.nav-lite__item {
+  margin: 0;
+  padding: 0;
+}
+.nav-lite a, .nav-lite__button, .nav-lite__nolink {
+  position: relative;
+  display: block;
+  padding: 0.5rem 0.25rem;
+  border: 0;
+  background: transparent;
+  color: var(--nav-lite-color);
+  font-size: inherit;
+  font-weight: 700;
+  line-height: inherit;
+  text-decoration: none;
+}
+.nav-lite a::after, .nav-lite__button::after, .nav-lite__nolink::after {
+  position: absolute;
+  bottom: 3px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--nav-lite-highlight);
+  content: "";
+  opacity: 0;
+  transform: scaleX(0);
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+.nav-lite a:hover, .nav-lite a:focus-visible, .nav-lite a:is(.is-active), .nav-lite__button:hover, .nav-lite__button:focus-visible, .nav-lite__button:is(.is-active), .nav-lite__nolink:hover, .nav-lite__nolink:focus-visible, .nav-lite__nolink:is(.is-active) {
+  color: var(--nav-lite-color);
+}
+.nav-lite a:hover::after, .nav-lite a:focus-visible::after, .nav-lite a:is(.is-active)::after, .nav-lite__button:hover::after, .nav-lite__button:focus-visible::after, .nav-lite__button:is(.is-active)::after, .nav-lite__nolink:hover::after, .nav-lite__nolink:focus-visible::after, .nav-lite__nolink:is(.is-active)::after {
+  opacity: 1;
+  transform: scaleX(1);
 }
 
 .nav-primary {

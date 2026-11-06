@@ -54,6 +54,7 @@ blockquote:before {
 
 hr {
   display: block;
+  box-sizing: content-box;
   height: 1px;
   margin: 2rem 0;
   padding: 0;
