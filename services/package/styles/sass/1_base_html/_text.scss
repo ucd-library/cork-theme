@@ -54,6 +54,7 @@ blockquote {
 // Horizontal Rule
 hr {
   display: block;
+  box-sizing: content-box;
   height: 1px;
   margin: $spacer--large 0;
   padding: 0;

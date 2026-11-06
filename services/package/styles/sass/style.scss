@@ -2,9 +2,6 @@
 //  $LIBRARIES
 //------------------------------------
 
-// Normalize to "reset" browser defaults
-@use "normalize-scss/sass/normalize/import-now";
-
 // Base HTML
 @use "1_base_html" as base_html;
 

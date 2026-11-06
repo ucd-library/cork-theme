@@ -4,6 +4,26 @@
 
 Each entry records one sync of campus's `source/sass`, `source/images`, `source/fonts` into `services/package/styles` on the `upstream-styles` branch. Newest first.
 
+## 2026-11-06: campus redesign (e039219f)
+
+- Upstream commit: `e039219ffe632342b17674909efe5fb30ee05bed`
+- Previous upstream commit: `8212d17`
+- Files: 12 modified, 2 added, 0 renamed, 1 deleted
+
+### Campus commits
+
+- 2026-10-28 SITEFARM-4183 allow flex columns to stretch instead of forcing each column width
+- 2026-10-19 SITEFARM-4163 update ucd-theme-tasks for Vite 8
+- 2026-10-19 SITEFARM-4163 update ucd-theme-tasks
+- 2026-10-19 SITEFARM-4163 refactor to have a custom normalize css file
+- 2026-10-19 SITEFARM-4163 remove legacy css fixes
+- 2026-10-19 SITEFARM-4163 move normalize file to repo and not npm package
+- 2026-10-14 SITEFARM-4170 fix lint
+- 2026-10-14 SITEFARM-4170 use a normal is- class
+- 2026-10-14 SITEFARM-4170 fix button line height mismatch
+- 2026-10-14 SITEFARM-4170 tests for nav-lite
+- 2026-10-14 SITEFARM-4170 add a nav-lite menu component
+
 ## 2026-10-27: campus redesign (8212d172)
 
 - Upstream commit: `8212d17204be559f0717c1de40f0c6ff6726f900`

@@ -63,10 +63,6 @@
         block-size $transition-time ease,
         padding-block $transition-time ease,
         content-visibility $transition-time ease allow-discrete;
-
-      > :last-child {
-        margin-bottom: 0;
-      }
     }
 
     &[open]::details-content {
@@ -124,15 +120,16 @@
       padding-left: var(--list-faq-prefix-spacing);
       background-color: transparent;
       color: var(--category-brand-contrast-color, var(--forced-contrast, var(--list-faq-a)));
+    }
 
-      &::before {
-        display: inline-block;
-        float: left;
-        width: var(--list-faq-prefix-spacing);
-        margin-left: calc(-1 * var(--list-faq-prefix-spacing));
-        content: "A:";
-        font-weight: $font-weight--extra-bold;
-      }
+    // "A:" prefix on the first answer element; `::details-content::before` breaks Lightning CSS.
+    > summary + *::before {
+      display: inline-block;
+      float: left;
+      width: var(--list-faq-prefix-spacing);
+      margin-left: calc(-1 * var(--list-faq-prefix-spacing));
+      content: "A:";
+      font-weight: $font-weight--extra-bold;
     }
 
     &[open]::details-content {
