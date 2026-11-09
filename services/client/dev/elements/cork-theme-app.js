@@ -1,5 +1,5 @@
 import { LitElement } from 'lit';
-import {render, styles} from "./cork-theme-app.tpl.js";
+import { render, styles } from "./cork-theme-app.tpl.js";
 
 // global css
 import '../css/index.js';
@@ -12,6 +12,9 @@ import '@ucd-lib/cork-theme/elements/cork-header';
 import '@ucd-lib/cork-theme/elements/cork-quick-links';
 import '@ucd-lib/cork-theme/elements/cork-primary-nav';
 import '@ucd-lib/cork-theme/elements/cork-nav-lite';
+import '@ucd-lib/cork-theme/elements/cork-search-form';
+import '@ucd-lib/cork-theme/elements/cork-search-tray';
+import '@ucd-lib/cork-theme/elements/cork-search-common';
 
 // icon elements and model
 import '@ucd-lib/cork-icon';

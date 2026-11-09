@@ -5,6 +5,7 @@ import formsCss from '@ucd-lib/cork-theme/styles/js/1_base_html/_forms.css.js';
 import headerCss from '@ucd-lib/cork-theme/styles/js/4_component/_header.css.js';
 import navTrayToggleCss from '@ucd-lib/cork-theme/styles/js/4_component/_nav-tray-toggle.css.js';
 import navTrayCss from '@ucd-lib/cork-theme/styles/js/4_component/_nav-tray.css.js';
+import searchTrayCss from '@ucd-lib/cork-theme/styles/js/4_component/_search-tray.css.js';
 
 import { optionalCssUrl } from '@ucd-lib/cork-theme/utils/assets';
 
@@ -30,6 +31,7 @@ export function styles() {
     headerCss,
     navTrayToggleCss,
     navTrayCss,
+    searchTrayCss,
     elementStyles
   ];
 }
@@ -100,7 +102,7 @@ export function render() {
           <slot name="primary-nav"></slot>
         </div>
         <div id="nav-tray-search" class="nav-tray__content nav-tray__content--search">
-          <slot name="search"></slot>
+          ${_renderSearchSlot.call(this)}
         </div>
         <div id="nav-tray-quicklinks" class="nav-tray__content nav-tray__content--quicklinks">
           <slot name="quick-links"></slot>
@@ -108,10 +110,22 @@ export function render() {
 
       </div>
     </dialog>
-
   </header>
 
   `;
+}
+
+function _renderSearchSlot(){
+  if ( this._slottedComponents.search.ele?.tagName === 'CORK-SEARCH-FORM' ) {
+    return html`
+      <div class='search-tray'>
+        <div class='search-tray__inner'>
+          <slot name="search"></slot>
+        </div>
+      </div>
+    `;
+  }
+  return html`<slot name="search"></slot>`;
 }
 
 /**

@@ -1,0 +1,35 @@
+//------------------------------------
+//  Search tray buttons
+//------------------------------------
+
+// Styles buttons in .search-tray__common exactly like its links, e.g. for NavController button items.
+// Mirrors every `a` rule in campus's sass/4_component/_search-tray.scss: keep in step with it when syncing upstream styles.
+// Disabled buttons have no hover/focus underline (links have no disabled state to copy).
+
+@use "../sass/0_tools" as *;
+
+.search-tray__common {
+  button {
+    // Reset browser button defaults, so the button starts out like an inline link
+    appearance: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    cursor: pointer;
+
+    // Same as campus's `a`
+    color: $brand--primary;
+    text-decoration: none;
+
+    &:not(:disabled):hover,
+    &:focus-visible {
+      text-decoration: underline;
+    }
+
+    &:disabled {
+      cursor: default;
+    }
+  }
+}

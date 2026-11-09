@@ -1,6 +1,6 @@
 # Header
 
-The header and the components that sit in it: `cork-header`, `cork-primary-nav`, `cork-nav-lite` and `cork-quick-links`. For how to import and register elements, see [Elements](elements.md).
+The header and the components that sit in it: `cork-header`, `cork-primary-nav`, `cork-nav-lite`, the search elements (`cork-search-form`, `cork-search-tray`, `cork-search-common`) and `cork-quick-links`. For how to import and register elements, see [Elements](elements.md).
 
 ## cork-header
 
@@ -19,6 +19,7 @@ The header and the components that sit in it: `cork-header`, `cork-primary-nav`,
    ```js
    import '@ucd-lib/cork-theme/elements/cork-header';
    import '@ucd-lib/cork-theme/elements/cork-primary-nav';
+   import '@ucd-lib/cork-theme/elements/cork-search-form';
    import '@ucd-lib/cork-theme/elements/cork-quick-links';
    ```
 
@@ -26,13 +27,16 @@ The header and the components that sit in it: `cork-header`, `cork-primary-nav`,
    <!-- Before -->
    <ucd-theme-header site-name="UC Davis Library" site-url="/">
      <ucd-theme-primary-nav>…</ucd-theme-primary-nav>
-     <ucd-theme-search-popup>…</ucd-theme-search-popup>
+     <ucd-theme-search-popup>
+       <ucd-theme-search-form>…</ucd-theme-search-form>
+     </ucd-theme-search-popup>
      <ucd-theme-quick-links>…</ucd-theme-quick-links>
    </ucd-theme-header>
 
    <!-- After -->
    <cork-header>
      <cork-primary-nav>…</cork-primary-nav>
+     <cork-search-form>…</cork-search-form>
      <cork-quick-links>…</cork-quick-links>
    </cork-header>
    ```
@@ -48,7 +52,7 @@ A child is put in its slot automatically by tag name. Any other element can be u
 | Old child | New child | Slot |
 | --- | --- | --- |
 | `ucd-theme-primary-nav` | `cork-primary-nav`. See [Primary nav](#primary-nav). | `primary-nav` |
-| `ucd-theme-search-popup` | `cork-search`, not built yet. Use your own element with `slot="search"` for now. | `search` |
+| `ucd-theme-search-popup` | `cork-search-form`, or a `cork-search-tray` wrapping a `cork-search-form` and a `cork-search-common`. If both are direct children, the tray is used. See [Search](#search). | `search` |
 | `ucd-theme-quick-links` | `cork-quick-links`. See [Quick links](#quick-links). | `quick-links` |
 | `ucdlib-branding-bar` | `cork-branding-bar`, not built yet. The `branding-bar` slot isn't rendered yet. | `branding-bar` |
 | (new) | `cork-nav-lite`. See [Nav lite](#nav-lite). | `nav-lite` |
@@ -59,6 +63,11 @@ For your own slotted element:
 
 - **Focus:** opening the tray calls the element's `focus()`. Use `delegatesFocus: true` in its shadow root options (as `cork-primary-nav` and `cork-quick-links` do), so focus goes to its first control.
 - **Reset:** when the tray closes or switches to another component, the header calls the element's `onNavTrayHide()` method, if it has one. `cork-primary-nav` uses it to collapse its submenus.
+- **Closing the tray:** dispatch a `cork-nav-tray-close-request` event, e.g. after a search. It's ignored if no tray is open.
+
+  ```js
+  this.dispatchEvent(new CustomEvent('cork-nav-tray-close-request', { bubbles: true, composed: true }));
+  ```
 
 ### Attributes and properties
 
@@ -78,7 +87,7 @@ For your own slotted element:
 
 ### Keyboard and closing
 
-- Escape, a click outside the tray, or the open component's toggle closes the tray. Focus returns to that toggle.
+- Escape, a click outside the tray, the open component's toggle, or a `cork-nav-tray-close-request` event closes the tray. Focus returns to that toggle.
 - With a `cork-nav-lite`, widening the window past 768px with the menu tray open closes it, since its toggle is hidden.
 - `cork-primary-nav` uses Escape to close its submenus first. See [Primary nav](#primary-nav).
 
@@ -173,6 +182,112 @@ Or write its own links, in the same markup as the other menus (see [Nav Markup](
 | `header-component-label` (`headerComponentLabel`) | The nav's `aria-label`. Default: `Main Menu`. |
 | `copy-from-primary-nav` (`copyFromPrimaryNav`) | Copies the top-level items of the header's `cork-primary-nav`. The element's own links are ignored. |
 | `primary-nav-max-items` (`primaryNavMaxItems`) | With `copy-from-primary-nav`, how many items to copy, from the start. Default: all. |
+
+## Search
+
+`ucd-theme-search-popup` and `ucd-theme-search-form` are replaced by three elements. The old popup had its own dropdown; now `cork-header` opens the search in its nav tray.
+
+| Element | Use |
+| --- | --- |
+| `cork-search-form` | The form: a text input, a search button, and optional facet buttons. Put it directly in the header when it's the only thing in the search tray. |
+| `cork-search-tray` | Lays out the search tray when it has a form and common searches. Wraps a `cork-search-form` and a `cork-search-common`. |
+| `cork-search-common` | A list of common search links, below the form. |
+
+### Steps
+
+1. Find the old elements:
+
+   ```
+   grep -rnE "ucd-theme-search-(popup|form)" src
+   ```
+
+2. Replace the popup and form with a `cork-search-form` in the header. Drop the popup wrapper:
+
+   ```js
+   import '@ucd-lib/cork-theme/elements/cork-search-form';
+   ```
+
+   ```html
+   <!-- Before -->
+   <ucd-theme-search-popup>
+     <ucd-theme-search-form @search=${this._onSearch}></ucd-theme-search-form>
+   </ucd-theme-search-popup>
+
+   <!-- After -->
+   <cork-search-form @cork-search=${this._onSearch}></cork-search-form>
+   ```
+
+3. Change `search` listeners to `cork-search`, and `e.detail.searchTerm` to `e.detail.query`.
+4. Change the attributes, as in the table below.
+5. Optionally, add facet buttons or common searches (see below).
+
+### Form attributes and properties
+
+| Old (`ucd-theme-search-form`) | New (`cork-search-form`) |
+| --- | --- |
+| `value`, `placeholder`, `form-action`, `form-method`, `label-text`, `query-param`, `clear-on-search` | Unchanged. |
+| `form-class`, `input-class` | Removed. Use `category-brand` for a background color. |
+| (new) `submit-param` (`submitParam`) | Name of the search button, i.e. its key in the request: `search=Submit`. Default: `search`. |
+| (new) `submit-aria-label` (`submitAriaLabel`) | Accessible name of the search button, which shows an icon. Default: `Search`. |
+| (new) `keep-tray-open` (`keepTrayOpen`) | Keeps the header's tray open after a search. By default, a search closes it. |
+| (new) `category-brand` (`categoryBrand`) | A campus category brand name, e.g. `admin-blue`, for the form's background color. |
+
+| Old (`ucd-theme-search-popup`) | New |
+| --- | --- |
+| `opened`, `open()`, `close()` | Removed. `cork-header` opens and closes its nav tray. |
+| `button-text` | Removed. The header's toggle button is labeled from `header-component-label`. |
+
+### Events
+
+| Old | New |
+| --- | --- |
+| `search`, with `detail.searchTerm` | `cork-search`, with `detail.query` and `detail.facet`. Fired only when `form-action` isn't set; with it, the form submits natively. |
+
+`detail.facet` is the name of the button that submitted the form: a facet button's `name`, or the `submit-param` (default `search`) for the search button and the Enter key.
+
+After `cork-search`, the form fires `cork-nav-tray-close-request`, so the header closes its tray. Set `keep-tray-open` to stop it. The input is also cleared whenever the tray closes.
+
+### Facet buttons
+
+New. Facet buttons run the search with a facet applied, e.g. searching only the directory. Add them as direct child `button` elements of `cork-search-form`:
+
+```html
+<cork-search-form>
+  <button name="directory">Directory</button>
+  <button name="news" aria-label="Search the news">News</button>
+</cork-search-form>
+```
+
+- `name` is required: it's the facet's key in the request, and `detail.facet` in `cork-search`. Buttons without one are skipped.
+- `value` defaults to the button's text, which is also the label shown.
+- `aria-label` is copied over.
+
+They're rendered as submit buttons, so a native submit sends `searchterm=library+hours&news=News`.
+
+### Common searches
+
+New. To show a list of common searches below the form, wrap both in a `cork-search-tray`:
+
+```js
+import '@ucd-lib/cork-theme/elements/cork-search-tray';
+import '@ucd-lib/cork-theme/elements/cork-search-common';
+```
+
+```html
+<cork-header>
+  <cork-search-tray>
+    <cork-search-form>…</cork-search-form>
+    <cork-search-common heading="Popular Searches">
+      <a href="/hours">Library hours</a>
+      <a href="/print">How do I print?</a>
+    </cork-search-common>
+  </cork-search-tray>
+</cork-header>
+```
+
+- `cork-search-tray` puts its children in place by tag name, or by a `slot` attribute (`form` or `common`) for your own elements. It focuses the form when the tray opens, and passes `onNavTrayHide()` on to its children.
+- `cork-search-common` reads the same markup as the other menus (see [Nav Markup](nav-markup.md)), and shows top-level items only. Buttons are styled like its links.
+- `heading` (default `Common Searches`) is the heading above the list. An empty value hides it.
 
 ## Quick links
 

@@ -7,7 +7,8 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
  * @typedef {Object} SlottedComponent
  * @property {String} name - The slot's name, as used in the slot attribute (e.g. 'primary-nav').
  * @property {HTMLElement|null} ele - The light DOM child currently assigned to the slot, or null if there is none.
- * @property {String} corkComponentName - Tag name of the cork element that is assigned to this slot automatically (e.g. 'cork-primary-nav').
+ * @property {String|String[]} corkComponentName - Tag name of the cork element that is assigned to this slot automatically (e.g. 'cork-primary-nav').
+ * An array accepts any of the tags, checked in order, e.g. ['cork-search-tray', 'cork-search-form']. Only one element is assigned.
  * @property {String} [navTrayName] - Name of the nav tray that this component toggles, if any (e.g. 'menu').
  * @property {Object} [defaultAttributes] - Default attributes to apply to the component if not found as properties or attributes on the element itself.
  * @property {String} [label] - Human readable label for the component
@@ -20,6 +21,7 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
  * '@ucd-lib/cork-theme/utils/assets' to load them. Without it, the header keeps its colors and has no images.
  * The image properties below override one image for this element only.
  * When a slotted component's nav tray is hidden (closed, or switched to another tray), the header calls its onNavTrayHide() method, if it has one.
+ * A slotted component can close the open tray by dispatching a cork-nav-tray-close-request event, with bubbles: true and composed: true.
  * @property {String} backdrop - Campus's header bar variant, '1' (default) to '7'. Attribute: backdrop.
  * @property {String} backgroundImageUrl - Overrides the header bar's background image, whichever backdrop is picked. Attribute: background-image-url.
  * @property {String} navTrayMenuBackgroundImageUrl - Overrides the menu tray's background image. Attribute: nav-tray-menu-background-image-url.
@@ -28,7 +30,7 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
  * @property {String} navTrayQuicklinksAccentImageUrl - Overrides the quick links tray's accent (top left outline) image. Attribute: nav-tray-quicklinks-accent-image-url.
  * @property {String} selectedNavComponentName - Name of the component whose nav tray is currently open. One of the keys of _slottedComponents.
  * @slot primary-nav - Main menu. A child cork-primary-nav is assigned here automatically.
- * @slot search - Search form. A child cork-search is assigned here automatically.
+ * @slot search - Search. A child cork-search-tray (form and common searches) or a bare cork-search-form is assigned here automatically.
  * @slot quick-links - Quick links section. A child cork-quick-links is assigned here automatically.
  * @slot branding-bar - Branding bar. A child cork-branding-bar is assigned here automatically.
  * @slot nav-lite - Inline main menu in the header bar, shown on larger screens in place of the menu tray toggle. A child cork-nav-lite is assigned here automatically.
@@ -43,7 +45,7 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
  *
  * <cork-header backdrop="3">
  *   <cork-primary-nav>…</cork-primary-nav>
- *   <cork-search></cork-search>
+ *   <cork-search-form>…</cork-search-form>
  *   <cork-quick-links>…</cork-quick-links>
  * </cork-header>
  */
@@ -77,6 +79,7 @@ export default class CorkHeader extends LitElement {
     this.navTrayQuicklinksAccentImageUrl = '';
     this.render = render.bind(this);
     this._onWindowResize = this._onWindowResize.bind(this);
+    this.addEventListener('cork-nav-tray-close-request', this._onNavTrayCloseRequest.bind(this));
 
     this.ctl = {
       mutationObserver: new MutationObserverController(this, {childList: true}, this._onChildListMutation)
@@ -86,7 +89,7 @@ export default class CorkHeader extends LitElement {
      * @description The header's named slots, and the element currently assigned to each. Kept current by _onChildListMutation.
      * @type {Object}
      * @property {SlottedComponent} primaryNav - The primary-nav slot, for a cork-primary-nav.
-     * @property {SlottedComponent} search - The search slot, for a cork-search.
+     * @property {SlottedComponent} search - The search slot, for a cork-search-tray or cork-search-form.
      * @property {SlottedComponent} quickLinks - The quick-links slot, for a cork-quick-links.
      * @property {SlottedComponent} brandingBar - The branding-bar slot, for a cork-branding-bar.
      */
@@ -103,7 +106,7 @@ export default class CorkHeader extends LitElement {
       search: {
         name: 'search', 
         ele: null, 
-        corkComponentName: 'cork-search',
+        corkComponentName: ['cork-search-tray', 'cork-search-form'],
         navTrayName: 'search',
         defaultAttributes: {
           label: 'Search'
@@ -223,7 +226,11 @@ export default class CorkHeader extends LitElement {
       const slot = this._slottedComponents[key];
       let ele = this.querySelector(`:scope > [slot="${slot.name}"]`);
       if ( !ele ) {
-        ele = this.querySelector(`:scope > ${slot.corkComponentName}:not([slot])`);
+        // Check the tag names in order, so the first one listed wins if more than one is present
+        for ( const tagName of [].concat(slot.corkComponentName) ) {
+          ele = this.querySelector(`:scope > ${tagName}:not([slot])`);
+          if ( ele ) break;
+        }
         if ( ele ) ele.setAttribute('slot', slot.name);
       }
 
@@ -282,6 +289,14 @@ export default class CorkHeader extends LitElement {
    * Clears selectedNavComponentName if the dialog closed itself (e.g. with the Escape key), to keep the toggles in sync.
    */
   _onNavTrayClose() {
+    if ( this.selectedNavComponentName ) this.selectedNavComponentName = null;
+  }
+
+  /**
+   * @description Listener for the cork-nav-tray-close-request event, which a slotted component (or anything inside the header) fires to close the open nav tray,
+   * e.g. after a search. Ignored if no tray is open.
+   */
+  _onNavTrayCloseRequest() {
     if ( this.selectedNavComponentName ) this.selectedNavComponentName = null;
   }
 

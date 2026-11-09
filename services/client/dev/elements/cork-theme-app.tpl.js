@@ -83,7 +83,23 @@ return html`
         </li>
       </ul>
     </cork-primary-nav>
-    <div slot='search'>Search</div>
+    
+    <cork-search-tray>
+      <cork-search-form
+        placeholder="Search the site"
+        @cork-search=${(e) => alert(`Searching for: ${JSON.stringify(e.detail)}`)}
+        form-method="get">
+        <button name="directory">Directory</button>
+        <button name="news" aria-label="Search the news">News</button>
+      </cork-search-form>
+      <cork-search-common heading="Common Searches">
+        <a href="#">What is the deal with that?</a>
+        <a href="#">How do I get started?</a>
+        <a href="#">Where can I find more information?</a>
+        <button @click=${() => alert('Hello!')}>I'm a button</button>
+      </cork-search-common>
+    </cork-search-tray>
+    
     <cork-quick-links highlight two-columns>
       <button @click=${() => alert('Hello!')}>I'm a button</button>
       <a href='/foo'>Foo</a>
