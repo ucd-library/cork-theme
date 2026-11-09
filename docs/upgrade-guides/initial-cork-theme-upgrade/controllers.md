@@ -50,6 +50,20 @@ Each item has `title`, `href`, `target`, `disabled`, `ariaLabel`, `fields` (e.g.
 - `item.renderedEles` holds the item's elements in the shadow DOM once rendered: `item` (from `item.render()`), and in the drill-down `linkToSubmenu` (the toggle button) and `submenu`. `item.focus(key)` focuses one of them (default `item`) and returns whether it took focus, e.g. `item.focus('linkToSubmenu')`.
 - `is-open`, `mobile-only`, `desktop-only` and icons aren't supported yet.
 
+Each parse fires a `cork-nav-items-update` event from the host (bubbling and composed), with `detail.navItems`.
+
+To show another controller's items instead of parsing the host's own markup (as `cork-nav-lite` does with `copy-from-primary-nav`):
+
+```js
+new NavController(this, { noParseHostProperty: 'copyFromPrimaryNav' });
+
+// later, e.g. on the other host's cork-nav-items-update event
+this.ctl.nav.copyNavItems(otherController.navItems, { sliceEnd: 3 });
+```
+
+- `noParseHostProperty`: names a host property. While it's truthy, the light DOM isn't parsed, so the copies aren't overwritten.
+- `copyNavItems(navItems, opts)` replaces `navItems` with copies and re-renders. The copies share nothing with the originals except `ele`, so button clicks still pass through to the original buttons. Their `renderedEles` start empty. Options: `sliceEnd` copies only the first n items; `copySubItems` (default `false`) copies sub items too.
+
 For a drill-down (`renderDrillDown()`), two behaviors from campus's nav-drill.js are opt-in:
 
 ```js

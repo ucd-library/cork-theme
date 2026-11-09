@@ -96,7 +96,7 @@ export function render() {
           </div>
         </div>
 
-        <div id="nav-tray-menu" class="nav-tray__content nav-tray__content--menu">
+        <div id="nav-tray-menu" class="nav-tray__content nav-tray__content--menu" @cork-nav-items-update=${this._copyPrimaryNavItemsToNavLite}>
           <slot name="primary-nav"></slot>
         </div>
         <div id="nav-tray-search" class="nav-tray__content nav-tray__content--search">

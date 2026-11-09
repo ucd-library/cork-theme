@@ -93,11 +93,7 @@ return html`
       <button @click=${() => alert('Hello!')}>I'm a button</button>
     </cork-quick-links>
 
-    <cork-nav-lite>
-      <a href='#'>Bar</a>
-      <a href='#'>Baz</a>
-      <button @click=${() => alert('Hello!')}>I'm a button</button>
-    </cork-nav-lite>
+    <cork-nav-lite copy-from-primary-nav primary-nav-max-items="3"></cork-nav-lite>
   </cork-header>
 
 `;}

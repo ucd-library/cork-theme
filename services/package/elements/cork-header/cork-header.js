@@ -33,6 +33,7 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
  * @slot branding-bar - Branding bar. A child cork-branding-bar is assigned here automatically.
  * @slot nav-lite - Inline main menu in the header bar, shown on larger screens in place of the menu tray toggle. A child cork-nav-lite is assigned here automatically.
  * If the menu tray is open when its toggle is hidden (e.g. the window is widened), the tray closes.
+ * If the nav-lite has copyFromPrimaryNav set, the header copies the primary nav's top-level items into it, and again whenever they change.
  * @example
  * import '@ucd-lib/cork-theme/elements/cork-header';
  * // or the class only, without registering the element:
@@ -164,6 +165,18 @@ export default class CorkHeader extends LitElement {
   }
 
   /**
+   * @description If the cork-nav-lite has copyFromPrimaryNav set, copies the cork-primary-nav's top-level items to it,
+   * up to its primaryNavMaxItems. Called on child list mutations, and on the primary nav's cork-nav-items-update event.
+   * @returns {void}
+   */
+  _copyPrimaryNavItemsToNavLite(){
+    const navItems = this._slottedComponents.primaryNav.ele?._corkNavController?.navItems || [];
+    const navLite = this._slottedComponents.navLite.ele;
+    if ( !navLite?.copyFromPrimaryNav ) return;
+    navLite._corkNavController.copyNavItems(navItems, {sliceEnd: navLite.primaryNavMaxItems});
+  }
+
+  /**
    * @description Callback for when the selectedNavComponentName property changes. Opens or closes the nav tray.
    * @param {string} prevVal - The previous value of the selectedNavComponentName property.
    * @returns {void}
@@ -203,7 +216,7 @@ export default class CorkHeader extends LitElement {
    * @description Callback for MutationObserverController when the child list of the header changes.
    * Finds or assigns the header's direct children to the appropriate slots.
    */
-  _onChildListMutation() {
+  async _onChildListMutation() {
 
     let requestUpdate = false;
     for (const key in this._slottedComponents) {
@@ -221,7 +234,11 @@ export default class CorkHeader extends LitElement {
         requestUpdate = true;
       }
     }
-    if (requestUpdate) this.requestUpdate();
+    if ( requestUpdate ) {
+      this.requestUpdate();
+      await this.updateComplete;
+      this._copyPrimaryNavItemsToNavLite();
+    }
   }
 
   /**

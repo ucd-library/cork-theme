@@ -137,28 +137,42 @@ A `data-nav="description"` field is shown under the item's title, at the top of 
 
 New: `cork-nav-lite` is campus's single-level menu, shown inline in the `cork-header` bar instead of behind the menu tray toggle. **If your app has a small number of top-level menu items, it's a candidate for nav lite.**
 
-- It shows at 768px and up, where it replaces the menu tray toggle. Smaller screens still use the menu tray, so keep a `cork-primary-nav` with the same links.
+- It shows at 768px and up, where it replaces the menu tray toggle. Smaller screens still use the menu tray, so keep a `cork-primary-nav` too.
 - Only top-level items are shown. Sub menus and fields are ignored, so it suits menus whose top-level items are all links or buttons.
-- It reads the same markup as the other menus. See [Nav Markup](nav-markup.md).
+
+The simplest setup copies the primary nav's top-level items, so the links are only written once. `primary-nav-max-items` limits it to the first few:
+
+```html
+<cork-header>
+  <cork-nav-lite copy-from-primary-nav primary-nav-max-items="3"></cork-nav-lite>
+  <cork-primary-nav>
+    <a href="/services">Services</a>
+    <a href="/collections">Collections</a>
+    <a href="/about">About</a>
+    <button>Chat with a librarian</button>
+  </cork-primary-nav>
+</cork-header>
+```
+
+The header does the copying, and copies again whenever the primary nav's items change. Button clicks are still passed through to the buttons in `cork-primary-nav`.
+
+Or write its own links, in the same markup as the other menus (see [Nav Markup](nav-markup.md)):
 
 ```html
 <cork-header>
   <cork-nav-lite>
     <a href="/services">Services</a>
     <a href="/collections">Collections</a>
-    <button>Chat with a librarian</button>
   </cork-nav-lite>
-  <cork-primary-nav>
-    <a href="/services">Services</a>
-    <a href="/collections">Collections</a>
-    <button>Chat with a librarian</button>
-  </cork-primary-nav>
+  <cork-primary-nav>…</cork-primary-nav>
 </cork-header>
 ```
 
 | Attribute | Notes |
 | --- | --- |
 | `header-component-label` (`headerComponentLabel`) | The nav's `aria-label`. Default: `Main Menu`. |
+| `copy-from-primary-nav` (`copyFromPrimaryNav`) | Copies the top-level items of the header's `cork-primary-nav`. The element's own links are ignored. |
+| `primary-nav-max-items` (`primaryNavMaxItems`) | With `copy-from-primary-nav`, how many items to copy, from the start. Default: all. |
 
 ## Quick links
 

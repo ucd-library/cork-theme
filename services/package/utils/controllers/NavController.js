@@ -35,6 +35,8 @@ import { renderItem, renderDrillDown, drillDownStyles } from './NavController.tp
  * @property {LitElement} host - 'this' from a Lit element
  * @property {String} fieldAttribute - Attribute that marks a field element. Default: 'data-nav'
  * @property {NavItem[]} navItems - The parsed items
+ * 
+ * @event cork-nav-items-update - Fired when the navItems are parsed, e.g. on host connection or light DOM mutation. Not fired by copyNavItems.
  *
  * @example
  * import { NavController } from '@ucd-lib/cork-theme/utils/controllers';
@@ -73,12 +75,14 @@ export default class NavController {
    * @param {String} opts.hostFocusedCoordinatesProperty - Property name for the host's focused nav item coordinates. Default: 'focusedNavItem'
    * @param {Boolean} opts.closeSubmenusOnEscape - Drill-down: the Escape key closes the submenu that has focus (or all submenus, if none has focus). Default: false
    * @param {Boolean} opts.setChildHeight - Drill-down: on narrow screens, sizes the expanded submenus to the deepest one, since submenus from level 3 down are absolutely positioned. Default: false
+   * @param {String} opts.noParseHostProperty - If set, the host's property of this name is checked before parsing the light DOM. If truthy, parsing is skipped. Default: undefined
    */
   constructor(host, opts={}){
     (this.host = host).addController(this);
     this.fieldAttribute = opts.fieldAttribute || 'data-nav';
     this.navItems = [];
     this.hostFocusedCoordinatesProperty = opts.hostFocusedCoordinatesProperty || 'focusedNavItem';
+    this.noParseHostProperty = opts.noParseHostProperty;
     this.closeSubmenusOnEscape = opts.closeSubmenusOnEscape || false;
     this.setChildHeight = opts.setChildHeight || false;
     this._onKeydown = this._onKeydown.bind(this);
@@ -106,6 +110,7 @@ export default class NavController {
    * @description Lit controller lifecycle method. Adds the Escape key listener, if opts.closeSubmenusOnEscape is set.
    */
   hostConnected(){
+    this.host._corkNavController = this;
     if ( this.closeSubmenusOnEscape ) this.host.addEventListener('keydown', this._onKeydown);
   }
 
@@ -179,11 +184,18 @@ export default class NavController {
 
   /**
    * @description Callback for MutationObserverController. Also runs when the host connects.
-   * Re-parses the light DOM and requests a host update.
+   * Re-parses the light DOM, requests a host update, and fires cork-nav-items-update.
+   * Does nothing if the host property named by opts.noParseHostProperty is truthy.
    */
   _onMutation(){
+    if ( this.noParseHostProperty && this.host[this.noParseHostProperty] ) return;
     this.navItems = this.parse();
     this.host.requestUpdate();
+    const detail = { navItems: this.navItems };
+    if ( this.host[this.hostFocusedCoordinatesProperty] ) {
+      detail.focusedCoordinates = this.host[this.hostFocusedCoordinatesProperty];
+    }
+    this.host.dispatchEvent(new CustomEvent('cork-nav-items-update', { detail, bubbles: true, composed: true }));
   }
 
   /**
@@ -381,6 +393,46 @@ export default class NavController {
     item.containsCoordinates = (coordinates) => this._containsCoordinates(item, coordinates);
     item.focus = (opts={}) => this._focusItem(item, opts);
     return item;
+  }
+
+  /**
+   * @description Copies a nav item, e.g. from another controller, so the copy shares no references with it, except ele (the light DOM link/button).
+   * @param {NavItem} navItem - The item to copy.
+   * @param {Object} opts - Options.
+   * @param {Boolean} opts.copySubItems - Also copy the sub items, recursively. Otherwise the copy has none. Default: false
+   * @returns {NavItem}
+   */
+  _copyNavItem(navItem, opts={}){
+    return this._makeItem({
+      title: navItem.title,
+      href: navItem.href,
+      target: navItem.target,
+      disabled: navItem.disabled,
+      ariaLabel: navItem.ariaLabel,
+      fields: { ...navItem.fields },
+      subItems: opts.copySubItems ? navItem.subItems.map(subItem => this._copyNavItem(subItem, opts)) : [],
+      navPosition: [...navItem.navPosition],
+      ele: navItem.ele
+    });
+  }
+
+  /**
+   * @description Replaces navItems with copies of another controller's items, and requests a host update.
+   * The copies share no references with the originals, except ele, so clicks still pass through to the original light DOM buttons.
+   * Use with opts.noParseHostProperty, so the host's own light DOM doesn't overwrite the copies.
+   * @param {NavItem[]} navItems - The items to copy, e.g. otherController.navItems.
+   * @param {Object} opts - Options.
+   * @param {Number} opts.sliceEnd - If set, only copies the first sliceEnd items.
+   * @param {Boolean} opts.copySubItems - Also copy the sub items, recursively. Otherwise the copies have none. Default: false
+   * @returns {void}
+   */
+  copyNavItems(navItems, opts={}){
+    let copies = navItems.map(navItem => this._copyNavItem(navItem, opts));
+    if ( opts.sliceEnd ) {
+      copies = copies.slice(0, opts.sliceEnd);
+    }
+    this.navItems = copies;
+    this.host.requestUpdate();
   }
 
   /**
