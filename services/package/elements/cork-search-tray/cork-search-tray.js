@@ -5,17 +5,22 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
 
 /**
  * @description Lays out the cork-header's search tray when it has more than a search form: a cork-search-form and a cork-search-common.
- * Add it as a child of the cork-header element. With only a form, put the cork-search-form directly in the header instead.
- * Its children are assigned to its slots automatically by tag name, or by their slot attribute.
- * Opening the tray focuses the form, and closing it calls onNavTrayHide() on each child that has it.
- * @property {String} headerComponentLabel - Label for the tray, e.g. in the header's nav tray bar. Default: 'Search'. Attribute: header-component-label.
- * @slot form - Search form. A child cork-search-form is assigned here automatically.
- * @slot common - Common searches, shown below the form. A child cork-search-common is assigned here automatically.
- * @example
- * import '@ucd-lib/cork-theme/elements/cork-search-tray';
- * // or the class only, without registering the element:
- * // import CorkSearchTray from '@ucd-lib/cork-theme/elements/cork-search-tray/cork-search-tray.js';
  *
+ * Add it as a child of the cork-header element. With only a form, put the cork-search-form directly in the header instead.
+ *
+ * - Its children are assigned to its slots automatically by tag name, or by their slot attribute.
+ * - Opening the tray focuses the form.
+ * - Closing the tray calls onNavTrayHide() on each child that has it.
+ * @property {String} headerComponentLabel - Label for the tray, e.g. in the header's nav tray bar. Default: 'Search'. Attribute: header-component-label.
+ * @slot form - Search form. A child {@link cork-search-form} is assigned here automatically.
+ * @slot common - Common searches, shown below the form. A child {@link cork-search-common} is assigned here automatically.
+ * @example <caption>Import</caption>
+ * import '@ucd-lib/cork-theme/elements/cork-search-tray';
+ *
+ * // or the class only, without registering the element:
+ * import CorkSearchTray from '@ucd-lib/cork-theme/elements/cork-search-tray/cork-search-tray.js';
+ *
+ * @example <caption>Use</caption>
  * <cork-header>
  *   <cork-search-tray>
  *     <cork-search-form>

@@ -9,11 +9,13 @@ import { NavController } from '@ucd-lib/cork-theme/utils/controllers';
  * @property {String} heading - Heading shown above the list. Default: 'Common Searches'. Attribute: heading.
  * @slot - Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM.
  * Only top-level items are shown.
- * @example
+ * @example <caption>Import</caption>
  * import '@ucd-lib/cork-theme/elements/cork-search-common';
- * // or the class only, without registering the element:
- * // import CorkSearchCommon from '@ucd-lib/cork-theme/elements/cork-search-common/cork-search-common.js';
  *
+ * // or the class only, without registering the element:
+ * import CorkSearchCommon from '@ucd-lib/cork-theme/elements/cork-search-common/cork-search-common.js';
+ *
+ * @example <caption>Use</caption>
  * <cork-search-tray>
  *   <cork-search-form></cork-search-form>
  *   <cork-search-common heading="Popular Searches">

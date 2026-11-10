@@ -4,19 +4,29 @@ import { render, styles } from "./cork-branding-bar.tpl.js";
 import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controllers';
 
 /**
- * @description The site's branding: a logo and the site name, with an optional slogan, both linking to the site's homepage.
- * Add it as a child of the cork-header element, which shows it below the header bar.
+ * @description The site's masthead: a logo and the site name, with an optional slogan, both linking to the site's homepage.
+ * 
+ * Add it as a child of the cork-header element.
  * @property {String} siteName - Name of the site. Default: 'UC Davis Library'. Attribute: site-name.
  * @property {String} siteUrl - URL for the logo and site name links. Default: '/'. Attribute: site-url.
  * @property {String} slogan - Optional text below the site name. Attribute: slogan.
  * @property {Boolean} noSiteLogo - Hides the logo. Attribute: no-site-logo.
  * @slot site-logo - Custom logo, in place of the library's book logo. The first direct child img element is assigned here automatically.
- * It needs no alt text, since the logo link is hidden from assistive technology. Size it with the app's own CSS, since it stays in the light DOM.
- * @example
- * import '@ucd-lib/cork-theme/elements/cork-branding-bar';
- * // or the class only, without registering the element:
- * // import CorkBrandingBar from '@ucd-lib/cork-theme/elements/cork-branding-bar/cork-branding-bar.js';
  *
+ * - It needs no alt text, since the logo link is hidden from assistive technology.
+ * - Size it with the app's own CSS, since it stays in the light DOM.
+ * 
+ * @example <caption>Import</caption>
+ * import '@ucd-lib/cork-theme/elements/cork-branding-bar';
+ * 
+ * // or the class only, without registering the element:
+ * import CorkBrandingBar from '@ucd-lib/cork-theme/elements/cork-branding-bar/cork-branding-bar.js';
+ *
+ * @example <caption>Use</caption>
+ * <!-- Default Library Branding -->
+ * <cork-branding-bar></cork-branding-bar>
+ * 
+ * <!-- Custom Site Branding -->
  * <cork-branding-bar site-name="Special Collections" site-url="/special-collections" slogan="Archives and rare books"></cork-branding-bar>
  *
  * <!-- with a custom logo -->

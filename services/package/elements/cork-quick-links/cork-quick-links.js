@@ -11,11 +11,13 @@ import { NavController } from '@ucd-lib/cork-theme/utils/controllers';
  * @property {Boolean} twoColumns - Shows the links in two columns, when there's room. Attribute: two-columns.
  * @property {Boolean} homeSite - Adds the ucdavis home site's icons to the first three links. Attribute: home-site.
  * @slot - Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM.
- * @example
+ * @example <caption>Import</caption>
  * import '@ucd-lib/cork-theme/elements/cork-quick-links';
- * // or the class only, without registering the element:
- * // import CorkQuickLinks from '@ucd-lib/cork-theme/elements/cork-quick-links/cork-quick-links.js';
  *
+ * // or the class only, without registering the element:
+ * import CorkQuickLinks from '@ucd-lib/cork-theme/elements/cork-quick-links/cork-quick-links.js';
+ *
+ * @example <caption>Use</caption>
  * <cork-quick-links highlight two-columns>
  *   <a href="/hours">Hours</a>
  *   <a href="/give">Give</a>

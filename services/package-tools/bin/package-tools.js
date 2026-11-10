@@ -9,6 +9,7 @@ program
   .description('Tools for generating and maintaining the cork-theme package.')
   .version('1.0.0')
   .command('styles', 'Tools for compiling and transpiling campus-provided SCSS stylesheets.')
+  .command('docs', 'Tools for generating documentation from the package source.')
   ;
 
 // commander exits silently with no arguments, so show help instead

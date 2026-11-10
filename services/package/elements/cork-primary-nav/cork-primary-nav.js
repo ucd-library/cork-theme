@@ -9,11 +9,13 @@ import { NavController } from '@ucd-lib/cork-theme/utils/controllers';
  * @property {String} headerComponentLabel - Label for the menu, e.g. in the header's nav tray. Default: 'Main Menu'. Attribute: header-component-label.
  * @property {Number[]} focusedNavItem - navPosition of the focused item, e.g. [1, 0]. Attribute: focused-nav-item, comma-separated (e.g. "1,0").
  * @slot - Menu: a ul/ol of li elements, nested for sub menus. Not an actual slot, but rather parsed and rendered into the shadow DOM.
- * @example
+ * @example <caption>Import</caption>
  * import '@ucd-lib/cork-theme/elements/cork-primary-nav';
- * // or the class only, without registering the element:
- * // import CorkPrimaryNav from '@ucd-lib/cork-theme/elements/cork-primary-nav/cork-primary-nav.js';
  *
+ * // or the class only, without registering the element:
+ * import CorkPrimaryNav from '@ucd-lib/cork-theme/elements/cork-primary-nav/cork-primary-nav.js';
+ *
+ * @example <caption>Use</caption>
  * <cork-primary-nav>
  *   <ul>
  *     <li>

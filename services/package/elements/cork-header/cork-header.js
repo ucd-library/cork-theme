@@ -16,12 +16,16 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
  */
 
 /**
- * @description The primary site header component that accepts various slotted header components.
- * Its background images come from the --cork-image-* custom properties: call setImageCssCustomProperties() from
- * '@ucd-lib/cork-theme/utils/assets' to load them. Without it, the header keeps its colors and has no images.
- * The image properties below override one image for this element only.
- * When a slotted component's nav tray is hidden (closed, or switched to another tray), the header calls its onNavTrayHide() method, if it has one.
- * A slotted component can close the open tray by dispatching a cork-nav-tray-close-request event, with bubbles: true and composed: true.
+ * @description The primary site header component that accepts various slotted header components and controls their visibility in the nav tray.
+ *
+ * Its background images are set via custom CSS properties: call setImageCssCustomProperties() from
+ * '@ucd-lib/cork-theme/utils/assets' to load them. Without it, the header will have no background art, unless overridden by the background-image-url properties.
+ *
+ * A slotted component that opens in a nav tray can hook into it:
+ *
+ * - When the tray opens, the header calls the component's focus(). Use delegatesFocus to pass it to the first control.
+ * - When the tray is hidden (closed, or switched to another tray), the header calls its onNavTrayHide() method, if it has one.
+ * - To close the open tray, it dispatches a cork-nav-tray-close-request event, with bubbles: true and composed: true.
  * @property {String} backdrop - Campus's header bar variant, '1' (default) to '7'. Attribute: backdrop.
  * @property {String} backgroundImageUrl - Overrides the header bar's background image, whichever backdrop is picked. Attribute: background-image-url.
  * @property {String} navTrayMenuBackgroundImageUrl - Overrides the menu tray's background image. Attribute: nav-tray-menu-background-image-url.
@@ -29,24 +33,45 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
  * @property {String} navTrayQuicklinksBackgroundImageUrl - Overrides the quick links tray's main (bottom right) background image. Attribute: nav-tray-quicklinks-background-image-url.
  * @property {String} navTrayQuicklinksAccentImageUrl - Overrides the quick links tray's accent (top left outline) image. Attribute: nav-tray-quicklinks-accent-image-url.
  * @property {String} selectedNavComponentName - Name of the component whose nav tray is currently open. One of the keys of _slottedComponents.
- * @slot primary-nav - Main menu. A child cork-primary-nav is assigned here automatically.
- * @slot search - Search. A child cork-search-tray (form and common searches) or a bare cork-search-form is assigned here automatically.
- * @slot quick-links - Quick links section. A child cork-quick-links is assigned here automatically.
- * @slot branding-bar - Branding bar. A child cork-branding-bar is assigned here automatically.
- * @slot nav-lite - Inline main menu in the header bar, shown on larger screens in place of the menu tray toggle. A child cork-nav-lite is assigned here automatically.
- * If the menu tray is open when its toggle is hidden (e.g. the window is widened), the tray closes.
- * If the nav-lite has copyFromPrimaryNav set, the header copies the primary nav's top-level items into it, and again whenever they change.
- * @example
+ * @slot primary-nav - Main menu. A child {@link cork-primary-nav} is assigned here automatically.
+ * @slot search - Search. A child {@link cork-search-tray} (form and common searches) or a bare {@link cork-search-form} is assigned here automatically.
+ * @slot quick-links - Quick links section. A child {@link cork-quick-links} is assigned here automatically.
+ * @slot branding-bar - Branding bar. A child {@link cork-branding-bar} is assigned here automatically.
+ * @slot nav-lite - Inline main menu in the header bar, shown on larger screens in place of the menu tray toggle. A child {@link cork-nav-lite} is assigned here automatically.
+ * @example <caption>Import</caption>
  * import '@ucd-lib/cork-theme/elements/cork-header';
- * // or the class only, without registering the element:
- * // import CorkHeader from '@ucd-lib/cork-theme/elements/cork-header/cork-header.js';
- * import { setImageCssCustomProperties } from '@ucd-lib/cork-theme/utils/assets';
- * setImageCssCustomProperties('/images/cork-theme');
  *
+ * // or the class only, without registering the element:
+ * import CorkHeader from '@ucd-lib/cork-theme/elements/cork-header/cork-header.js';
+ *
+ * // and load the header's images
+ * import { setImageCssCustomProperties } from '@ucd-lib/cork-theme/utils/assets';
+ * setImageCssCustomProperties('/images/cork-theme'); // from your own app copied via 'npx cork-theme copy-images'
+ * setImageCssCustomProperties('https://cork-theme.library.ucdavis.edu/images'); // or from the library's site
+ *
+ * @example <caption>Use</caption>
  * <cork-header backdrop="3">
  *   <cork-primary-nav>…</cork-primary-nav>
  *   <cork-search-form>…</cork-search-form>
  *   <cork-quick-links>…</cork-quick-links>
+ *   <cork-branding-bar>…</cork-branding-bar>
+ * </cork-header>
+ *
+ * @example <caption>Overriding images</caption>
+ * <!-- replaces the header bar's and the menu tray's background images, for this header only -->
+ * <cork-header
+ *   background-image-url="/images/my-header-bar.webp"
+ *   nav-tray-menu-background-image-url="/images/my-menu-tray.webp">
+ *   <cork-primary-nav>…</cork-primary-nav>
+ * </cork-header>
+ *
+ * @example <caption>Custom slotted element</caption>
+ * <!-- any element can fill a slot with the slot attribute, in place of the cork element -->
+ * <cork-header>
+ *   <cork-primary-nav>…</cork-primary-nav>
+ *   <div slot="branding-bar" class="my-branding">
+ *     <a href="/">My Site</a>
+ *   </div>
  * </cork-header>
  */
 export default class CorkHeader extends LitElement {

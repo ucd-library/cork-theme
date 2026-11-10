@@ -10,6 +10,7 @@ Documentation for `@ucd-lib/cork-theme`. All links are relative, and a folder's 
   - A Lit `css.js` partial for each Sass partial.
 - **Elements and JS Utilities:** A UC Davis-branded Lit web component library.
 
+- [Reference](reference/readme.md): the elements and utils, generated from their JSDoc with `./devops/cmds/run-package-tool.sh docs jsdoc`.
 - [Upgrade Guides](upgrade-guides/readme.md): what apps must change when this package is updated.
 - [Upstream Styles Log](upstream-styles-log.md): a record of each official UC Davis style update merged in.
 

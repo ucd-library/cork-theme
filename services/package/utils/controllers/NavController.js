@@ -4,6 +4,7 @@ import { renderItem, renderDrillDown, drillDownStyles } from './NavController.tp
 
 /**
  * @typedef {Object} NavItem
+ * @description Used by the NavController to represent a navigation item, which may be a link, button, or title-only item, and may have sub items.
  * @property {String} title - The item's text: from its link/button, its own text, or deprecated link-text attribute.
  * @property {String|null} href - The href as written in the markup, or null.
  * @property {String|null} target - The target attribute, or null.
@@ -14,8 +15,10 @@ import { renderItem, renderDrillDown, drillDownStyles } from './NavController.tp
  * @property {Number[]} navPosition - Index at each level of the tree, from the top. e.g. [0, 2] is the third sub item of the first item.
  * @property {HTMLElement|null} ele - The light DOM link/button that supplied the title, or null.
  * @property {Function} click - For button items: passes a click through to the light DOM button, so its listeners run. Use as the shadow DOM button's click listener, e.g. @click=${item.click}.
+ *
  * Does nothing for other items: links rely on their shadow DOM href, so listeners on a light DOM link don't run.
  * @property {Function} render - Renders the item's own link/button (not its sub items) for the host's shadow DOM, e.g. ${item.render({classes: 'menu__link'})}.
+ *
  * Takes an opts object, where opts.classes is a class string or a classMap object, or just a class string, e.g. ${item.render('menu__link')}.
  * @property {Function} matchesCoordinates - Takes a navPosition (e.g. [1, 0, 2]). Returns true if the item is at exactly that position.
  * @property {Function} containsCoordinates - Takes a navPosition. Returns true if the item is at that position or is one of its ancestors, e.g. [1] and [1, 0] contain [1, 0, 2].
@@ -38,7 +41,7 @@ import { renderItem, renderDrillDown, drillDownStyles } from './NavController.tp
  * 
  * @event cork-nav-items-update - Fired when the navItems are parsed, e.g. on host connection or light DOM mutation. Not fired by copyNavItems.
  *
- * @example
+ * @example <caption>Instantiation</caption>
  * import { NavController } from '@ucd-lib/cork-theme/utils/controllers';
  *
  * // in the host element's constructor
@@ -46,7 +49,25 @@ import { renderItem, renderDrillDown, drillDownStyles } from './NavController.tp
  * // or with a different field attribute
  * this.ctl = { nav: new NavController(this, { fieldAttribute: 'data-cork-nav' }) };
  *
- * <!-- nested lists -->
+ * @example <caption>Rendering</caption>
+ * <!-- in your element template: each item's own link/button -->
+ * ${this.ctl.nav.navItems.map(item => item.render({ classes: 'menu__link' }))}
+ *
+ * <!-- or assign classes per item type -->
+ * ${this.ctl.nav.navItems.map(item => item.render({ typeClasses: { button: 'menu__button', a: 'menu__link', span: 'menu__nolink' } }))}
+ *
+ * <!-- or the whole menu as a drill-down, with ...NavController.drillDownStyles in the element's styles -->
+ * ${this.ctl.nav.renderDrillDown()}
+ *
+ * @example <caption>Light DOM markup</caption>
+ * ```html
+ * <!-- flat: a series of a/button elements, each a title-only item -->
+ * <my-nav>
+ *   <a href="/hours">Hours</a>
+ *   <button>Chat with a librarian</button>
+ * </my-nav>
+ *
+ * <!-- list: li items, nested for sub menus, with fields marked by fieldAttribute -->
  * <my-nav>
  *   <ul>
  *     <li>
@@ -56,15 +77,15 @@ import { renderItem, renderDrillDown, drillDownStyles } from './NavController.tp
  *         <li><a href="/services/borrow">Borrowing</a></li>
  *       </ul>
  *     </li>
+ *     <li>
+ *       Collections
+ *       <ul>
+ *         <li><a href="/collections/special">Special Collections</a></li>
+ *       </ul>
+ *     </li>
  *   </ul>
  * </my-nav>
- *
- * <!-- flat -->
- * <my-nav>
- *   <a href="/">Home</a>
- *   <button>Log out</button>
- * </my-nav>
- *
+ * ```
  */
 export default class NavController {
 
@@ -418,8 +439,9 @@ export default class NavController {
 
   /**
    * @description Replaces navItems with copies of another controller's items, and requests a host update.
-   * The copies share no references with the originals, except ele, so clicks still pass through to the original light DOM buttons.
-   * Use with opts.noParseHostProperty, so the host's own light DOM doesn't overwrite the copies.
+   *
+   * - The copies share no references with the originals, except ele, so clicks still pass through to the original light DOM buttons.
+   * - Use with opts.noParseHostProperty, so the host's own light DOM doesn't overwrite the copies.
    * @param {NavItem[]} navItems - The items to copy, e.g. otherController.navItems.
    * @param {Object} opts - Options.
    * @param {Number} opts.sliceEnd - If set, only copies the first sliceEnd items.

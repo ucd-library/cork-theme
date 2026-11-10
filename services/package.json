@@ -33,6 +33,7 @@
     "@ucd-lib/logger": "^0.0.7",
     "@ucd-lib/spa-router-middleware": "^0.3.0",
     "commander": "^15.0.0",
+    "comment-parser": "^1.4.9",
     "express": "^5.3.0",
     "fontverter": "^2.0.0",
     "harfbuzzjs": "^1.6.4",

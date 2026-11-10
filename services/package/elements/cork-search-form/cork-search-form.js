@@ -5,10 +5,14 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
 
 /**
  * @description A search form: a text input, a search button, and optional facet buttons that each run the search with a facet applied.
+ *
  * Add it as a child of the cork-header element, or of a cork-search-tray to show common searches below it. It also works on its own.
- * With formAction set, the form submits natively. Otherwise it fires a cork-search event for the app to handle.
- * After a search, it asks a parent cork-header to close its nav tray, unless keepTrayOpen is set.
- * The search button submits as submitParam=Submit, and a facet button as its name=value, so the request says which one was used.
+ *
+ * On submit:
+ *
+ * - With formAction set, the form submits natively. Otherwise it fires a cork-search event for the app to handle.
+ * - The search button submits as submitParam=Submit, and a facet button as its name=value, so the request says which one was used.
+ * - After a search, it asks a parent cork-header to close its nav tray, unless keepTrayOpen is set.
  * @property {String} value - The search text. Cleared when the header's nav tray hides the form.
  * @property {String} placeholder - The input's placeholder. Default: 'Search...'. Attribute: placeholder.
  * @property {String} formAction - URL to submit the form to. If unset, the form fires a cork-search event instead. Attribute: form-action.
@@ -21,15 +25,23 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
  * @property {Boolean} keepTrayOpen - Keeps the cork-header's nav tray open after a search. Attribute: keep-tray-open.
  * @property {String} categoryBrand - A campus category brand name, e.g. 'admin-blue', for the form's background color. Attribute: category-brand.
  * @slot - Facet buttons: button elements, direct children only. Not an actual slot, but rather parsed and rendered into the shadow DOM as submit buttons.
- * A button needs a name, which is its key in the request. Its value defaults to its text. Its aria-label is copied over.
- * @event cork-search - Fired on submit when formAction isn't set. detail.query is the search text, and detail.facet is the facet button's name,
- * or the submitParam for the search button and the Enter key.
- * @event cork-nav-tray-close-request - Fired after cork-search, unless keepTrayOpen is set. cork-header closes its nav tray.
- * @example
- * import '@ucd-lib/cork-theme/elements/cork-search-form';
- * // or the class only, without registering the element:
- * // import CorkSearchForm from '@ucd-lib/cork-theme/elements/cork-search-form/cork-search-form.js';
  *
+ * - name: required. Its key in the request.
+ * - value: defaults to its text.
+ * - aria-label: copied over.
+ * @event cork-search - Fired on submit when formAction isn't set.
+ *
+ * - detail.query: the search text.
+ * - detail.facet: the facet button's name, or the submitParam for the search button and the Enter key.
+ * @event cork-nav-tray-close-request - Fired after cork-search, unless keepTrayOpen is set. cork-header closes its nav tray.
+ * @example <caption>Import</caption>
+ * import '@ucd-lib/cork-theme/elements/cork-search-form';
+ *
+ * // or the class only, without registering the element:
+ * import CorkSearchForm from '@ucd-lib/cork-theme/elements/cork-search-form/cork-search-form.js';
+ *
+ * @example <caption>Use</caption>
+ * <!-- handle the search in the app, with facet buttons -->
  * <cork-search-form placeholder="Search the library" @cork-search=${e => this._search(e.detail)}>
  *   <button name="directory">Directory</button>
  *   <button name="news" aria-label="Search the news">News</button>
