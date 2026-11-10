@@ -1,6 +1,6 @@
 # Header
 
-The header and the components that sit in it: `cork-header`, `cork-primary-nav`, `cork-nav-lite`, the search elements (`cork-search-form`, `cork-search-tray`, `cork-search-common`) and `cork-quick-links`. For how to import and register elements, see [Elements](elements.md).
+The header and the components that sit in it: `cork-header`, `cork-primary-nav`, `cork-nav-lite`, the search elements (`cork-search-form`, `cork-search-tray`, `cork-search-common`), `cork-quick-links` and `cork-branding-bar`. For how to import and register elements, see [Elements](elements.md).
 
 ## cork-header
 
@@ -21,6 +21,7 @@ The header and the components that sit in it: `cork-header`, `cork-primary-nav`,
    import '@ucd-lib/cork-theme/elements/cork-primary-nav';
    import '@ucd-lib/cork-theme/elements/cork-search-form';
    import '@ucd-lib/cork-theme/elements/cork-quick-links';
+   import '@ucd-lib/cork-theme/elements/cork-branding-bar';
    ```
 
    ```html
@@ -35,6 +36,7 @@ The header and the components that sit in it: `cork-header`, `cork-primary-nav`,
 
    <!-- After -->
    <cork-header>
+     <cork-branding-bar site-name="UC Davis Library" site-url="/"></cork-branding-bar>
      <cork-primary-nav>…</cork-primary-nav>
      <cork-search-form>…</cork-search-form>
      <cork-quick-links>…</cork-quick-links>
@@ -54,7 +56,7 @@ A child is put in its slot automatically by tag name. Any other element can be u
 | `ucd-theme-primary-nav` | `cork-primary-nav`. See [Primary nav](#primary-nav). | `primary-nav` |
 | `ucd-theme-search-popup` | `cork-search-form`, or a `cork-search-tray` wrapping a `cork-search-form` and a `cork-search-common`. If both are direct children, the tray is used. See [Search](#search). | `search` |
 | `ucd-theme-quick-links` | `cork-quick-links`. See [Quick links](#quick-links). | `quick-links` |
-| `ucdlib-branding-bar` | `cork-branding-bar`, not built yet. The `branding-bar` slot isn't rendered yet. | `branding-bar` |
+| `ucdlib-branding-bar` | `cork-branding-bar`. See [Branding bar](#branding-bar). | `branding-bar` |
 | (new) | `cork-nav-lite`. See [Nav lite](#nav-lite). | `nav-lite` |
 
 The tray's title and the toggle's label come from the child's `header-component-label` attribute (`headerComponentLabel`), e.g. `Main Menu` for `cork-primary-nav`.
@@ -73,7 +75,7 @@ For your own slotted element:
 
 | Old | New |
 | --- | --- |
-| `site-name`, `slogan`, `figure-src`, `site-url`, `branding-figure-aria-label` | Removed. Campus's header has no site branding area. A branding bar is planned (see [Children](#children)). |
+| `site-name`, `slogan`, `figure-src`, `site-url`, `branding-figure-aria-label` | Moved to a child `cork-branding-bar`. See [Branding bar](#branding-bar). |
 | `opened`, `open()`, `close()` | `selectedNavComponentName`: the slot name of the open component (`primary-nav`, `search` or `quick-links`), or `null` when closed. Set it to open or close a tray. |
 | `prevent-fixed` | Removed. The header isn't fixed to the top of the screen. Campus's sticky header isn't supported yet. |
 | `is-demo`, `silence-warnings` | Removed. |
@@ -360,3 +362,81 @@ Custom icons aren't supported yet. The old element showed a first child element 
 ### Buttons
 
 Buttons in the menu are styled like its links. The styles are in `@ucd-lib/cork-theme/styles/js/ucdlib-sass/_nav-quicklinks-buttons.css.js` and `style-ucdlib.css`, for use outside the element.
+
+## Branding bar
+
+`ucdlib-branding-bar` is replaced by `cork-branding-bar`. It also takes over the site branding attributes of `ucd-theme-header` (`site-name`, `slogan`, etc.). It shows a logo and the site name, with an optional slogan, and is meant to sit in a `cork-header`.
+
+### Steps
+
+1. Find the old element and the header's branding attributes:
+
+   ```
+   grep -rnE "ucdlib-branding-bar|site-name|figure-src|branding-figure-aria-label" src
+   ```
+
+2. Change the import and the tag. If the branding was on `ucd-theme-header`, move its attributes to a `cork-branding-bar` in the `cork-header`:
+
+   ```js
+   import '@ucd-lib/cork-theme/elements/cork-branding-bar';
+   ```
+
+   ```html
+   <!-- Before -->
+   <ucd-theme-header site-name="Special Collections" site-url="/special-collections" slogan="Archives and rare books">
+     …
+   </ucd-theme-header>
+
+   <!-- or -->
+   <ucd-theme-header>
+     <ucdlib-branding-bar site-name="Special Collections" site-url="/special-collections" slogan="Archives and rare books"></ucdlib-branding-bar>
+     …
+   </ucd-theme-header>
+
+   <!-- After -->
+   <cork-header>
+     <cork-branding-bar site-name="Special Collections" site-url="/special-collections" slogan="Archives and rare books"></cork-branding-bar>
+     …
+   </cork-header>
+   ```
+
+3. Change the attributes, as in the table below.
+4. If the old element had nav links, they aren't shown yet. See [Nav](#nav).
+
+### Attributes and properties
+
+| Old | New |
+| --- | --- |
+| `site-name`, `site-url`, `slogan` | Unchanged. `site-name` defaults to `UC Davis Library` (the old header's default was empty). |
+| `figure="book"` | The default. |
+| `figure="logo"` | Removed. |
+| `figure="custom"`, `figure-src` | A direct child `img`, which goes in the `site-logo` slot. See [Logo](#logo). |
+| `figure-custom-width` | Removed. Size the slotted logo with your own CSS. See [Logo](#logo). |
+| `branding-figure-aria-label` | Removed. The logo link is now hidden from screen readers. See [Logo](#logo). |
+| (new) `no-site-logo` (`noSiteLogo`) | Hides the logo. |
+| `nav-aria-label`, `navItems` | Not supported yet. See [Nav](#nav). |
+
+### Logo
+
+The library's book logo is shown by default. For your own, add an `img` as a direct child. The first one goes in the `site-logo` slot automatically; any other element can use `slot="site-logo"`.
+
+```html
+<cork-branding-bar site-name="DataLab">
+  <img src="/images/datalab-logo.svg">
+</cork-branding-bar>
+```
+
+The slotted logo stays in the light DOM, so size it with your own CSS, in place of `figure-custom-width`:
+
+```css
+cork-branding-bar img {
+  width: 150px;
+  min-width: 150px;
+}
+```
+
+The logo and the site name link to the same URL, so the logo link is hidden from screen readers and skipped by the Tab key. Your logo doesn't need alt text.
+
+### Nav
+
+Not supported yet. `ucdlib-branding-bar` showed its child links as a nav next to the branding. `cork-branding-bar` will too, but its styles aren't done, and child links are ignored for now.

@@ -110,6 +110,7 @@ export function render() {
 
       </div>
     </dialog>
+    <slot name="branding-bar"></slot>
   </header>
 
   `;

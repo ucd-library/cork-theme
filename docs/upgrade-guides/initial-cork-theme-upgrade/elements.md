@@ -30,3 +30,4 @@ Menu elements read their links with a new markup format: see [Nav Markup](nav-ma
 | (new) | `cork-nav-lite`. See [Header](header.md#nav-lite). |
 | `ucd-theme-search-popup`, `ucd-theme-search-form` | `cork-search-form`, and the new `cork-search-tray` and `cork-search-common`. See [Header](header.md#search). |
 | `ucd-theme-quick-links` | `cork-quick-links`. See [Header](header.md#quick-links). |
+| `ucdlib-branding-bar` | `cork-branding-bar`. See [Header](header.md#branding-bar). |

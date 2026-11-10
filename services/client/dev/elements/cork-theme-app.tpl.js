@@ -109,6 +109,9 @@ return html`
       <button @click=${() => alert('Hello!')}>I'm a button</button>
     </cork-quick-links>
 
+    <cork-branding-bar>
+    </cork-branding-bar>
+
     <cork-nav-lite copy-from-primary-nav primary-nav-max-items="3"></cork-nav-lite>
   </cork-header>
 
