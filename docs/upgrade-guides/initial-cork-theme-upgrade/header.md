@@ -80,6 +80,8 @@ For your own slotted element:
 | `prevent-fixed` | Removed. The header isn't fixed to the top of the screen. Campus's sticky header isn't supported yet. |
 | `is-demo`, `silence-warnings` | Removed. |
 | (new) `backdrop`, `background-image-url`, `nav-tray-*-image-url` | Header bar variant and image overrides. See [Images and Fonts](images-and-fonts.md#cork-header). |
+| (new) `no-page-width` | The header sets `--page-width` on the document by default. This turns it off, e.g. if the app runs its own `PageWidthController`. See [Controllers](controllers.md#pagewidthcontroller). |
+| (new) `image-url`, `font-url` | Where the theme's images and fonts are served from, for the whole document. In place of calling `setImageCssCustomProperties()` and `setFontFaces()`. See [Images and Fonts](images-and-fonts.md#cork-header). |
 
 ### Events
 

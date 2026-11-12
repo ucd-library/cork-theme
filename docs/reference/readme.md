@@ -19,5 +19,5 @@ or `docs jsdoc <name>` for one page.
 ## Utils
 
 - [assets](utils/assets.md): `cssUrl`, `optionalCssUrl`, `setImageCssCustomProperties`, `setFontFaces`, `copyImages`, `copyFonts`
-- [controllers](utils/controllers.md): `MutationObserverController`, `NavController`
+- [controllers](utils/controllers.md): `MutationObserverController`, `NavController`, `PageWidthController`
 - [mixins](utils/mixins.md): `MainDomElementMixin`

@@ -39,6 +39,8 @@ Large theme images (the header bar and its variants, the nav tray backgrounds, t
 
   Always give a full `url(...)` value. An invalid value (such as a bare path) makes the browser drop the whole `background` declaration, color included.
 
+- **No js entry point:** set `image-url` and `font-url` on `cork-header` instead. See [cork-header](#cork-header).
+
 ## Building the Sass yourself
 
 The `--cork-image-*` properties, the embedded small images and the embedded Font Awesome icons are added by the package's own build, after Sass compiles. An app that compiles the package's Sass itself (e.g. `@use "pkg:@ucd-lib/cork-theme/styles/ucdlib-sass/style-ucdlib";`) gets campus's plain output instead. So:
@@ -83,3 +85,15 @@ The fonts can't work the same way, as `@font-face` doesn't allow custom properti
 - `nav-tray-menu-background-image-url`, `nav-tray-search-background-image-url`, `nav-tray-quicklinks-background-image-url` and `nav-tray-quicklinks-accent-image-url` replace a nav tray image.
 
 These set the matching `--cork-image-*` properties on that header only.
+
+- `image-url` and `font-url` call `setImageCssCustomProperties()` and `setFontFaces()` with their values, for apps that have no js entry point to call them from:
+
+  ```html
+  <cork-header
+    image-url="/images/cork-theme"
+    font-url="/fonts/cork-theme">
+    …
+  </cork-header>
+  ```
+
+  Unlike the overrides above, these act on the whole document, not just the header. Use them or the function calls, not both.

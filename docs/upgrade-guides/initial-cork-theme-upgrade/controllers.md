@@ -28,6 +28,7 @@ The Lit reactive controllers moved from `@ucd-lib/theme-elements` to `utils/cont
 | Controller | Changes |
 | --- | --- |
 | `MutationObserverController` | None when imported from `utils/controllers`. Its file was renamed from `mutation-observer.js` to `MutationObserverController.js`, and it is now the default export: change `import { MutationObserverController } from '.../mutation-observer.js'` to `import MutationObserverController from '@ucd-lib/cork-theme/utils/controllers/MutationObserverController.js'`, or import it from `utils/controllers` instead. |
+| `PageWidthController` | See [PageWidthController](#pagewidthcontroller). |
 
 ## NavController
 
@@ -75,11 +76,24 @@ new NavController(this, { closeSubmenusOnEscape: true, setChildHeight: true });
 
 Opening or closing a submenu always moves focus into it (its own link, or its first focusable item) or back to its toggle, and scrolls the other submenus back to the top. `cork-primary-nav` turns both options on.
 
+## PageWidthController
+
+Sets `--page-width` (the page width minus any scrollbar), which the theme's `--full-width` and layout classes such as `l-full-width` are derived from.
+
+`cork-header` now runs one itself, so apps with a `cork-header` can remove their `(new PageWidthController).init()` call. To keep your own instead, set `no-page-width` on the header.
+
+Otherwise, the old call still works. Changes:
+
+- The file is `PageWidthController.js`, and the class is its default export. Importing it from `utils/controllers` works as before.
+- It no longer sets `--full-width`. The theme's CSS sets that.
+- It can take a Lit host as its first argument, and then starts and stops with the host: `new PageWidthController(this)`. With `shouldInit`, it only starts if that returns true: `new PageWidthController(this, { shouldInit: () => !this.noPageWidth })`.
+- The property is set in a `<style id="cork-theme-page-width">` tag rather than inline on `<html>`. The `root` and `selector` options set it on a shadow root instead, like `setImageCssCustomProperties()`: `new PageWidthController(this, { root: this.renderRoot })`.
+- The resize listener is now actually removed by `destroy()`, and `init()` no longer adds a second one when called twice.
+
 ## Not yet moved
 
 - `BreakPointsController`
 - `IntersectionObserverController`
-- `PageWidthController`
 - `PopStateObserverController`
 - `SilsPrimoController`
 - `WaitController`

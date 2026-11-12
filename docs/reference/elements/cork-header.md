@@ -4,8 +4,13 @@
 
 The primary site header component that accepts various slotted header components and controls their visibility in the nav tray.
 
-Its background images are set via custom CSS properties: call setImageCssCustomProperties() from
-'@ucd-lib/cork-theme/utils/assets' to load them. Without it, the header will have no background art, unless overridden by the background-image-url properties.
+By default, background images are set via global CSS properties. Without the image-url or background-image-url attributes, the header will have no background art.
+
+The image-url and font-url attributes are conveniences for apps without a js entry point to make those calls from.
+They act on the whole document, not just the header, so use one or the other, not both.
+
+The header also sets --page-width on the document with a [`PageWidthController`](../utils/controllers.md#pagewidthcontroller), for layout classes such as l-full-width.
+Set the no-page-width attribute to turn this off.
 
 A slotted component that opens in a nav tray can hook into it:
 
@@ -23,6 +28,9 @@ A slotted component that opens in a nav tray can hook into it:
 | `navTraySearchBackgroundImageUrl` | `String` | Overrides the search tray's background image. Attribute: nav-tray-search-background-image-url. |
 | `navTrayQuicklinksBackgroundImageUrl` | `String` | Overrides the quick links tray's main (bottom right) background image. Attribute: nav-tray-quicklinks-background-image-url. |
 | `navTrayQuicklinksAccentImageUrl` | `String` | Overrides the quick links tray's accent (top left outline) image. Attribute: nav-tray-quicklinks-accent-image-url. |
+| `imageUrl` | `String` | Base URL of the theme's large images, e.g. '/images/cork-theme'. Passed to setImageCssCustomProperties(), so it sets the --cork-image-* properties for the whole document. Attribute: image-url. |
+| `fontUrl` | `String` | Base URL of the theme fonts, e.g. '/fonts/cork-theme'. Passed to setFontFaces(), so it loads the fonts for the whole document. Attribute: font-url. |
+| `noPageWidth` | `Boolean` | Stops the header from setting --page-width, e.g. if the app sets it itself. Attribute: no-page-width. |
 | `selectedNavComponentName` | `String` | Name of the component whose nav tray is currently open. One of the keys of _slottedComponents. |
 
 ## Slots
@@ -44,11 +52,6 @@ import '@ucd-lib/cork-theme/elements/cork-header';
 
 // or the class only, without registering the element:
 import CorkHeader from '@ucd-lib/cork-theme/elements/cork-header/cork-header.js';
-
-// and load the header's images
-import { setImageCssCustomProperties } from '@ucd-lib/cork-theme/utils/assets';
-setImageCssCustomProperties('/images/cork-theme'); // from your own app copied via 'npx cork-theme copy-images'
-setImageCssCustomProperties('https://cork-theme.library.ucdavis.edu/images'); // or from the library's site
 ```
 
 **Use**
@@ -59,6 +62,32 @@ setImageCssCustomProperties('https://cork-theme.library.ucdavis.edu/images'); //
   <cork-search-form>…</cork-search-form>
   <cork-quick-links>…</cork-quick-links>
   <cork-branding-bar>…</cork-branding-bar>
+</cork-header>
+```
+
+**Setting image and font origins via utility functions**
+
+```js
+// To set where fonts and images are hosted, you can call the utility functions from your app's js entry point:
+import { setImageCssCustomProperties, setFontFaces } from '@ucd-lib/cork-theme/utils/assets';
+
+// from your own app copied via 'npx cork-theme copy-images' and 'npx cork-theme copy-fonts':
+setImageCssCustomProperties('/images/cork-theme'); 
+setFontFaces('/fonts/cork-theme');
+
+// or from the Library's site
+setImageCssCustomProperties('https://cork-theme.library.ucdavis.edu/images');
+setFontFaces('https://cork-theme.library.ucdavis.edu/fonts');
+```
+
+**Setting image and font origins via attributes**
+
+```html
+<!-- These attributes call the same utility functions, but from the header element. They act on the whole document, not just the header. -->
+<cork-header
+  image-url="https://cork-theme.library.ucdavis.edu/images"
+  font-url="https://cork-theme.library.ucdavis.edu/fonts">
+  <cork-primary-nav>…</cork-primary-nav>
 </cork-header>
 ```
 

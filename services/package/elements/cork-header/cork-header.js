@@ -1,7 +1,8 @@
 import { LitElement } from 'lit';
 import {render, styles} from "./cork-header.tpl.js";
 
-import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controllers';
+import { MutationObserverController, PageWidthController } from '@ucd-lib/cork-theme/utils/controllers';
+import { setImageCssCustomProperties, setFontFaces } from '@ucd-lib/cork-theme/utils/assets';
 
 /**
  * @typedef {Object} SlottedComponent
@@ -18,8 +19,13 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
 /**
  * @description The primary site header component that accepts various slotted header components and controls their visibility in the nav tray.
  *
- * Its background images are set via custom CSS properties: call setImageCssCustomProperties() from
- * '@ucd-lib/cork-theme/utils/assets' to load them. Without it, the header will have no background art, unless overridden by the background-image-url properties.
+ * By default, background images are set via global CSS properties. Without the image-url or background-image-url attributes, the header will have no background art.
+ *
+ * The image-url and font-url attributes are conveniences for apps without a js entry point to make those calls from.
+ * They act on the whole document, not just the header, so use one or the other, not both.
+ *
+ * The header also sets --page-width on the document with a {@link PageWidthController}, for layout classes such as l-full-width.
+ * Set the no-page-width attribute to turn this off.
  *
  * A slotted component that opens in a nav tray can hook into it:
  *
@@ -32,6 +38,9 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
  * @property {String} navTraySearchBackgroundImageUrl - Overrides the search tray's background image. Attribute: nav-tray-search-background-image-url.
  * @property {String} navTrayQuicklinksBackgroundImageUrl - Overrides the quick links tray's main (bottom right) background image. Attribute: nav-tray-quicklinks-background-image-url.
  * @property {String} navTrayQuicklinksAccentImageUrl - Overrides the quick links tray's accent (top left outline) image. Attribute: nav-tray-quicklinks-accent-image-url.
+ * @property {String} imageUrl - Base URL of the theme's large images, e.g. '/images/cork-theme'. Passed to setImageCssCustomProperties(), so it sets the --cork-image-* properties for the whole document. Attribute: image-url.
+ * @property {String} fontUrl - Base URL of the theme fonts, e.g. '/fonts/cork-theme'. Passed to setFontFaces(), so it loads the fonts for the whole document. Attribute: font-url.
+ * @property {Boolean} noPageWidth - Stops the header from setting --page-width, e.g. if the app sets it itself. Attribute: no-page-width.
  * @property {String} selectedNavComponentName - Name of the component whose nav tray is currently open. One of the keys of _slottedComponents.
  * @slot primary-nav - Main menu. A child {@link cork-primary-nav} is assigned here automatically.
  * @slot search - Search. A child {@link cork-search-tray} (form and common searches) or a bare {@link cork-search-form} is assigned here automatically.
@@ -44,17 +53,32 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
  * // or the class only, without registering the element:
  * import CorkHeader from '@ucd-lib/cork-theme/elements/cork-header/cork-header.js';
  *
- * // and load the header's images
- * import { setImageCssCustomProperties } from '@ucd-lib/cork-theme/utils/assets';
- * setImageCssCustomProperties('/images/cork-theme'); // from your own app copied via 'npx cork-theme copy-images'
- * setImageCssCustomProperties('https://cork-theme.library.ucdavis.edu/images'); // or from the library's site
- *
  * @example <caption>Use</caption>
  * <cork-header backdrop="3">
  *   <cork-primary-nav>…</cork-primary-nav>
  *   <cork-search-form>…</cork-search-form>
  *   <cork-quick-links>…</cork-quick-links>
  *   <cork-branding-bar>…</cork-branding-bar>
+ * </cork-header>
+ *
+ * @example <caption>Setting image and font origins via utility functions</caption>
+ * // To set where fonts and images are hosted, you can call the utility functions from your app's js entry point:
+ * import { setImageCssCustomProperties, setFontFaces } from '@ucd-lib/cork-theme/utils/assets';
+ * 
+ * // from your own app copied via 'npx cork-theme copy-images' and 'npx cork-theme copy-fonts':
+ * setImageCssCustomProperties('/images/cork-theme'); 
+ * setFontFaces('/fonts/cork-theme');
+ * 
+ * // or from the Library's site
+ * setImageCssCustomProperties('https://cork-theme.library.ucdavis.edu/images');
+ * setFontFaces('https://cork-theme.library.ucdavis.edu/fonts');
+ * 
+ * @example <caption>Setting image and font origins via attributes</caption>
+ * <!-- These attributes call the same utility functions, but from the header element. They act on the whole document, not just the header. -->
+ * <cork-header
+ *   image-url="https://cork-theme.library.ucdavis.edu/images"
+ *   font-url="https://cork-theme.library.ucdavis.edu/fonts">
+ *   <cork-primary-nav>…</cork-primary-nav>
  * </cork-header>
  *
  * @example <caption>Overriding images</caption>
@@ -85,6 +109,9 @@ export default class CorkHeader extends LitElement {
       navTrayQuicklinksBackgroundImageUrl: { type: String, attribute: 'nav-tray-quicklinks-background-image-url' },
       navTrayQuicklinksAccentImageUrl: { type: String, attribute: 'nav-tray-quicklinks-accent-image-url' },
       selectedNavComponentName: { type: String},
+      imageUrl: { type: String, attribute: 'image-url' },
+      fontUrl: { type: String, attribute: 'font-url' },
+      noPageWidth: { type: Boolean, attribute: 'no-page-width' },
       _selectedNavComponent: { state: true },
       _slottedComponents: { type: Object }
     }
@@ -102,12 +129,16 @@ export default class CorkHeader extends LitElement {
     this.navTraySearchBackgroundImageUrl = '';
     this.navTrayQuicklinksBackgroundImageUrl = '';
     this.navTrayQuicklinksAccentImageUrl = '';
+    this.imageUrl = '';
+    this.fontUrl = '';
+    this.noPageWidth = false;
     this.render = render.bind(this);
     this._onWindowResize = this._onWindowResize.bind(this);
     this.addEventListener('cork-nav-tray-close-request', this._onNavTrayCloseRequest.bind(this));
 
     this.ctl = {
-      mutationObserver: new MutationObserverController(this, {childList: true}, this._onChildListMutation)
+      mutationObserver: new MutationObserverController(this, {childList: true}, this._onChildListMutation),
+      pageWidth: new PageWidthController(this, { shouldInit: () => !this.noPageWidth })
     }
 
     /**
@@ -183,12 +214,22 @@ export default class CorkHeader extends LitElement {
   }
 
   /**
-   * @description Standard Lit lifecycle method
+   * @description Standard Lit lifecycle method. Opens or closes the nav tray, sets the image and font origins when imageUrl or fontUrl change to a non-empty value,
+   * and starts or stops the page width controller when noPageWidth changes.
    * @param {Map} props - Map of changed properties and their previous values
    */
   willUpdate(props){
     if ( props.has('selectedNavComponentName') ) {
       this._onSelectedNavComponentNameChange(props.get('selectedNavComponentName'));
+    }
+    if ( props.has('imageUrl') && this.imageUrl ) {
+      setImageCssCustomProperties(this.imageUrl);
+    }
+    if ( props.has('fontUrl') && this.fontUrl ) {
+      setFontFaces(this.fontUrl);
+    }
+    if ( props.has('noPageWidth') ) {
+      this.noPageWidth ? this.ctl.pageWidth.destroy() : this.ctl.pageWidth.init();
     }
   }
 
