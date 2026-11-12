@@ -4,7 +4,7 @@ import { render, styles } from "./cork-search-tray.tpl.js";
 import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controllers';
 
 /**
- * @description Lays out the cork-header's search tray when it has more than just a search form. Add it as a child of the cork-header element.
+ * @description Lays out the cork-header's search tray when it has more than just a search form. Add it as a child of the {@link cork-header} element.
  * @property {String} headerComponentLabel - Label for the tray, e.g. in the header's nav tray bar. Default: 'Search'. Attribute: header-component-label.
  * @slot form - Search form. A child {@link cork-search-form} is assigned here automatically.
  * @slot common - Common searches, shown below the form. A child {@link cork-search-common} is assigned here automatically.

@@ -4,9 +4,7 @@ import { render, styles } from "./cork-branding-bar.tpl.js";
 import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controllers';
 
 /**
- * @description The site's masthead: a logo and the site name, with an optional slogan, both linking to the site's homepage.
- * 
- * Add it as a child of the cork-header element.
+ * @description The site's masthead: a logo and the site name, with an optional slogan, both linking to the site's homepage. Add it as a child of the {@link cork-header} element.
  * @property {String} siteName - Name of the site. Default: 'UC Davis Library'. Attribute: site-name.
  * @property {String} siteUrl - URL for the logo and site name links. Default: '/'. Attribute: site-url.
  * @property {String} slogan - Optional text below the site name. Attribute: slogan.

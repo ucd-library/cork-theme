@@ -2,7 +2,7 @@
 
 # cork-search-tray
 
-Lays out the cork-header's search tray when it has more than just a search form. Add it as a child of the cork-header element.
+Lays out the cork-header's search tray when it has more than just a search form. Add it as a child of the [`cork-header`](../elements/cork-header.md) element.
 
 ## Properties
 

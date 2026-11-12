@@ -3,7 +3,7 @@
 # cork-search-common
 
 A list of common searches, shown below the search form in the cork-header's search tray.
-Add it as a child of a cork-search-tray in cork-header, alongside a cork-search-form.
+Add it as a child of a [`cork-search-tray`](../elements/cork-search-tray.md) in [`cork-header`](../elements/cork-header.md), alongside a [`cork-search-form`](../elements/cork-search-form.md).
 
 ## Properties
 

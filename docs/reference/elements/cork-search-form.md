@@ -2,7 +2,7 @@
 
 # cork-search-form
 
-A simple search form with optional facet buttons. Can be added as a child of the cork-header element, or of a cork-search-tray.
+A simple search form with optional facet buttons. Can be added as a child of the [`cork-header`](../elements/cork-header.md) element, or of a [`cork-search-tray`](../elements/cork-search-tray.md).
 
 On submit:
 

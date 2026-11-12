@@ -2,9 +2,7 @@
 
 # cork-branding-bar
 
-The site's masthead: a logo and the site name, with an optional slogan, both linking to the site's homepage.
-
-Add it as a child of the cork-header element.
+The site's masthead: a logo and the site name, with an optional slogan, both linking to the site's homepage. Add it as a child of the [`cork-header`](../elements/cork-header.md) element.
 
 ## Properties
 

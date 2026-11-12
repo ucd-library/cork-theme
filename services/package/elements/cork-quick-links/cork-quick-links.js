@@ -5,7 +5,7 @@ import { NavController } from '@ucd-lib/cork-theme/utils/controllers';
 
 /**
  * @description A quick links menu component: a short list of links/buttons outside of the main navigation.
- * Add it as a child of the cork-header element.
+ * Add it as a child of the {@link cork-header} element.
  * @property {String} headerComponentLabel - Label for the menu, e.g. in the header's nav tray. Default: 'Quick Links'. Attribute: header-component-label.
  * @property {Boolean} highlight - Shows the first three links as large highlighted buttons. Attribute: highlight.
  * @property {Boolean} twoColumns - Shows the links in two columns, when there's room. Attribute: two-columns.

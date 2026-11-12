@@ -8,7 +8,7 @@
  * The property is set in a style tag (id cork-theme-page-width), one per root. Controllers on the same root share the tag,
  * and destroy() on any started one removes it.
  * 
- * The cork-header element sets the property by default, so you don't need to use this controller if you have a cork-header. 
+ * The {@link cork-header} element sets the property by default, so you don't need to use this controller if you have a cork-header. 
  * @param {LitElement|Object} host - A Lit element to attach the controller to. Optional: pass opts as the first argument instead to use it standalone.
  * @param {Object} opts - Options.
  * @param {Document|ShadowRoot} opts.root - Where to add the style tag. Default: document.

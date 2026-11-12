@@ -4,7 +4,7 @@ import { render, styles } from "./cork-search-form.tpl.js";
 import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controllers';
 
 /**
- * @description A simple search form with optional facet buttons. Can be added as a child of the cork-header element, or of a cork-search-tray.
+ * @description A simple search form with optional facet buttons. Can be added as a child of the {@link cork-header} element, or of a {@link cork-search-tray}.
  *
  * On submit:
  *

@@ -3,7 +3,7 @@
 # cork-quick-links
 
 A quick links menu component: a short list of links/buttons outside of the main navigation.
-Add it as a child of the cork-header element.
+Add it as a child of the [`cork-header`](../elements/cork-header.md) element.
 
 ## Properties
 

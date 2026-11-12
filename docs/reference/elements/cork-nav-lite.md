@@ -2,7 +2,7 @@
 
 # cork-nav-lite
 
-A single-level main menu, shown inline in the cork-header bar. For sites with only a few top-level links. Add it as a child of the cork-header element.
+A single-level main menu, shown inline in the cork-header bar. For sites with only a few top-level links. Add it as a child of the [`cork-header`](../elements/cork-header.md) element.
 
 The header shows it on larger screens, in place of the menu tray toggle.
 Smaller screens use the menu tray, so the site still also needs a cork-primary-nav.

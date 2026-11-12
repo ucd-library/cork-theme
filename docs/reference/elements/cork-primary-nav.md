@@ -2,7 +2,7 @@
 
 # cork-primary-nav
 
-The site's main menu. Add it as a child of the cork-header element, which opens it in its nav tray.
+The site's main menu. Add it as a child of the [`cork-header`](../elements/cork-header.md) element, which opens it in its nav tray.
 
 ## Properties
 

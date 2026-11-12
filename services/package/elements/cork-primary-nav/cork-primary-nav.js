@@ -4,7 +4,7 @@ import { render, styles } from "./cork-primary-nav.tpl.js";
 import { NavController } from '@ucd-lib/cork-theme/utils/controllers';
 
 /**
- * @description The site's main menu. Add it as a child of the cork-header element, which opens it in its nav tray.
+ * @description The site's main menu. Add it as a child of the {@link cork-header} element, which opens it in its nav tray.
  * @property {String} headerComponentLabel - Label for the menu, e.g. in the header's nav tray. Default: 'Main Menu'. Attribute: header-component-label.
  * @property {Number[]} focusedNavItem - navPosition of the focused item, e.g. [1, 0]. Attribute: focused-nav-item, comma-separated (e.g. "1,0").
  * @slot - Menu: a ul/ol of li elements, nested for sub menus. Not an actual slot, but rather parsed and rendered into the shadow DOM by {@link NavController}. See its examples for the markup formats.

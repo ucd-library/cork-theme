@@ -4,7 +4,7 @@ import { render, styles } from "./cork-nav-lite.tpl.js";
 import { NavController } from '@ucd-lib/cork-theme/utils/controllers';
 
 /**
- * @description A single-level main menu, shown inline in the cork-header bar. For sites with only a few top-level links. Add it as a child of the cork-header element.
+ * @description A single-level main menu, shown inline in the cork-header bar. For sites with only a few top-level links. Add it as a child of the {@link cork-header} element.
  *
  * The header shows it on larger screens, in place of the menu tray toggle.
  * Smaller screens use the menu tray, so the site still also needs a cork-primary-nav.

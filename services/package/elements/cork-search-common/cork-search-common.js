@@ -5,7 +5,7 @@ import { NavController } from '@ucd-lib/cork-theme/utils/controllers';
 
 /**
  * @description A list of common searches, shown below the search form in the cork-header's search tray.
- * Add it as a child of a cork-search-tray in cork-header, alongside a cork-search-form.
+ * Add it as a child of a {@link cork-search-tray} in {@link cork-header}, alongside a {@link cork-search-form}.
  * @property {String} heading - Heading shown above the list. Default: 'Common Searches'. Attribute: heading.
  * @slot - Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM by {@link NavController}. See its examples for the markup formats.
  * Only top-level items are shown.
