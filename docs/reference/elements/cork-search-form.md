@@ -2,9 +2,7 @@
 
 # cork-search-form
 
-A search form: a text input, a search button, and optional facet buttons that each run the search with a facet applied.
-
-Add it as a child of the cork-header element, or of a cork-search-tray to show common searches below it. It also works on its own.
+A simple search form with optional facet buttons. Can be added as a child of the cork-header element, or of a cork-search-tray.
 
 On submit:
 
@@ -63,15 +61,23 @@ import '@ucd-lib/cork-theme/elements/cork-search-form';
 import CorkSearchForm from '@ucd-lib/cork-theme/elements/cork-search-form/cork-search-form.js';
 ```
 
-**Use**
+**Listen for search events**
 
 ```html
-<!-- handle the search in the app, with facet buttons -->
-<cork-search-form placeholder="Search the library" @cork-search=${e => this._search(e.detail)}>
-  <button name="directory">Directory</button>
-  <button name="news" aria-label="Search the news">News</button>
-</cork-search-form>
+<cork-search-form placeholder="Search the library" @cork-search=${e => this._search(e.detail)}></cork-search-form>
+```
 
-<!-- or submit natively -->
+**Submit a search natively**
+
+```html
 <cork-search-form form-action="/search" form-method="get"></cork-search-form>
+```
+
+**With facet buttons**
+
+```html
+<cork-search-form placeholder="Search Library Materials">
+  <button name="books">Books</button>
+  <button name="articles">Articles</button>
+</cork-search-form>
 ```

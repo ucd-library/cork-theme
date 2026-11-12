@@ -45,8 +45,10 @@ The markup it reads is described in [Nav Markup](nav-markup.md). The field attri
 Each item has `title`, `href`, `target`, `disabled`, `ariaLabel`, `fields` (e.g. `fields.description`), `subItems`, `navPosition` (e.g. `[0, 2]`, for `getNavItem()`), `ele`, the light DOM link/button, and `click`.
 
 - `item.render({ classes })` renders the item's own button, link, or (with no href) span, with click handling done. `classes` is a string or a `classMap` object, and a plain string works as shorthand: `item.render('menu__link')`.
-- Elements that render items themselves use `item.click` as a button's click listener (e.g. `@click=${item.click}`). It passes the click through to `ele`, so click handlers on the user's buttons still run.
-- Links aren't passed through: the shadow DOM link navigates by its `href`, so click handlers on the user's `<a>` elements don't run. SPA routers that use `event.composedPath()`, such as cork-app-state's, still intercept them.
+- Elements that render items themselves use `item.click` as a button's or link's click listener (e.g. `@click=${item.click}`). `item.render()` does this already.
+- `item.click` fires `cork-nav-item-click` from the host (bubbling and composed), with `detail.navItem` and `detail.originalEvent` (the click). For a copied item (see `copyNavItems` below), `detail.navItem` is the copy.
+- For buttons, it then passes the click through to `ele`, so click handlers on the user's buttons still run.
+- Links aren't passed through: the shadow DOM link navigates by its `href`, so click handlers on the user's `<a>` elements don't run. Listen for `cork-nav-item-click` instead. SPA routers that use `event.composedPath()`, such as cork-app-state's, still intercept them.
 - `item.matchesCoordinates(navPosition)` is true if the item is at exactly that position. `item.containsCoordinates(navPosition)` is also true for its ancestors, e.g. for highlighting the branch leading to a focused item.
 - `item.renderedEles` holds the item's elements in the shadow DOM once rendered: `item` (from `item.render()`), and in the drill-down `linkToSubmenu` (the toggle button) and `submenu`. `item.focus(key)` focuses one of them (default `item`) and returns whether it took focus, e.g. `item.focus('linkToSubmenu')`.
 - `is-open`, `mobile-only`, `desktop-only` and icons aren't supported yet.

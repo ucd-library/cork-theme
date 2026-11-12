@@ -18,7 +18,13 @@ Add it as a child of the cork-header element.
 
 | Name | Description |
 | --- | --- |
-| (default) | Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM. |
+| (default) | Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM by [`NavController`](../utils/controllers/NavController.md). See its examples for the markup formats. |
+
+## Events
+
+| Name | Description |
+| --- | --- |
+| `cork-nav-item-click` | Fired when a rendered link or button is clicked, with the clicked item in detail.navItem. See [`NavController`](../utils/controllers/NavController.md). |
 
 ## Methods
 

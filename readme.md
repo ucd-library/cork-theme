@@ -95,4 +95,6 @@ This rebuilds every page and clears out pages for deleted sources. To rebuild on
 ./devops/cmds/run-package-tool.sh docs jsdoc cork-header controllers
 ```
 
-The index, `docs/reference/readme.md`, is rebuilt every time. To run every docs build, use `docs run-all`.
+Controllers get a page each, under `docs/reference/utils/controllers/`. Name one to rebuild only its page (e.g. `docs jsdoc NavController`), or `controllers` for all of them. To split another util folder the same way, add it to `SPLIT_UTILS` in `services/package-tools/lib/docs.js`.
+
+The indexes, `docs/reference/readme.md` and `docs/reference/utils/controllers/readme.md`, are rebuilt every time. To run every docs build, use `docs run-all`.

@@ -7,17 +7,16 @@
  * @property {String|Function} callback - Called on mutation: either the name of an element method, or a function
  * Default: '_onChildListMutation'
  *
- * @examples
- * // For a basic childlist observer, instantiate this class in your element:
+ * @example <caption>Basic childlist observer</caption>
  *  mutationObserver = new MutationObserverController(this);
  *
- * // or customize the options/callback:
+ * @example <caption>Custome the options/callback</caption>
  *  mutationObserver = new MutationObserverController(this, {childList: true, attributes: true}, 'aDifferentCallbackMethod');
  *
- * // or pass a function:
- *  mutationObserver = new MutationObserverController(this, {childList: true}, (mutationsList) => this._update(mutationsList));
+ * @example <caption>Use a function as the callback</caption>
+ *  mutationObserver = new MutationObserverController(this, {childList: true}, this._onMutation);
  * 
- * // or from another controller
+ * @example <caption>Use from another controller</caption>
  * mutationObserver = new MutationObserverController(host, {childList: true}, this._onChildListMutation.bind(this));
  */
 export default class MutationObserverController {

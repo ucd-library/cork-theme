@@ -10,7 +10,8 @@ import { NavController } from '@ucd-lib/cork-theme/utils/controllers';
  * @property {Boolean} highlight - Shows the first three links as large highlighted buttons. Attribute: highlight.
  * @property {Boolean} twoColumns - Shows the links in two columns, when there's room. Attribute: two-columns.
  * @property {Boolean} homeSite - Adds the ucdavis home site's icons to the first three links. Attribute: home-site.
- * @slot - Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM.
+ * @slot - Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM by {@link NavController}. See its examples for the markup formats.
+ * @event cork-nav-item-click - Fired when a rendered link or button is clicked, with the clicked item in detail.navItem. See {@link NavController}.
  * @example <caption>Import</caption>
  * import '@ucd-lib/cork-theme/elements/cork-quick-links';
  *

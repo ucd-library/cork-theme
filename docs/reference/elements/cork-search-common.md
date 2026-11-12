@@ -3,7 +3,7 @@
 # cork-search-common
 
 A list of common searches, shown below the search form in the cork-header's search tray.
-Add it as a child of a cork-search-tray, alongside a cork-search-form.
+Add it as a child of a cork-search-tray in cork-header, alongside a cork-search-form.
 
 ## Properties
 
@@ -15,7 +15,13 @@ Add it as a child of a cork-search-tray, alongside a cork-search-form.
 
 | Name | Description |
 | --- | --- |
-| (default) | Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM. Only top-level items are shown. |
+| (default) | Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM by [`NavController`](../utils/controllers/NavController.md). See its examples for the markup formats. Only top-level items are shown. |
+
+## Events
+
+| Name | Description |
+| --- | --- |
+| `cork-nav-item-click` | Fired when a rendered link or button is clicked, with the clicked item in detail.navItem. See [`NavController`](../utils/controllers/NavController.md). |
 
 ## Methods
 

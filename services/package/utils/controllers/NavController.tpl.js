@@ -40,7 +40,7 @@ export function drillDownStyles() {
 
 /**
  * @description Renders an item's own element for the host's shadow DOM: a button, anchor, or span.
- * Automatically wires up button clicks and relevant attributes, and records the element as item.renderedEles.item. Does not render sub items.
+ * Automatically wires up button and link clicks (to item.click) and relevant attributes, and records the element as item.renderedEles.item. Does not render sub items.
  * Called by item.render.
  * @param {NavItem} item - The item.
  * @param {Object|String} opts - Options. A string is treated as opts.classes.
@@ -80,7 +80,8 @@ export function renderItem(item, opts={}){
         href=${item.href}
         target=${ifDefined(item.target ?? undefined)}
         class=${classAtr}
-        aria-label=${ariaLabel}>${item.title}${opts.suffixTemplate ? opts.suffixTemplate : html``}</a>`;
+        aria-label=${ariaLabel}
+        @click=${item.click}>${item.title}${opts.suffixTemplate ? opts.suffixTemplate : html``}</a>`;
   }
   return html`<span ${eleRef} class=${classAtr}>${item.title}${opts.suffixTemplate ? opts.suffixTemplate : html``}</span>`;
 }

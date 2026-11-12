@@ -4,9 +4,7 @@ import { render, styles } from "./cork-search-form.tpl.js";
 import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controllers';
 
 /**
- * @description A search form: a text input, a search button, and optional facet buttons that each run the search with a facet applied.
- *
- * Add it as a child of the cork-header element, or of a cork-search-tray to show common searches below it. It also works on its own.
+ * @description A simple search form with optional facet buttons. Can be added as a child of the cork-header element, or of a cork-search-tray.
  *
  * On submit:
  *
@@ -40,15 +38,17 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
  * // or the class only, without registering the element:
  * import CorkSearchForm from '@ucd-lib/cork-theme/elements/cork-search-form/cork-search-form.js';
  *
- * @example <caption>Use</caption>
- * <!-- handle the search in the app, with facet buttons -->
- * <cork-search-form placeholder="Search the library" @cork-search=${e => this._search(e.detail)}>
- *   <button name="directory">Directory</button>
- *   <button name="news" aria-label="Search the news">News</button>
- * </cork-search-form>
+ * @example <caption>Listen for search events</caption>
+ * <cork-search-form placeholder="Search the library" @cork-search=${e => this._search(e.detail)}></cork-search-form>
  *
- * <!-- or submit natively -->
+ * @example <caption>Submit a search natively</caption>
  * <cork-search-form form-action="/search" form-method="get"></cork-search-form>
+ * 
+ * @example <caption>With facet buttons</caption>
+ * <cork-search-form placeholder="Search Library Materials">
+ *   <button name="books">Books</button>
+ *   <button name="articles">Articles</button>
+ * </cork-search-form>
  */
 export default class CorkSearchForm extends LitElement {
 

@@ -1,13 +1,14 @@
 /**
  * @class PageWidthController
- * @description Sets the page width, minus any scrollbar, as a CSS custom property (--page-width), and keeps it current as the window resizes.
- * The theme's --full-width property, used by layout classes such as l-full-width, is derived from it.
+ * @description Sets the theme's page width CSS custom property (--page-width), and keeps it current as the window resizes.
  *
  * - With a Lit host, the controller starts and stops with the host's lifecycle.
  * - Without one, call init() to start it and destroy() to stop it.
  *
  * The property is set in a style tag (id cork-theme-page-width), one per root. Controllers on the same root share the tag,
  * and destroy() on any started one removes it.
+ * 
+ * The cork-header element sets the property by default, so you don't need to use this controller if you have a cork-header. 
  * @param {LitElement|Object} host - A Lit element to attach the controller to. Optional: pass opts as the first argument instead to use it standalone.
  * @param {Object} opts - Options.
  * @param {Document|ShadowRoot} opts.root - Where to add the style tag. Default: document.
@@ -47,6 +48,7 @@ export default class PageWidthController {
     this.shouldInit = opts.shouldInit || (() => true);
     this.styleId = 'cork-theme-page-width';
     this._initialized = false;
+    this._width = null;
     this._onResize = this._onResize.bind(this);
   }
 
@@ -112,13 +114,16 @@ export default class PageWidthController {
       style.id = this.styleId;
       ( this.isShadowRoot ? this.root : this.root.head ).prepend(style);
     }
-    style.textContent = `${this.selector} {\n  ${this.propertyName}: ${document.documentElement.clientWidth}px;\n}`;
+    this._width = document.documentElement.clientWidth;
+    style.textContent = `${this.selector} {\n  ${this.propertyName}: ${this._width}px;\n}`;
   }
 
   /**
-   * @description Listener for the window resize event. Updates the property.
+   * @description Listener for the window resize event. Updates the property if the width changed.
+   * Height-only resizes, e.g. a mobile browser's URL bar showing or hiding on scroll, are skipped.
    */
   _onResize(){
+    if ( document.documentElement.clientWidth === this._width ) return;
     this.setPageWidthProperty();
   }
 }

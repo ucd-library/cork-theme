@@ -27,6 +27,9 @@ const LIFECYCLE = [
 // Static methods every element has (custom element registration), so left out of Methods
 const STATIC_EXCLUDED = ['define'];
 
+// Util folders that get a page per source file, plus an index page, instead of one page for the whole folder
+const SPLIT_UTILS = ['controllers'];
+
 // Words that look like a method declaration on the line after a doc block, but aren't
 const NOT_METHODS = ['if', 'for', 'while', 'switch', 'return', 'catch', 'function'];
 
@@ -46,10 +49,12 @@ class Docs {
 
   /**
    * @description Builds markdown reference pages from the JSDoc in package/elements and package/utils, into docs/reference.
-   * One page per element, and one per util folder. Only the public API is documented: members starting with _, blocks tagged @private,
-   * lifecycle callbacks (see LIFECYCLE), static define() (see STATIC_EXCLUDED), and top-level functions that aren't exported are left out. The index, docs/reference/readme.md, is always rebuilt from every source.
-   * @param {String[]} names - Pages to build: element names (e.g. 'cork-header') or util folders (e.g. 'controllers'). Empty builds all,
-   * and first clears the old pages.
+   * One page per element, and one per util folder, except the folders in SPLIT_UTILS, which get a page per source file and an index page.
+   * Only the public API is documented: members starting with _, blocks tagged @private,
+   * lifecycle callbacks (see LIFECYCLE), static define() (see STATIC_EXCLUDED), and top-level functions that aren't exported are left out.
+   * The indexes (docs/reference/readme.md, and each split folder's readme.md) are always rebuilt from every source.
+   * @param {String[]} names - Pages to build: element names (e.g. 'cork-header'), util folders (e.g. 'controllers', which for a split folder
+   * builds all of its pages), or a split folder's files (e.g. 'NavController'). Empty builds all, and first clears the old pages.
    * @param {Object} opts - Command options (none yet).
    * @returns {Promise<void>}
    */
@@ -75,11 +80,13 @@ class Docs {
       }
     }
 
-    // Pages are one folder down from the index, so their {@link} targets are relative to the parent folder
-    this._linkPrefix = '../';
     for ( const page of pages ) {
-      if ( names.length && !names.includes(page.name) ) continue;
-      await this._write(page.dest, await this._renderPage(page), { sources: page.files });
+      const selected = !names.length || names.includes(page.name) || names.includes(page.folder) || page.kind === 'util-index';
+      if ( !selected ) continue;
+      // {@link} targets are relative to docs/reference, so step up out of the page's folder
+      this._linkPrefix = '../'.repeat(page.dest.split('/').length - 1);
+      const markdown = page.kind === 'util-index' ? await this._renderUtilIndex(page) : await this._renderPage(page);
+      await this._write(page.dest, markdown, { sources: page.kind === 'util-index' ? [`package/utils/${page.folder}`] : page.files });
     }
     this._linkPrefix = '';
     await this._write('readme.md', this._renderIndex(pages), { sources: ['package/elements', 'package/utils'] });
@@ -88,7 +95,8 @@ class Docs {
   /**
    * @description Builds the targets that {@link} tags can point to (see _renderLinks), from every page:
    * - An element's tag name (cork-header) and class name (CorkHeader), to its page.
-   * - A util's class, function, const or typedef name (NavController, NavItem), to its heading on the util page.
+   * - A util's class, function, const or typedef name (NavController, NavItem), to its heading on the util page,
+   *   or to the page itself if it's a split folder file's main symbol (see _mainSymbol).
    * - A member, as Name#member (NavController#parse, CorkSearchTray#focus, cork-search-tray#focus), to its heading.
    * @param {Object[]} pages - Every page from _listPages, with its symbols.
    * @returns {Object} Targets keyed by name, each with dest (relative to docs/reference) and anchor (empty for a whole page).
@@ -103,14 +111,16 @@ class Docs {
     };
 
     for ( const page of pages ) {
-      if ( page.kind === 'element' ) {
-        const cls = page.symbols.find(symbol => symbol.kind === 'class');
-        const names = [page.name, cls?.name].filter(Boolean);
+      if ( page.kind === 'util-index' ) continue;
+      const main = this._mainSymbol(page);
+      if ( main ) {
+        const names = [page.name, main.name].filter((name, i, all) => all.indexOf(name) === i);
         names.forEach(name => links[name] = { dest: page.dest, anchor: '' });
-        if ( cls ) addMembers(names, cls, page.dest);
-        continue;
+        addMembers(names, main, page.dest);
       }
+      if ( page.kind === 'element' ) continue;
       for ( const symbol of page.symbols ) {
+        if ( symbol === main ) continue;
         links[symbol.name] = { dest: page.dest, anchor: this._slug(this._title(symbol)) };
         addMembers([symbol.name], symbol, page.dest);
       }
@@ -139,9 +149,24 @@ class Docs {
   }
 
   /**
+   * @description A page's main symbol, which its page is headed by: an element's class, or the symbol named after a split folder file
+   * (else its first symbol that isn't a typedef). Null for a util folder page, which has no main symbol.
+   * @param {Object} page - A page from _listPages, with its symbols.
+   * @returns {Object|null}
+   */
+  _mainSymbol(page) {
+    if ( page.kind === 'element' ) return page.symbols.find(symbol => symbol.kind === 'class') || null;
+    if ( page.kind !== 'util-file' ) return null;
+    return page.symbols.find(symbol => symbol.name === page.name) || page.symbols.find(symbol => symbol.kind !== 'typedef') || null;
+  }
+
+  /**
    * @description Lists the reference pages and their source files.
-   * Elements: elements/<name>/<name>.js. Utils: every .js file in utils/<folder>, except *.tpl.js, with index.js first.
-   * @returns {Promise<Object[]>} Pages, each with name, kind ('element' or 'util'), files (absolute paths), and dest (relative to docs/reference).
+   * - Elements: elements/<name>/<name>.js.
+   * - Utils: every .js file in utils/<folder>, except *.tpl.js, with index.js first.
+   * - Split utils (see SPLIT_UTILS): a page per .js file in the folder, except index.js and *.tpl.js, and an index page.
+   * @returns {Promise<Object[]>} Pages, each with name, kind ('element', 'util', 'util-file' or 'util-index'), files (absolute paths),
+   * and dest (relative to docs/reference). Util pages also have folder, and an index page has children (its file pages).
    */
   async _listPages() {
     const pages = [];
@@ -162,7 +187,16 @@ class Docs {
         .filter(file => file.endsWith('.js') && !file.endsWith('.tpl.js'))
         .sort((a, b) => (b === 'index.js') - (a === 'index.js') || a.localeCompare(b))
         .map(file => path.join(dir, file));
-      pages.push({ name, kind: 'util', files, dest: `utils/${name}.md` });
+
+      if ( !SPLIT_UTILS.includes(name) ) {
+        pages.push({ name, kind: 'util', folder: name, files, dest: `utils/${name}.md` });
+        continue;
+      }
+      const children = files.filter(file => path.basename(file) !== 'index.js').map(file => {
+        const fileName = path.basename(file, '.js');
+        return { name: fileName, kind: 'util-file', folder: name, files: [file], dest: `utils/${name}/${fileName}.md` };
+      });
+      pages.push(...children, { name, kind: 'util-index', folder: name, files: children.flatMap(child => child.files), dest: `utils/${name}/readme.md`, children });
     }
 
     return pages;
@@ -274,12 +308,12 @@ class Docs {
   /**
    * @description The import statements for a util page's symbols. A symbol in the folder's index.js, or in a file the index.js
    * imports from, is imported by name from the folder. Any other file's symbols are imported from the file itself.
-   * @param {Object} page - A util page from _listPages, with its symbols.
+   * @param {Object} page - A util page from _listPages (any util kind), with its symbols.
    * @returns {Promise<String[]>} Import statements, one per import path.
    */
   async _importLines(page) {
-    const dir = path.join(UTILS_DIR, page.name);
-    const folderPath = `${IMPORT_PATH}/utils/${page.name}`;
+    const dir = path.join(UTILS_DIR, page.folder);
+    const folderPath = `${IMPORT_PATH}/utils/${page.folder}`;
     let index = '';
     try {
       index = await fs.readFile(path.join(dir, 'index.js'), 'utf8');
@@ -430,42 +464,77 @@ class Docs {
   }
 
   /**
-   * @description Renders a reference page. An element page is headed by the element name, with its class's sections at level 2.
-   * A util page starts with its import statements (see _importLines), then has a level 2 section per class, function, const, or typedef.
+   * @description Renders a reference page.
+   * - Element and split folder file pages are headed by the page name, with their main symbol's sections (see _mainSymbol) at level 2,
+   *   then any typedefs and other symbols.
+   * - Util pages start with their import statements (see _importLines). A util folder page then has a level 2 section per class,
+   *   function, const, or typedef. Both get a table of contents (see _toc) above their first heading.
    * @param {Object} page - A page from _listPages, with its symbols.
    * @returns {Promise<String>} Markdown.
    */
   async _renderPage(page) {
     const out = [`# ${page.name}`, ''];
+    const body = [];
+    let tocLevels = [2, 4];
 
-    if ( page.kind === 'element' ) {
-      const cls = page.symbols.find(symbol => symbol.kind === 'class');
-      if ( cls ) out.push(...this._renderSymbol(cls, 2, { noHeading: true }));
+    if ( page.kind === 'util' ) {
+      body.push(...page.symbols.flatMap(symbol => this._renderSymbol(symbol, 2)));
+    } else {
+      const main = this._mainSymbol(page);
+      if ( main ) body.push(...this._renderSymbol(main, 2, { noHeading: true }));
       const typedefs = page.symbols.filter(symbol => symbol.kind === 'typedef');
       if ( typedefs.length ) {
-        out.push('## Typedefs', '');
-        typedefs.forEach(symbol => out.push(...this._renderSymbol(symbol, 3)));
+        body.push('## Typedefs', '');
+        typedefs.forEach(symbol => body.push(...this._renderSymbol(symbol, 3)));
       }
-      page.symbols.filter(symbol => symbol !== cls && symbol.kind !== 'typedef')
-        .forEach(symbol => out.push(...this._renderSymbol(symbol, 2)));
+      page.symbols.filter(symbol => symbol !== main && symbol.kind !== 'typedef')
+        .forEach(symbol => body.push(...this._renderSymbol(symbol, 2)));
+      tocLevels = [2, 3];
+    }
+
+    if ( page.kind === 'element' ) {
+      out.push(...body);
     } else {
       const imports = await this._importLines(page);
       if ( imports.length ) out.push('```js', ...imports, '```', '');
-      const body = page.symbols.flatMap(symbol => this._renderSymbol(symbol, 2));
-      out.push(...this._toc(body), ...body);
+      // The contents go just above the first heading, i.e. after a main symbol's description
+      const firstHeading = Math.max(0, body.findIndex(line => /^#{2,6} /.test(line)));
+      body.splice(firstHeading, 0, ...this._toc(body, { levels: tocLevels }));
+      out.push(...body);
     }
 
     return out.join('\n').replace(/\n{3,}/g, '\n\n').trim() + '\n';
   }
 
   /**
-   * @description Builds a table of contents for a util page: a link to each level 2 heading (class, function, const or typedef),
-   * with its level 4 headings (methods and template functions) nested below it.
+   * @description Renders a split util folder's index page: its import statement, and each of its files' pages
+   * with the first sentence of the main symbol's description.
+   * @param {Object} page - A util-index page from _listPages.
+   * @returns {Promise<String>} Markdown.
+   */
+  async _renderUtilIndex(page) {
+    const out = [`# ${page.name}`, ''];
+    const imports = await this._importLines({ ...page, symbols: page.children.flatMap(child => child.symbols) });
+    if ( imports.length ) out.push('```js', ...imports, '```', '');
+    for ( const child of page.children ) {
+      const description = this._mainSymbol(child)?.doc.description || '';
+      out.push(`- [${child.name}](${path.basename(child.dest)}): ${this._escape(this._firstSentence(description))}`);
+    }
+    return out.join('\n') + '\n';
+  }
+
+  /**
+   * @description Builds a table of contents for a page: a link to each top-level heading, with its sub-level headings nested below it.
+   * e.g. on a util folder page, classes and functions (level 2) with their methods and template functions (level 4);
+   * on a split folder file page, sections such as Methods (level 2) with each method (level 3).
    * Anchors are slugged as GitHub and VS Code do (see _slug), counting every heading so repeated ones get the same -1, -2 suffixes.
    * @param {String[]} lines - The page body's markdown lines, from _renderSymbol.
+   * @param {Object} opts - Options.
+   * @param {Number[]} opts.levels - The top and nested heading levels. Default: [2, 4].
    * @returns {String[]} Markdown lines, ending with a blank line. Empty if the body has no headings.
    */
-  _toc(lines) {
+  _toc(lines, opts={}) {
+    const [top, nested] = opts.levels || [2, 4];
     const seen = {};
     const out = [];
     let inFence = false;
@@ -480,8 +549,8 @@ class Docs {
       else seen[slug] = 0;
 
       const level = match[1].length;
-      if ( level === 2 ) out.push(`- [${match[2]}](#${slug})`);
-      else if ( level === 4 ) out.push(`  - [${match[2]}](#${slug})`);
+      if ( level === top ) out.push(`- [${match[2]}](#${slug})`);
+      else if ( level === nested ) out.push(`  - [${match[2]}](#${slug})`);
     }
     return out.length ? ['## Contents', '', ...out, ''] : [];
   }
@@ -625,7 +694,8 @@ class Docs {
 
   /**
    * @description Renders docs/reference/readme.md: each element with the first sentence of its description, and each util folder
-   * with the names it documents.
+   * with the names it documents. A split folder links to its index page, with its file pages nested below it, each with the first sentence
+   * of its main symbol's description.
    * @param {Object[]} pages - Every page from _listPages, with its symbols.
    * @returns {String} Markdown.
    */
@@ -644,9 +714,17 @@ class Docs {
       out.push(`- [${page.name}](${page.dest}): ${this._escape(this._firstSentence(description))}`);
     }
     out.push('', '## Utils', '');
-    for ( const page of pages.filter(page => page.kind === 'util') ) {
-      const names = page.symbols.filter(symbol => symbol.kind !== 'typedef').map(symbol => `\`${symbol.name}\``);
-      out.push(`- [${page.name}](${page.dest}): ${names.join(', ')}`);
+    const names = symbols => symbols.filter(symbol => symbol.kind !== 'typedef').map(symbol => `\`${symbol.name}\``).join(', ');
+    for ( const page of pages.filter(page => page.kind === 'util' || page.kind === 'util-index') ) {
+      if ( page.kind === 'util' ) {
+        out.push(`- [${page.name}](${page.dest}): ${names(page.symbols)}`);
+        continue;
+      }
+      out.push(`- [${page.name}](${page.dest})`);
+      page.children.forEach(child => {
+        const description = this._mainSymbol(child)?.doc.description || '';
+        out.push(`  - [${child.name}](${child.dest}): ${this._escape(this._firstSentence(description))}`);
+      });
     }
     return out.join('\n') + '\n';
   }

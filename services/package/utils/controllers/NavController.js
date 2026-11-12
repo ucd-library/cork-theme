@@ -14,9 +14,11 @@ import { renderItem, renderDrillDown, drillDownStyles } from './NavController.tp
  * @property {NavItem[]} subItems - Child items.
  * @property {Number[]} navPosition - Index at each level of the tree, from the top. e.g. [0, 2] is the third sub item of the first item.
  * @property {HTMLElement|null} ele - The light DOM link/button that supplied the title, or null.
- * @property {Function} click - For button items: passes a click through to the light DOM button, so its listeners run. Use as the shadow DOM button's click listener, e.g. @click=${item.click}.
+ * @property {Function} click - Click listener for the item's shadow DOM button or link, e.g. @click=${item.click}. Wired up by item.render. Takes the click event.
  *
- * Does nothing for other items: links rely on their shadow DOM href, so listeners on a light DOM link don't run.
+ * - Fires cork-nav-item-click from the host, with the item and the click event.
+ * - For button items, then passes the click through to the light DOM button, so its listeners run.
+ * - Links aren't passed through: they rely on their shadow DOM href, so listeners on a light DOM link don't run. Use cork-nav-item-click instead.
  * @property {Function} render - Renders the item's own link/button (not its sub items) for the host's shadow DOM, e.g. ${item.render({classes: 'menu__link'})}.
  *
  * Takes an opts object, where opts.classes is a class string or a classMap object, or just a class string, e.g. ${item.render('menu__link')}.
@@ -40,6 +42,10 @@ import { renderItem, renderDrillDown, drillDownStyles } from './NavController.tp
  * @property {NavItem[]} navItems - The parsed items
  * 
  * @event cork-nav-items-update - Fired when the navItems are parsed, e.g. on host connection or light DOM mutation. Not fired by copyNavItems.
+ * @event cork-nav-item-click - Fired from the host when an item's rendered button or link is clicked (see NavItem's click). Bubbles and is composed.
+ *
+ * - detail.navItem: the item. For items copied with copyNavItems, the copy, whose ele is still the original light DOM element.
+ * - detail.originalEvent: the click event, e.g. to call preventDefault() on a link for an SPA router.
  *
  * @example <caption>Instantiation</caption>
  * import { NavController } from '@ucd-lib/cork-theme/utils/controllers';
@@ -59,15 +65,15 @@ import { renderItem, renderDrillDown, drillDownStyles } from './NavController.tp
  * <!-- or the whole menu as a drill-down, with ...NavController.drillDownStyles in the element's styles -->
  * ${this.ctl.nav.renderDrillDown()}
  *
- * @example <caption>Light DOM markup</caption>
+ * @example <caption>Light DOM markup - flat series of a/button elements</caption>
  * ```html
- * <!-- flat: a series of a/button elements, each a title-only item -->
  * <my-nav>
  *   <a href="/hours">Hours</a>
  *   <button>Chat with a librarian</button>
+ *   <a>Inert link</a>
  * </my-nav>
  *
- * <!-- list: li items, nested for sub menus, with fields marked by fieldAttribute -->
+ * @example <caption>Light DOM markup - list format with sub menus</caption>
  * <my-nav>
  *   <ul>
  *     <li>
@@ -404,8 +410,14 @@ export default class NavController {
       renderedEles: {},
       ...props
     };
-    // Passes a click through to the light DOM button. Links aren't passed through, so clicks keep their native behavior
-    item.click = () => {
+    // Fires cork-nav-item-click, then passes a button click through to the light DOM button.
+    // Links aren't passed through, so clicks keep their native behavior
+    item.click = (e) => {
+      this.host.dispatchEvent(new CustomEvent('cork-nav-item-click', {
+        bubbles: true,
+        composed: true,
+        detail: { navItem: item, originalEvent: e }
+      }));
       if ( !item.ele?.matches('button') ) return;
       item.ele.click();
     };

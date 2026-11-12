@@ -2,10 +2,10 @@
 
 # cork-nav-lite
 
-A single-level main menu, shown inline in the cork-header bar. For sites with only a few top-level links.
+A single-level main menu, shown inline in the cork-header bar. For sites with only a few top-level links. Add it as a child of the cork-header element.
 
-Add it as a child of the cork-header element. The header shows it on larger screens, in place of the menu tray toggle.
-Smaller screens use the menu tray, so the site also needs a cork-primary-nav.
+The header shows it on larger screens, in place of the menu tray toggle.
+Smaller screens use the menu tray, so the site still also needs a cork-primary-nav.
 
 The links can be written in the element, or copied from the header's cork-primary-nav with copyFromPrimaryNav, so they're only written once.
 Only top-level items are shown: sub menus and fields are ignored.
@@ -15,14 +15,20 @@ Only top-level items are shown: sub menus and fields are ignored.
 | Name | Type | Description |
 | --- | --- | --- |
 | `headerComponentLabel` | `String` | Label for the menu, used as the nav's aria-label. Default: 'Main Menu'. Attribute: header-component-label. |
-| `copyFromPrimaryNav` | `Boolean` | Copies the top-level items of the cork-primary-nav in the same cork-header, instead of reading the element's own links.<br><br>The cork-header does the copying, and copies again when the primary nav's items change. Attribute: copy-from-primary-nav. |
+| `copyFromPrimaryNav` | `Boolean` | Copies the top-level items of the cork-primary-nav in the same cork-header, instead of reading the element's own links. Attribute: copy-from-primary-nav. |
 | `primaryNavMaxItems` | `Number` | With copyFromPrimaryNav, the number of items to copy, from the start. Default: all. Attribute: primary-nav-max-items. |
 
 ## Slots
 
 | Name | Description |
 | --- | --- |
-| (default) | Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM. Ignored with copyFromPrimaryNav. |
+| (default) | Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM by [`NavController`](../utils/controllers/NavController.md). See its examples for the markup formats. Ignored with copyFromPrimaryNav. |
+
+## Events
+
+| Name | Description |
+| --- | --- |
+| `cork-nav-item-click` | Fired when a rendered link or button is clicked, with the clicked item in detail.navItem. See [`NavController`](../utils/controllers/NavController.md). |
 
 ## Examples
 
@@ -35,20 +41,30 @@ import '@ucd-lib/cork-theme/elements/cork-nav-lite';
 import CorkNavLite from '@ucd-lib/cork-theme/elements/cork-nav-lite/cork-nav-lite.js';
 ```
 
-**Use**
+**Use with own links**
 
 ```html
-<!-- its own links -->
 <cork-header>
   <cork-nav-lite>
     <a href="/services">Services</a>
     <a href="/collections">Collections</a>
     <button>Chat with a librarian</button>
   </cork-nav-lite>
+</cork-header>
+```
+
+**Copy top-level links from primary nav**
+
+```html
+<cork-header>
+  <cork-nav-lite copy-from-primary-nav></cork-nav-lite>
   <cork-primary-nav>…</cork-primary-nav>
 </cork-header>
+```
 
-<!-- or copy the first three items of the primary nav -->
+**Copy top-level links from primary nav (with a limit)**
+
+```html
 <cork-header>
   <cork-nav-lite copy-from-primary-nav primary-nav-max-items="3"></cork-nav-lite>
   <cork-primary-nav>…</cork-primary-nav>

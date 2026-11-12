@@ -335,6 +335,8 @@ import '@ucd-lib/cork-theme/elements/cork-search-common';
    </cork-quick-links>
    ```
 
+   Or listen for `cork-nav-item-click`, which fires for every link and button, with the item in `detail.navItem`. See [Controllers](controllers.md#navcontroller).
+
 5. Check the links are direct children of the element (or in a list), not inside wrapper elements. See [Nav Markup](nav-markup.md).
 
 ### Attributes and properties
@@ -355,7 +357,7 @@ import '@ucd-lib/cork-theme/elements/cork-search-common';
 | --- | --- |
 | `toggle` | Removed, along with the dropdown. |
 | `btn-click` | Removed, along with `disable-dropdown`. |
-| `item-click` | Removed. Use a `button` with a click listener. |
+| `item-click` | `cork-nav-item-click`, fired for every link and button, with `detail.navItem` and `detail.originalEvent`. Or use a `button` with a click listener. |
 
 ### Icons
 

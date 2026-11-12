@@ -13,11 +13,14 @@ or `docs jsdoc <name>` for one page.
 - [cork-primary-nav](elements/cork-primary-nav.md): The site's main menu.
 - [cork-quick-links](elements/cork-quick-links.md): A quick links menu component: a short list of links/buttons outside of the main navigation.
 - [cork-search-common](elements/cork-search-common.md): A list of common searches, shown below the search form in the cork-header's search tray.
-- [cork-search-form](elements/cork-search-form.md): A search form: a text input, a search button, and optional facet buttons that each run the search with a facet applied.
-- [cork-search-tray](elements/cork-search-tray.md): Lays out the cork-header's search tray when it has more than a search form: a cork-search-form and a cork-search-common.
+- [cork-search-form](elements/cork-search-form.md): A simple search form with optional facet buttons.
+- [cork-search-tray](elements/cork-search-tray.md): Lays out the cork-header's search tray when it has more than just a search form.
 
 ## Utils
 
 - [assets](utils/assets.md): `cssUrl`, `optionalCssUrl`, `setImageCssCustomProperties`, `setFontFaces`, `copyImages`, `copyFonts`
-- [controllers](utils/controllers.md): `MutationObserverController`, `NavController`, `PageWidthController`
+- [controllers](utils/controllers/readme.md)
+  - [MutationObserverController](utils/controllers/MutationObserverController.md): Lit controller that attaches a MutationObserver to an element
+  - [NavController](utils/controllers/NavController.md): Lit controller that parses menu markup in the host's light DOM into navItems, for the host element to render in its shadow DOM.
+  - [PageWidthController](utils/controllers/PageWidthController.md): Sets the theme's page width CSS custom property (--page-width), and keeps it current as the window resizes.
 - [mixins](utils/mixins.md): `MainDomElementMixin`

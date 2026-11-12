@@ -9,7 +9,7 @@ By default, background images are set via global CSS properties. Without the ima
 The image-url and font-url attributes are conveniences for apps without a js entry point to make those calls from.
 They act on the whole document, not just the header, so use one or the other, not both.
 
-The header also sets --page-width on the document with a [`PageWidthController`](../utils/controllers.md#pagewidthcontroller), for layout classes such as l-full-width.
+The header also sets --page-width on the document with a [`PageWidthController`](../utils/controllers/PageWidthController.md), for layout classes such as l-full-width.
 Set the no-page-width attribute to turn this off.
 
 A slotted component that opens in a nav tray can hook into it:
