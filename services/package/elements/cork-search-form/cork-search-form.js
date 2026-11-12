@@ -97,16 +97,18 @@ export default class CorkSearchForm extends LitElement {
     this.categoryBrand = "";
     this._facets = [];
 
-    this.mutationObserver = new MutationObserverController(
-      this,
-      {
-        childList: true,
-        attributes: true,
-        characterData: true,
-        attributeFilter: ['name', 'value', 'aria-label']
-      },
-      this._onChildListMutation.bind(this)
-    );
+    this.ctl = {
+      mutationObserver: new MutationObserverController(
+        this,
+        {
+          childList: true,
+          attributes: true,
+          characterData: true,
+          attributeFilter: ['name', 'value', 'aria-label']
+        },
+        this._onChildListMutation.bind(this)
+      )
+    };
   }
 
   /**

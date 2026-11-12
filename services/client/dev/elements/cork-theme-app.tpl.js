@@ -115,4 +115,10 @@ return html`
     <cork-nav-lite copy-from-primary-nav primary-nav-max-items="3"></cork-nav-lite>
   </cork-header>
 
+  <cork-pages selected='foo'>
+    <div id="foo">Foo</div>
+    <div id="bar">Bar</div>
+    <div id="baz">Baz</div>
+  </cork-pages>
+
 `;}

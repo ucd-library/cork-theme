@@ -10,6 +10,7 @@ or `docs jsdoc <name>` for one page.
 - [cork-branding-bar](elements/cork-branding-bar.md): The site's masthead: a logo and the site name, with an optional slogan, both linking to the site's homepage.
 - [cork-header](elements/cork-header.md): The primary site header component that accepts various slotted header components and controls their visibility in the nav tray.
 - [cork-nav-lite](elements/cork-nav-lite.md): A single-level main menu, shown inline in the cork-header bar.
+- [cork-pages](elements/cork-pages.md): Shows one of its children at a time, and hides the rest.
 - [cork-primary-nav](elements/cork-primary-nav.md): The site's main menu.
 - [cork-quick-links](elements/cork-quick-links.md): A quick links menu component: a short list of links/buttons outside of the main navigation.
 - [cork-search-common](elements/cork-search-common.md): A list of common searches, shown below the search form in the cork-header's search tray.

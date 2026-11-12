@@ -11,6 +11,8 @@ Lit controller that attaches a MutationObserver to an element
 ## Contents
 
 - [Properties](#properties)
+- [Methods](#methods)
+  - [updateOptions(options, runCallback)](#updateoptionsoptions-runcallback)
 - [Examples](#examples)
 
 ## Properties
@@ -20,6 +22,18 @@ Lit controller that attaches a MutationObserver to an element
 | `host` | `LitElement` | 'this' from a Lit element |
 | `options` | `Object` | MutationObserver.observe options. Default: {childList: true} |
 | `callback` | `String\|Function` | Called on mutation: either the name of an element method, or a function Default: '_onChildListMutation' |
+
+## Methods
+
+### updateOptions(options, runCallback)
+
+Replaces the observer's options. If the host is connected, the observer is re-attached with them;
+otherwise they're used when it connects. Mutations already queued are kept.
+
+| Param | Type | Description |
+| --- | --- | --- |
+| `options` | `Object` | MutationObserver.observe options, e.g. {childList: true, attributes: true}. Replaces the old options, rather than merging with them. |
+| `runCallback` | `Boolean` | Also runs the callback now, with no arguments, as on host connection. Default: false |
 
 ## Examples
 
@@ -45,4 +59,11 @@ Lit controller that attaches a MutationObserver to an element
 
 ```js
 mutationObserver = new MutationObserverController(host, {childList: true}, this._onChildListMutation.bind(this));
+```
+
+**Change the options later**
+
+```js
+// e.g. start watching attributes too, and run the callback now to catch up
+mutationObserver.updateOptions({childList: true, attributes: true}, true);
 ```

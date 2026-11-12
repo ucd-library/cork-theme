@@ -35,12 +35,9 @@
 export default class PageWidthController {
 
   constructor(host, opts={}){
-    if ( typeof host?.addController === 'function' ) {
-      (this.host = host).addController(this);
-    } else {
-      opts = host || {};
-      this.host = null;
-    }
+    const isHost = typeof host?.addController === 'function';
+    if ( !isHost ) opts = host || {};
+    this.host = isHost ? host : null;
     this.root = opts.root || document;
     this.isShadowRoot = this.root instanceof ShadowRoot;
     this.selector = opts.selector || (this.isShadowRoot ? ':host' : ':root');
@@ -50,6 +47,8 @@ export default class PageWidthController {
     this._initialized = false;
     this._width = null;
     this._onResize = this._onResize.bind(this);
+
+    if ( this.host ) this.host.addController(this);
   }
 
   /**

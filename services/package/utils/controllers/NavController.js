@@ -105,7 +105,7 @@ export default class NavController {
    * @param {String} opts.noParseHostProperty - If set, the host's property of this name is checked before parsing the light DOM. If truthy, parsing is skipped. Default: undefined
    */
   constructor(host, opts={}){
-    (this.host = host).addController(this);
+    this.host = host;
     this.fieldAttribute = opts.fieldAttribute || 'data-nav';
     this.navItems = [];
     this.hostFocusedCoordinatesProperty = opts.hostFocusedCoordinatesProperty || 'focusedNavItem';
@@ -113,6 +113,9 @@ export default class NavController {
     this.closeSubmenusOnEscape = opts.closeSubmenusOnEscape || false;
     this.setChildHeight = opts.setChildHeight || false;
     this._onKeydown = this._onKeydown.bind(this);
+    this.renderDrillDown = renderDrillDown.bind(this);
+
+    host.addController(this);
 
     this.mutationObserver = new MutationObserverController(
       this.host,
@@ -125,8 +128,6 @@ export default class NavController {
       },
       this._onMutation.bind(this)
     );
-
-    this.renderDrillDown = renderDrillDown.bind(this);
   }
 
   static get drillDownStyles() {

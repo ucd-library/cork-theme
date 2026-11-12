@@ -16,6 +16,7 @@ import '@ucd-lib/cork-theme/elements/cork-search-form';
 import '@ucd-lib/cork-theme/elements/cork-search-tray';
 import '@ucd-lib/cork-theme/elements/cork-search-common';
 import '@ucd-lib/cork-theme/elements/cork-branding-bar';
+import '@ucd-lib/cork-theme/elements/cork-pages';
 
 // icon elements and model
 import '@ucd-lib/cork-icon';

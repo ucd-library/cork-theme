@@ -18,13 +18,18 @@
  * 
  * @example <caption>Use from another controller</caption>
  * mutationObserver = new MutationObserverController(host, {childList: true}, this._onChildListMutation.bind(this));
+ *
+ * @example <caption>Change the options later</caption>
+ * // e.g. start watching attributes too, and run the callback now to catch up
+ * mutationObserver.updateOptions({childList: true, attributes: true}, true);
  */
 export default class MutationObserverController {
 
   constructor(host, options = {childList: true}, callback = "_onChildListMutation"){
-    (this.host = host).addController(this);
+    this.host = host;
     this.options = options;
     this.callback = callback;
+    host.addController(this);
   }
 
   hostConnected(){
@@ -38,6 +43,19 @@ export default class MutationObserverController {
 
   hostDisconnected(){
     this._observer.disconnect();
+    this._observer = null;
+  }
+
+  /**
+   * @description Replaces the observer's options. If the host is connected, the observer is re-attached with them;
+   * otherwise they're used when it connects. Mutations already queued are kept.
+   * @param {Object} options - MutationObserver.observe options, e.g. {childList: true, attributes: true}. Replaces the old options, rather than merging with them.
+   * @param {Boolean} runCallback - Also runs the callback now, with no arguments, as on host connection. Default: false
+   */
+  updateOptions(options, runCallback=false){
+    this.options = options;
+    if ( this._observer ) this._observer.observe(this.host, this.options);
+    if ( runCallback ) this._onMutation();
   }
 
   /**
