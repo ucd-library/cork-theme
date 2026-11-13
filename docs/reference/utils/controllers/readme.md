@@ -3,9 +3,10 @@
 # controllers
 
 ```js
-import { MutationObserverController, NavController, PageWidthController } from '@ucd-lib/cork-theme/utils/controllers';
+import { AppStateController, MutationObserverController, NavController, PageWidthController } from '@ucd-lib/cork-theme/utils/controllers';
 ```
 
+- [AppStateController](AppStateController.md): Lit controller that calls back on @ucd-lib/cork-app-state's app-state-update event.
 - [MutationObserverController](MutationObserverController.md): Lit controller that attaches a MutationObserver to an element
 - [NavController](NavController.md): Lit controller that parses menu markup in the host's light DOM into navItems, for the host element to render in its shadow DOM.
 - [PageWidthController](PageWidthController.md): Sets the theme's page width CSS custom property (--page-width), and keeps it current as the window resizes.

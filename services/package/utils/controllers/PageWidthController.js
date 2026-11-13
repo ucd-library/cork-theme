@@ -21,12 +21,20 @@
  * const pageWidth = new PageWidthController();
  * pageWidth.init();
  *
- * @example <caption>Lit host</caption>
+ * @example <caption>Lit host in constructor</caption>
  * // in a Lit element's constructor. Starts when the element connects, and stops when it disconnects.
  * this.ctl = { pageWidth: new PageWidthController(this) };
  *
- * // or only start while a property is off
+ * @example <caption>Toggle with a host property</caption>
+ * // constructor
  * this.ctl = { pageWidth: new PageWidthController(this, { shouldInit: () => !this.noPageWidth }) };
+ * 
+ * // and handle property changes in willUpdate() to start or stop the controller
+ * willUpdate(props){
+ *  if ( props.has('noPageWidth') ) {
+ *   this.noPageWidth ? this.ctl.pageWidth.destroy() : this.ctl.pageWidth.init();
+ *  }
+ * }
  *
  * @example <caption>Shadow root</caption>
  * // sets the property on the shadow root's host instead of the document

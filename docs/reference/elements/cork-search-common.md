@@ -23,13 +23,6 @@ Add it as a child of a [`cork-search-tray`](../elements/cork-search-tray.md) in 
 | --- | --- |
 | `cork-nav-item-click` | Fired when a rendered link or button is clicked, with the clicked item in detail.navItem. See [`NavController`](../utils/controllers/NavController.md). |
 
-## Methods
-
-### static get shadowRootOptions
-
-Lit shadow root options. delegatesFocus forwards focus() on the element to its first focusable control,
-e.g. when cork-search-tray is focused and has no form.
-
 ## Examples
 
 **Import**

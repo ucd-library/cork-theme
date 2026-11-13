@@ -80,6 +80,7 @@ Menu elements read their links with a new markup format: see [Nav Markup](nav-ma
 | `fallbackSelection` | Now an attribute too, `fallback-selection`. Before, it could only be set as a property. |
 | `fallbackSelection` matching | Now matched like `selected`: a whole number is a child index, anything else an attribute value. Before, it was treated as an index whenever `selected` contained a digit, whatever the fallback's own value. |
 | `attrForSelected` | Unchanged, but it now reads `'id'` when left unset, rather than `undefined`. |
+| (new) `prop-for-selected` | Match `selected` against a property of each child instead of an attribute, e.g. `pageId`. Takes precedence over `attr-for-selected` when set. |
 | (new) `inline-display-value` | The selected child's inline `display`, e.g. `flex`. Default: `block`, as before. |
 | `console.warn` when nothing matches | Removed. Every child is hidden, as before. |
 

@@ -24,8 +24,8 @@ const LIFECYCLE = [
   'hostConnected', 'hostDisconnected', 'hostUpdate', 'hostUpdated'
 ];
 
-// Static methods every element has (custom element registration), so left out of Methods
-const STATIC_EXCLUDED = ['define'];
+// Static members left out of Methods: custom element registration, which every element has, and Lit's shadow root options
+const STATIC_EXCLUDED = ['define', 'shadowRootOptions'];
 
 // Util folders that get a page per source file, plus an index page, instead of one page for the whole folder
 const SPLIT_UTILS = ['controllers'];
@@ -51,7 +51,7 @@ class Docs {
    * @description Builds markdown reference pages from the JSDoc in package/elements and package/utils, into docs/reference.
    * One page per element, and one per util folder, except the folders in SPLIT_UTILS, which get a page per source file and an index page.
    * Only the public API is documented: members starting with _, blocks tagged @private,
-   * lifecycle callbacks (see LIFECYCLE), static define() (see STATIC_EXCLUDED), and top-level functions that aren't exported are left out.
+   * lifecycle callbacks (see LIFECYCLE), static define() and shadowRootOptions (see STATIC_EXCLUDED), and top-level functions that aren't exported are left out.
    * The indexes (docs/reference/readme.md, and each split folder's readme.md) are always rebuilt from every source.
    * @param {String[]} names - Pages to build: element names (e.g. 'cork-header'), util folders (e.g. 'controllers', which for a split folder
    * builds all of its pages), or a split folder's files (e.g. 'NavController'). Empty builds all, and first clears the old pages.

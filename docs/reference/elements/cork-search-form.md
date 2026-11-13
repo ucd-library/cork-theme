@@ -41,11 +41,6 @@ On submit:
 
 ## Methods
 
-### static get shadowRootOptions
-
-Lit shadow root options. delegatesFocus forwards focus() on the element to its first focusable control,
-e.g. when cork-header opens its nav tray.
-
 ### onNavTrayHide()
 
 Called by cork-header (directly, or through cork-search-tray) when its nav tray hides this element. Clears the input.

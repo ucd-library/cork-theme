@@ -12,6 +12,9 @@ They act on the whole document, not just the header, so use one or the other, no
 The header also sets --page-width on the document with a [`PageWidthController`](../utils/controllers/PageWidthController.md), for layout classes such as l-full-width.
 Set the no-page-width attribute to turn this off.
 
+In an SPA using @ucd-lib/cork-app-state, the header closes its open nav tray when the location changes, with an [`AppStateController`](../utils/controllers/AppStateController.md).
+Set the no-app-state-close attribute to turn this off. In any other SPA, call closeNavTray() from your router on navigation.
+
 A slotted component that opens in a nav tray can hook into it:
 
 - When the tray opens, the header calls the component's focus(). Use delegatesFocus to pass it to the first control.
@@ -31,6 +34,7 @@ A slotted component that opens in a nav tray can hook into it:
 | `imageUrl` | `String` | Base URL of the theme's large images, e.g. '/images/cork-theme'. Passed to setImageCssCustomProperties(), so it sets the --cork-image-* properties for the whole document. Attribute: image-url. |
 | `fontUrl` | `String` | Base URL of the theme fonts, e.g. '/fonts/cork-theme'. Passed to setFontFaces(), so it loads the fonts for the whole document. Attribute: font-url. |
 | `noPageWidth` | `Boolean` | Stops the header from setting --page-width, e.g. if the app sets it itself. Attribute: no-page-width. |
+| `noAppStateClose` | `Boolean` | Stops the header from closing its nav tray on cork-app-state location changes. Attribute: no-app-state-close. |
 | `selectedNavComponentName` | `String` | Name of the component whose nav tray is currently open. One of the keys of _slottedComponents. |
 
 ## Slots
@@ -42,6 +46,20 @@ A slotted component that opens in a nav tray can hook into it:
 | `quick-links` | Quick links section. A child [`cork-quick-links`](../elements/cork-quick-links.md) is assigned here automatically. |
 | `branding-bar` | Branding bar. A child [`cork-branding-bar`](../elements/cork-branding-bar.md) is assigned here automatically. |
 | `nav-lite` | Inline main menu in the header bar, shown on larger screens in place of the menu tray toggle. A child [`cork-nav-lite`](../elements/cork-nav-lite.md) is assigned here automatically. |
+
+## Methods
+
+### openNavTray(name)
+
+Opens a nav tray, closing any other. Same as setting selectedNavComponentName.
+
+| Param | Type | Description |
+| --- | --- | --- |
+| `name` | `String` | Name of the slot whose tray to open, e.g. 'primary-nav', 'search' or 'quick-links'. |
+
+### closeNavTray()
+
+Closes the open nav tray, if any. Call it from an SPA's router on navigation, unless the app uses cork-app-state.
 
 ## Examples
 

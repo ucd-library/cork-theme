@@ -92,10 +92,27 @@ Otherwise, the old call still works. Changes:
 - The property is set in a `<style id="cork-theme-page-width">` tag rather than inline on `<html>`. The `root` and `selector` options set it on a shadow root instead, like `setImageCssCustomProperties()`: `new PageWidthController(this, { root: this.renderRoot })`.
 - The resize listener is now actually removed by `destroy()`, and `init()` no longer adds a second one when called twice.
 
+## AppStateController
+
+New. Calls back on cork-app-state's `app-state-update` event, without this package importing cork-app-utils: it finds the `AppStateModel` through `window._corkAppUtils.Registery`. If no `AppStateModel` is registered, it does nothing.
+
+```js
+new AppStateController(this, { callback: this._onAppStateUpdate, shouldInit: () => !this.noAppStateClose });
+```
+
+- `callback`: a host method name or a function, called with the app state. Default: `'_onAppStateUpdate'`.
+- `shouldInit`, `init()` and `destroy()` work as in `PageWidthController`. If the `AppStateModel` is registered after the host connects, call `init()` then.
+- The event fires on every app state change, so compare `state.location` to catch navigation only.
+
+`cork-header` uses it to close its tray on navigation.
+
+## Not moving
+
+- `PopStateObserverController`: `popstate` doesn't fire on `pushState`, so it misses SPA link clicks. Use `AppStateController` with cork-app-state, or a plain `popstate` listener.
+
 ## Not yet moved
 
 - `BreakPointsController`
 - `IntersectionObserverController`
-- `PopStateObserverController`
 - `SilsPrimoController`
 - `WaitController`

@@ -34,6 +34,10 @@ class AppStateModelImpl extends AppStateModel {
       update.lastLocation = JSON.parse(JSON.stringify(this.store.data.location));
       let page = update.location.path?.[0] ? update.location.path[0] : 'home';
 
+      if ( ['elements'].includes(page) && update.location.path?.length > 1 ) {
+        page += '-single';
+      }
+
       update.page = page;
     }
 

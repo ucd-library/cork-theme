@@ -25,11 +25,6 @@ The site's main menu. Add it as a child of the [`cork-header`](../elements/cork-
 
 ## Methods
 
-### static get shadowRootOptions
-
-Lit shadow root options. delegatesFocus forwards focus() on the element to its first focusable control,
-e.g. when cork-header opens its nav tray.
-
 ### onNavTrayHide()
 
 Called by cork-header when its nav tray hides this element. Collapses any open submenus,

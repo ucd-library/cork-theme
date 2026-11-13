@@ -7,7 +7,7 @@ import '../css/index.js';
 import { Registry, LitCorkUtils, Mixin } from '@ucd-lib/cork-app-utils';
 import { MainDomElementMixin } from '@ucd-lib/cork-theme/utils/mixins';
 
-// elements
+// theme elements
 import '@ucd-lib/cork-theme/elements/cork-header';
 import '@ucd-lib/cork-theme/elements/cork-quick-links';
 import '@ucd-lib/cork-theme/elements/cork-primary-nav';
@@ -18,11 +18,16 @@ import '@ucd-lib/cork-theme/elements/cork-search-common';
 import '@ucd-lib/cork-theme/elements/cork-branding-bar';
 import '@ucd-lib/cork-theme/elements/cork-pages';
 
+// page elements
+import './pages/cork-theme-page-elements.js';
+import './pages/cork-theme-page-elements-single.js';
+
 // icon elements and model
 import '@ucd-lib/cork-icon';
 
 // cork models
 import '../lib/cork/models/AppStateModel.js';
+import '../lib/cork/models/DocModel.js';
 Registry.ready();
 
 export default class CorkThemeApp extends Mixin(LitElement)
@@ -69,7 +74,6 @@ export default class CorkThemeApp extends Mixin(LitElement)
       this._firstAppStateUpdate = true;
       this.hideFullSiteLoader();
     }
-    // this.closeNav();
     const { page, location } = e;
 
     // const bundleLoadedForFirstTime = await bundleLoader.loadForPage(page);
@@ -89,13 +93,6 @@ export default class CorkThemeApp extends Mixin(LitElement)
     await new Promise(resolve => setTimeout(resolve, timeout));
     document.querySelector('#site-loader').style.display = 'none';
     this.style.display = 'block';
-  }
-
-  /**
-   * @description Close the app's primary nav menu
-   */
-  closeNav(){
-    // todo: create popstate on header element
   }
 
 }

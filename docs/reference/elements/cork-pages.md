@@ -2,14 +2,15 @@
 
 # cork-pages
 
-Shows one of its children at a time, and hides the rest. The selected child is picked by index, or by an attribute value (id by default).
+Shows one of its children at a time, and hides the rest. The selected child is picked by index, or by an attribute or property value (the id attribute by default).
 
 ## Properties
 
 | Name | Type | Description |
 | --- | --- | --- |
-| `selected` | `String` | The child to show. A whole number (e.g. '0') is a child index. Anything else is matched against each child's attrForSelected attribute. Attribute: selected. |
-| `attrForSelected` | `String` | Attribute of the children that selected value is matched against. Default: 'id'. Attribute: attr-for-selected. |
+| `selected` | `String` | The child to show. A whole number (e.g. '0') is a child index. Anything else is matched against each child's propForSelected property, if set, or else its attrForSelected attribute. Attribute: selected. |
+| `attrForSelected` | `String` | Attribute of the children that selected value is matched against. Default (and when empty): 'id'. Attribute: attr-for-selected. |
+| `propForSelected` | `String` | Property of the children that selected value is matched against, with strict equality. Takes precedence over attrForSelected when set. Changes to a child's property are not watched, so set selected after changing one. Default: ''. Attribute: prop-for-selected. |
 | `selectedAttribute` | `String` | An attribute to add to the selected child, and remove from the rest. Optional. Attribute: selected-attribute. |
 | `fallbackSelection` | `String` | The child to show when selected matches nothing, e.g. a not-found page. Matched like selected. Attribute: fallback-selection. |
 | `inlineDisplayValue` | `String` | Inline display style for the selected child, e.g. ele.style.display = 'flex'. Default: 'block'. Attribute: inline-display-value. |
@@ -55,5 +56,15 @@ import CorkPages from '@ucd-lib/cork-theme/elements/cork-pages/cork-pages.js';
   <app-home page-id="home"></app-home>
   <app-search page-id="search"></app-search>
   <app-not-found page-id="not-found"></app-not-found>
+</cork-pages>
+```
+
+**Select by a property**
+
+```html
+<!-- each child has a pageId property, e.g. set in its constructor -->
+<cork-pages selected=${this.page} prop-for-selected="pageId">
+  <app-home></app-home>
+  <app-search></app-search>
 </cork-pages>
 ```

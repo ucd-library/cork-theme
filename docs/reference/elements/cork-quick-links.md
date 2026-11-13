@@ -26,13 +26,6 @@ Add it as a child of the [`cork-header`](../elements/cork-header.md) element.
 | --- | --- |
 | `cork-nav-item-click` | Fired when a rendered link or button is clicked, with the clicked item in detail.navItem. See [`NavController`](../utils/controllers/NavController.md). |
 
-## Methods
-
-### static get shadowRootOptions
-
-Lit shadow root options. delegatesFocus forwards focus() on the element to its first focusable control,
-e.g. when cork-header opens its nav tray.
-
 ## Examples
 
 **Import**

@@ -1,7 +1,7 @@
 import { LitElement } from 'lit';
 import {render, styles} from "./cork-header.tpl.js";
 
-import { MutationObserverController, PageWidthController } from '@ucd-lib/cork-theme/utils/controllers';
+import { AppStateController, MutationObserverController, PageWidthController } from '@ucd-lib/cork-theme/utils/controllers';
 import { setImageCssCustomProperties, setFontFaces } from '@ucd-lib/cork-theme/utils/assets';
 
 /**
@@ -27,6 +27,9 @@ import { setImageCssCustomProperties, setFontFaces } from '@ucd-lib/cork-theme/u
  * The header also sets --page-width on the document with a {@link PageWidthController}, for layout classes such as l-full-width.
  * Set the no-page-width attribute to turn this off.
  *
+ * In an SPA using @ucd-lib/cork-app-state, the header closes its open nav tray when the location changes, with an {@link AppStateController}.
+ * Set the no-app-state-close attribute to turn this off. In any other SPA, call closeNavTray() from your router on navigation.
+ *
  * A slotted component that opens in a nav tray can hook into it:
  *
  * - When the tray opens, the header calls the component's focus(). Use delegatesFocus to pass it to the first control.
@@ -41,6 +44,7 @@ import { setImageCssCustomProperties, setFontFaces } from '@ucd-lib/cork-theme/u
  * @property {String} imageUrl - Base URL of the theme's large images, e.g. '/images/cork-theme'. Passed to setImageCssCustomProperties(), so it sets the --cork-image-* properties for the whole document. Attribute: image-url.
  * @property {String} fontUrl - Base URL of the theme fonts, e.g. '/fonts/cork-theme'. Passed to setFontFaces(), so it loads the fonts for the whole document. Attribute: font-url.
  * @property {Boolean} noPageWidth - Stops the header from setting --page-width, e.g. if the app sets it itself. Attribute: no-page-width.
+ * @property {Boolean} noAppStateClose - Stops the header from closing its nav tray on cork-app-state location changes. Attribute: no-app-state-close.
  * @property {String} selectedNavComponentName - Name of the component whose nav tray is currently open. One of the keys of _slottedComponents.
  * @slot primary-nav - Main menu. A child {@link cork-primary-nav} is assigned here automatically.
  * @slot search - Search. A child {@link cork-search-tray} (form and common searches) or a bare {@link cork-search-form} is assigned here automatically.
@@ -112,6 +116,7 @@ export default class CorkHeader extends LitElement {
       imageUrl: { type: String, attribute: 'image-url' },
       fontUrl: { type: String, attribute: 'font-url' },
       noPageWidth: { type: Boolean, attribute: 'no-page-width' },
+      noAppStateClose: { type: Boolean, attribute: 'no-app-state-close' },
       _selectedNavComponent: { state: true },
       _slottedComponents: { type: Object }
     }
@@ -132,13 +137,16 @@ export default class CorkHeader extends LitElement {
     this.imageUrl = '';
     this.fontUrl = '';
     this.noPageWidth = false;
+    this.noAppStateClose = false;
+    this._lastFullpath = null;
     this.render = render.bind(this);
     this._onWindowResize = this._onWindowResize.bind(this);
     this.addEventListener('cork-nav-tray-close-request', this._onNavTrayCloseRequest.bind(this));
 
     this.ctl = {
       mutationObserver: new MutationObserverController(this, {childList: true}, this._onChildListMutation),
-      pageWidth: new PageWidthController(this, { shouldInit: () => !this.noPageWidth })
+      pageWidth: new PageWidthController(this, { shouldInit: () => !this.noPageWidth }),
+      appState: new AppStateController(this, { callback: this._onAppStateUpdate, shouldInit: () => !this.noAppStateClose })
     }
 
     /**
@@ -215,7 +223,7 @@ export default class CorkHeader extends LitElement {
 
   /**
    * @description Standard Lit lifecycle method. Opens or closes the nav tray, sets the image and font origins when imageUrl or fontUrl change to a non-empty value,
-   * and starts or stops the page width controller when noPageWidth changes.
+   * and starts or stops applicable controllers.
    * @param {Map} props - Map of changed properties and their previous values
    */
   willUpdate(props){
@@ -231,6 +239,36 @@ export default class CorkHeader extends LitElement {
     if ( props.has('noPageWidth') ) {
       this.noPageWidth ? this.ctl.pageWidth.destroy() : this.ctl.pageWidth.init();
     }
+    if ( props.has('noAppStateClose') ) {
+      this.noAppStateClose ? this.ctl.appState.destroy() : this.ctl.appState.init();
+    }
+  }
+
+  /**
+   * @description Opens a nav tray, closing any other. Same as setting selectedNavComponentName.
+   * @param {String} name - Name of the slot whose tray to open, e.g. 'primary-nav', 'search' or 'quick-links'.
+   */
+  openNavTray(name){
+    this.selectedNavComponentName = name;
+  }
+
+  /**
+   * @description Closes the open nav tray, if any. Call it from an SPA's router on navigation, unless the app uses cork-app-state.
+   */
+  closeNavTray(){
+    if ( this.selectedNavComponentName ) this.selectedNavComponentName = null;
+  }
+
+  /**
+   * @description Callback for the AppStateController. Closes the open nav tray when the app state's location changes,
+   * and ignores other app state updates.
+   * @param {Object} state - The cork-app-state app state.
+   */
+  _onAppStateUpdate(state){
+    const fullpath = state?.location?.fullpath;
+    if ( fullpath === this._lastFullpath ) return;
+    this._lastFullpath = fullpath;
+    this.closeNavTray();
   }
 
   /**
@@ -355,7 +393,7 @@ export default class CorkHeader extends LitElement {
    * Clears selectedNavComponentName if the dialog closed itself (e.g. with the Escape key), to keep the toggles in sync.
    */
   _onNavTrayClose() {
-    if ( this.selectedNavComponentName ) this.selectedNavComponentName = null;
+    this.closeNavTray();
   }
 
   /**
@@ -363,7 +401,7 @@ export default class CorkHeader extends LitElement {
    * e.g. after a search. Ignored if no tray is open.
    */
   _onNavTrayCloseRequest() {
-    if ( this.selectedNavComponentName ) this.selectedNavComponentName = null;
+    this.closeNavTray();
   }
 
   /**

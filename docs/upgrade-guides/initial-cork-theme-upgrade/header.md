@@ -44,8 +44,8 @@ The header and the components that sit in it: `cork-header`, `cork-primary-nav`,
    ```
 
 3. Load the header's images: see [Images and Fonts](images-and-fonts.md). Without them, the header bar and trays have no background images.
-4. Replace `open()`, `close()`, `opened` and `toggle` listeners with `selectedNavComponentName` (see below).
-5. In an SPA, close the tray on navigation. The old header closed itself on `popstate`; `cork-header` doesn't yet. For example, in a cork-app-state route handler: `header.selectedNavComponentName = null`.
+4. Replace `open()`, `close()`, `opened` and `toggle` listeners with `openNavTray(name)`, `closeNavTray()` and `selectedNavComponentName` (see below).
+5. In an SPA, the tray should close on navigation. The old header closed itself on `popstate`, which misses link clicks (routers use `pushState`). `cork-header` instead closes itself when cork-app-state's location changes, by listening for `app-state-update` (see [Controllers](controllers.md#appstatecontroller)). With any other router, call `header.closeNavTray()` on navigation.
 
 ### Children
 
@@ -76,11 +76,12 @@ For your own slotted element:
 | Old | New |
 | --- | --- |
 | `site-name`, `slogan`, `figure-src`, `site-url`, `branding-figure-aria-label` | Moved to a child `cork-branding-bar`. See [Branding bar](#branding-bar). |
-| `opened`, `open()`, `close()` | `selectedNavComponentName`: the slot name of the open component (`primary-nav`, `search` or `quick-links`), or `null` when closed. Set it to open or close a tray. |
+| `opened`, `open()`, `close()` | `selectedNavComponentName`: the slot name of the open component (`primary-nav`, `search` or `quick-links`), or `null` when closed. Set it to open or close a tray, or call `openNavTray(name)` and `closeNavTray()`. |
 | `prevent-fixed` | Removed. The header isn't fixed to the top of the screen. Campus's sticky header isn't supported yet. |
 | `is-demo`, `silence-warnings` | Removed. |
 | (new) `backdrop`, `background-image-url`, `nav-tray-*-image-url` | Header bar variant and image overrides. See [Images and Fonts](images-and-fonts.md#cork-header). |
 | (new) `no-page-width` | The header sets `--page-width` on the document by default. This turns it off, e.g. if the app runs its own `PageWidthController`. See [Controllers](controllers.md#pagewidthcontroller). |
+| (new) `no-app-state-close` | The header closes its tray when cork-app-state's location changes. This turns it off. |
 | (new) `image-url`, `font-url` | Where the theme's images and fonts are served from, for the whole document. In place of calling `setImageCssCustomProperties()` and `setFontFaces()`. See [Images and Fonts](images-and-fonts.md#cork-header). |
 
 ### Events

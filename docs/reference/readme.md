@@ -21,6 +21,7 @@ or `docs jsdoc <name>` for one page.
 
 - [assets](utils/assets.md): `cssUrl`, `optionalCssUrl`, `setImageCssCustomProperties`, `setFontFaces`, `copyImages`, `copyFonts`
 - [controllers](utils/controllers/readme.md)
+  - [AppStateController](utils/controllers/AppStateController.md): Lit controller that calls back on @ucd-lib/cork-app-state's app-state-update event.
   - [MutationObserverController](utils/controllers/MutationObserverController.md): Lit controller that attaches a MutationObserver to an element
   - [NavController](utils/controllers/NavController.md): Lit controller that parses menu markup in the host's light DOM into navItems, for the host element to render in its shadow DOM.
   - [PageWidthController](utils/controllers/PageWidthController.md): Sets the theme's page width CSS custom property (--page-width), and keeps it current as the window resizes.

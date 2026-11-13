@@ -4,10 +4,11 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
 import { Mixin, MainDomElementMixin } from '@ucd-lib/cork-theme/utils/mixins';
 
 /**
- * @description Shows one of its children at a time, and hides the rest. The selected child is picked by index, or by an attribute value (id by default).
+ * @description Shows one of its children at a time, and hides the rest. The selected child is picked by index, or by an attribute or property value (the id attribute by default).
  * @property {String} selected - The child to show. A whole number (e.g. '0') is a child index.
- * Anything else is matched against each child's attrForSelected attribute. Attribute: selected.
- * @property {String} attrForSelected - Attribute of the children that selected value is matched against. Default: 'id'. Attribute: attr-for-selected.
+ * Anything else is matched against each child's propForSelected property, if set, or else its attrForSelected attribute. Attribute: selected.
+ * @property {String} attrForSelected - Attribute of the children that selected value is matched against. Default (and when empty): 'id'. Attribute: attr-for-selected.
+ * @property {String} propForSelected - Property of the children that selected value is matched against, with strict equality. Takes precedence over attrForSelected when set. Default: ''. Attribute: prop-for-selected.
  * @property {String} selectedAttribute - An attribute to add to the selected child, and remove from the rest. Optional. Attribute: selected-attribute.
  * @property {String} fallbackSelection - The child to show when selected matches nothing, e.g. a not-found page. Matched like selected. Attribute: fallback-selection.
  * @property {String} inlineDisplayValue - Inline display style for the selected child, e.g. ele.style.display = 'flex'. Default: 'block'. Attribute: inline-display-value.
@@ -40,6 +41,13 @@ import { Mixin, MainDomElementMixin } from '@ucd-lib/cork-theme/utils/mixins';
  *   <app-search page-id="search"></app-search>
  *   <app-not-found page-id="not-found"></app-not-found>
  * </cork-pages>
+ *
+ * @example <caption>Select by a property</caption>
+ * <!-- each child has a pageId property, e.g. set in its constructor -->
+ * <cork-pages selected=${this.page} prop-for-selected="pageId">
+ *   <app-home></app-home>
+ *   <app-search></app-search>
+ * </cork-pages>
  */
 export default class CorkPages extends Mixin(LitElement)
   .with(MainDomElementMixin) {
@@ -48,6 +56,7 @@ export default class CorkPages extends Mixin(LitElement)
     return {
       selected: {type: String},
       attrForSelected: {type: String, attribute: 'attr-for-selected'},
+      propForSelected: {type: String, attribute: 'prop-for-selected'},
       selectedAttribute: {type: String, attribute: 'selected-attribute'},
       fallbackSelection: {type: String, attribute: 'fallback-selection'},
       inlineDisplayValue: {type: String, attribute: 'inline-display-value'}
@@ -58,6 +67,7 @@ export default class CorkPages extends Mixin(LitElement)
     super();
     this.selected = '';
     this.attrForSelected = 'id';
+    this.propForSelected = '';
     this.selectedAttribute = '';
     this.fallbackSelection = '';
     this.inlineDisplayValue = 'block';
@@ -74,7 +84,7 @@ export default class CorkPages extends Mixin(LitElement)
     if ( props.has('attrForSelected') && !this.attrForSelected ) this.attrForSelected = 'id';
     if ( props.has('inlineDisplayValue') && !this.inlineDisplayValue ) this.inlineDisplayValue = 'block';
     
-    const attributes = ['selected', 'attrForSelected', 'selectedAttribute', 'fallbackSelection', 'inlineDisplayValue'];
+    const attributes = ['selected', 'attrForSelected', 'propForSelected', 'selectedAttribute', 'fallbackSelection', 'inlineDisplayValue'];
     if( attributes.some(attr => props.has(attr)) ) {
       this._onChange();
     }
@@ -97,7 +107,8 @@ export default class CorkPages extends Mixin(LitElement)
     }
 
     // loop through and hide/show children
-    let found = this._updateVisibility(selected, this.attrForSelected);
+    const matchOpts = {attr: this.attrForSelected, prop: this.propForSelected};
+    let found = this._updateVisibility(selected, matchOpts);
 
     // if nothing found, check fallback selection
     if( !found && this.fallbackSelection ) {
@@ -107,17 +118,19 @@ export default class CorkPages extends Mixin(LitElement)
         selected = this.fallbackSelection;
       }
 
-      found = this._updateVisibility(selected, this.attrForSelected);
+      found = this._updateVisibility(selected, matchOpts);
     } 
   }
 
   /**
    * @description Shows the matching child and hides the rest.
-   * @param {Number|String} selected - A child index, or a value to match against each child's attr.
-   * @param {String} attr - Attribute to match a string selected against.
+   * @param {Number|String} selected - A child index, or a value to match against each child's prop or attr.
+   * @param {Object} opts - Options.
+   * @param {String} opts.attr - Attribute to match a string selected against.
+   * @param {String} opts.prop - Property to match a string selected against. Takes precedence over opts.attr when set.
    * @returns {Boolean} Whether a child matched.
    */
-  _updateVisibility(selected, attr) {
+  _updateVisibility(selected, opts={}) {
     let children = [...this.children];
     let found = false;
     let useIndex = (typeof selected === 'number');
@@ -130,7 +143,7 @@ export default class CorkPages extends Mixin(LitElement)
         continue;
       }
 
-      val = children[i].getAttribute(attr);
+      val = opts.prop ? children[i][opts.prop] : children[i].getAttribute(opts.attr);
       this._select((val === selected), children[i], this.selectedAttribute);
       if( !found ) found = (val === selected);
     }
