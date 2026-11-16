@@ -14,4 +14,9 @@ program
   .argument('[names...]', 'Pages to build: element names (e.g. cork-header) or util folders (e.g. controllers). Default: all')
   .action(docs.jsdoc.bind(docs));
 
+program
+  .command('cem')
+  .description('Build package/custom-elements.json, the Custom Elements Manifest, from package/elements')
+  .action(docs.cem.bind(docs));
+
 program.parse(process.argv);

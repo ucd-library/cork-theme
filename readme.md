@@ -83,7 +83,17 @@ git push
 
 ### Generating Docs
 
-The element and util reference pages in [docs/reference](docs/reference/readme.md) are generated from the JSDoc in `services/package`. Don't edit them by hand. After changing an element or util's JSDoc, rebuild them. The local dev container must be running.
+Before publishing, generate all docs with: 
+
+```bash
+./devops/cmds/run-package-tool.sh docs run-all
+```
+
+The local dev container must be running.
+
+#### Markdown
+
+The element and util reference pages in [docs/reference](docs/reference/readme.md) are generated from the JSDoc in `services/package`. Don't edit them by hand. After changing an element or util's JSDoc, rebuild them. 
 
 ```bash
 ./devops/cmds/run-package-tool.sh docs jsdoc
@@ -108,4 +118,8 @@ To add intro text to a util's page (e.g. `utils/mixins.md`), or a split folder's
 import AppStateController from './AppStateController.js';
 ```
 
-The indexes, `docs/reference/readme.md` and `docs/reference/utils/controllers/readme.md`, are rebuilt every time. To run every docs build, use `docs run-all`.
+The indexes, `docs/reference/readme.md` and `docs/reference/utils/controllers/readme.md`, are rebuilt every time.
+
+#### Custom Element Manifest
+
+`docs cem` builds `services/package/custom-elements.json`, the [Custom Elements Manifest](https://github.com/webcomponents/custom-elements-manifest) for the elements. It's published with the package (`customElements` in `package.json`), and read by tools such as IDE custom data generators, Storybook and api-viewer. It's made by `@custom-elements-manifest/analyzer`, with the config and plugins in `services/package-tools/lib/cem/`. 
