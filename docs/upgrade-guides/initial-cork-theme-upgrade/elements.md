@@ -32,6 +32,7 @@ Menu elements read their links with a new markup format: see [Nav Markup](nav-ma
 | `ucd-theme-quick-links` | `cork-quick-links`. See [Header](header.md#quick-links). |
 | `ucdlib-branding-bar` | `cork-branding-bar`. See [Header](header.md#branding-bar). |
 | `ucdlib-pages` | `cork-pages`. See [cork-pages](#cork-pages). |
+| `ucdlib-md`, `ucdlib-md-content` | `cork-markdown`. See [cork-markdown](#cork-markdown). |
 
 ## cork-pages
 
@@ -85,3 +86,87 @@ Menu elements read their links with a new markup format: see [Nav Markup](nav-ma
 | `console.warn` when nothing matches | Removed. Every child is hidden, as before. |
 
 See the [reference](../../reference/elements/cork-pages.md) for every attribute.
+
+## cork-markdown
+
+`ucdlib-md` is now `cork-markdown`. It still renders markdown as sanitized HTML in the light DOM, with marked and DOMPurify. `ucdlib-md-content` is replaced by a script tag.
+
+### Steps
+
+1. Find the old elements:
+
+   ```
+   grep -rn "ucdlib-md" src
+   ```
+
+2. Change the import:
+
+   ```js
+   // Before
+   import '@ucd-lib/theme-elements/ucdlib/ucdlib-md/ucdlib-md.js';
+
+   // After
+   import '@ucd-lib/cork-theme/elements/cork-markdown';
+   ```
+
+3. Rename the tag, and replace `ucdlib-md-content` with a `<script type="text/markdown">`:
+
+   ```html
+   <!-- Before -->
+   <ucdlib-md>
+     <ucdlib-md-content>
+       ## A heading
+       Some **bold** text
+     </ucdlib-md-content>
+   </ucdlib-md>
+
+   <!-- After -->
+   <cork-markdown>
+     <script type="text/markdown">
+       ## A heading
+       Some **bold** text
+     </script>
+   </cork-markdown>
+   ```
+
+4. Rename the `data` property to `markdown`:
+
+   ```html
+   <!-- Before -->
+   <ucdlib-md .data=${this.doc}></ucdlib-md>
+
+   <!-- After -->
+   <cork-markdown .markdown=${this.doc}></cork-markdown>
+   ```
+
+5. Move `renderer`, `use` and `options` into a single `markedOptions` object, which takes the same object as `marked.use()`:
+
+   ```js
+   // Before
+   ele.renderer = { heading(token) { … } };
+   ele.options = { breaks: false };
+
+   // After
+   ele.markedOptions = {
+     breaks: false,
+     renderer: { heading(token) { … } }
+   };
+   ```
+
+6. If you query the element in code or style it in CSS, change the tag name there too.
+
+### Changes
+
+| Old | New |
+| --- | --- |
+| `ucdlib-md-content` | A `<script type="text/markdown">` child. Its text isn't parsed as HTML, so `<`, `&` and autolinks like `<https://…>` reach marked as written. |
+| Inline indentation | Only the indentation shared by all lines is removed. Before, every line was trimmed, which broke nested lists and indented code. |
+| `data` | Renamed `markdown`. |
+| `renderer`, `use`, `options` | One `markedOptions` property, merged over the defaults rather than replacing them. A renderer method can return `false` to fall back to the default. |
+| marked settings | Each element has its own marked instance. Before, options were set on the shared `marked` object, so one element's options affected every other, and extensions piled up on each update. |
+| Ordered lists | Now `<ol class="list--multilevel">`, so they're numbered, with letters for nested lists. Before, they were rendered as `<ul>`. |
+| (new) Heading ids | Headings get GitHub-style ids with an `md-` prefix, e.g. `## Slots` gets `id="md-slots"`, and the `#hash` of relative links gets the same prefix, so `[Slots](#slots)` still works. The prefix stops DOMPurify from removing ids such as `children` or `title`. Change it with `heading-id-prefix`. |
+| Rendered wrapper | The HTML is rendered directly in the element, not in a `<div rendered>`. |
+| marked, DOMPurify | marked 18 (was 16) and DOMPurify 3 (was 2), plus marked-gfm-heading-id. |
+
+See the [reference](../../reference/elements/cork-markdown.md) for every property.

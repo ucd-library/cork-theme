@@ -66,7 +66,6 @@ import { renderItem, renderDrillDown, drillDownStyles } from './NavController.tp
  * ${this.ctl.nav.renderDrillDown()}
  *
  * @example <caption>Light DOM markup - flat series of a/button elements</caption>
- * ```html
  * <my-nav>
  *   <a href="/hours">Hours</a>
  *   <button>Chat with a librarian</button>
@@ -91,7 +90,6 @@ import { renderItem, renderDrillDown, drillDownStyles } from './NavController.tp
  *     </li>
  *   </ul>
  * </my-nav>
- * ```
  */
 export default class NavController {
 

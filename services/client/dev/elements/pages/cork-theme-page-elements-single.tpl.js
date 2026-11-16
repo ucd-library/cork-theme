@@ -29,7 +29,7 @@ export function render() {
     <div class="breadcrumbs__dots"></div>
     <div class="l-container">
       <div class="l-content">
-        <p>element single</p>
+        ${this.ctl.markdown.render({ stripTopHeading: true })}
       </div>
     </div>
   `;

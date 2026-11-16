@@ -97,4 +97,15 @@ This rebuilds every page and clears out pages for deleted sources. To rebuild on
 
 Controllers get a page each, under `docs/reference/utils/controllers/`. Name one to rebuild only its page (e.g. `docs jsdoc NavController`), or `controllers` for all of them. To split another util folder the same way, add it to `SPLIT_UTILS` in `services/package-tools/lib/docs.js`.
 
+To add intro text to a util's page (e.g. `utils/mixins.md`), or a split folder's index page, put a `@file` block at the top of the folder's `index.js`. Its text goes under the page title, and markdown and `{@link}` work as in other descriptions:
+
+```js
+/**
+ * @file Lit reactive controllers for theme elements and your own components.
+ *
+ * Most attach to a host element with `new XController(this, opts)`.
+ */
+import AppStateController from './AppStateController.js';
+```
+
 The indexes, `docs/reference/readme.md` and `docs/reference/utils/controllers/readme.md`, are rebuilt every time. To run every docs build, use `docs run-all`.

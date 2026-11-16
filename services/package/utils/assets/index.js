@@ -1,3 +1,7 @@
+/**
+ * @file Utility functions for managing theme assets, such as images and fonts.
+ */
+
 import imageProperties from '../../styles/image-properties.js';
 import fontFaces from '../../styles/font-faces.js';
 

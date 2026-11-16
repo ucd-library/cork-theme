@@ -24,6 +24,8 @@ See examples for supported light DOM markup formats.
 - [Template functions](#template-functions)
   - [renderItem(item, opts)](#renderitemitem-opts)
 - [Examples](#examples)
+- [Typedefs](#typedefs)
+  - [NavItem](#navitem)
 
 ## Properties
 
@@ -155,8 +157,11 @@ ${this.ctl.nav.renderDrillDown()}
   <button>Chat with a librarian</button>
   <a>Inert link</a>
 </my-nav>
+```
 
-@example <caption>Light DOM markup - list format with sub menus</caption>
+**Light DOM markup - list format with sub menus**
+
+```html
 <my-nav>
   <ul>
     <li>

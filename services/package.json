@@ -37,7 +37,9 @@
     "express": "^5.3.0",
     "fontverter": "^2.0.0",
     "harfbuzzjs": "^1.6.4",
+    "marked-highlight": "^2.2.4",
     "postcss": "^8.5.32",
+    "prismjs": "^1.30.0",
     "sass": "^1.106.1",
     "subset-font": "^2.9.0",
     "uuid": "^14.0.3",
@@ -45,7 +47,10 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "lit": "^3.3.3"
+    "dompurify": "^3.4.18",
+    "lit": "^3.3.3",
+    "marked": "^18.2.0",
+    "marked-gfm-heading-id": "^4.1.4"
   },
   "allowScripts": {
     "@ucd-lib/cork-icon@1.5.0": true

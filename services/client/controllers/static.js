@@ -18,7 +18,7 @@ export default (app) => {
   let assetsDir = path.join(__dirname, '../public');
   logger.info(`Serving static assets from ${assetsDir}`);
 
-  const routes = ['elements'];
+  const routes = ['elements', 'utils'];
   const appTitle = 'Cork Theme';
 
   spaMiddleware({

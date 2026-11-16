@@ -10,7 +10,7 @@ Shows one of its children at a time, and hides the rest. The selected child is p
 | --- | --- | --- |
 | `selected` | `String` | The child to show. A whole number (e.g. '0') is a child index. Anything else is matched against each child's propForSelected property, if set, or else its attrForSelected attribute. Attribute: selected. |
 | `attrForSelected` | `String` | Attribute of the children that selected value is matched against. Default (and when empty): 'id'. Attribute: attr-for-selected. |
-| `propForSelected` | `String` | Property of the children that selected value is matched against, with strict equality. Takes precedence over attrForSelected when set. Changes to a child's property are not watched, so set selected after changing one. Default: ''. Attribute: prop-for-selected. |
+| `propForSelected` | `String` | Property of the children that selected value is matched against, with strict equality. Takes precedence over attrForSelected when set. Default: ''. Attribute: prop-for-selected. |
 | `selectedAttribute` | `String` | An attribute to add to the selected child, and remove from the rest. Optional. Attribute: selected-attribute. |
 | `fallbackSelection` | `String` | The child to show when selected matches nothing, e.g. a not-found page. Matched like selected. Attribute: fallback-selection. |
 | `inlineDisplayValue` | `String` | Inline display style for the selected child, e.g. ele.style.display = 'flex'. Default: 'block'. Attribute: inline-display-value. |

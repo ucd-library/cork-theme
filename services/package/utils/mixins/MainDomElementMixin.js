@@ -5,6 +5,13 @@
  * default shadow root
  * 
  * @returns {Class} LitElement updated createRenderRoot function.
+ * @example <caption>Render an element into the light DOM</caption>
+ * import { LitElement } from 'lit';
+ * import { Mixin, MainDomElementMixin } from '@ucd-lib/cork-theme/utils/mixins';
+ *
+ * class MyElement extends Mixin(LitElement).with(MainDomElementMixin) {
+ *   // static styles are added to the element as a style tag, since there's no shadow root
+ * }
  */
 const MainDomElementMixin = (superClass) => class extends superClass {
 

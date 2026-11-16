@@ -6,14 +6,9 @@
 import { AppStateController } from '@ucd-lib/cork-theme/utils/controllers';
 ```
 
-Lit controller that calls back on @ucd-lib/cork-app-state's app-state-update event.
+Lit controller that calls back on @ucd-lib/cork-app-state's app-state-update event, if it exists.
 
-It finds the AppStateModel through cork-app-utils' globals (window._corkAppUtils.Registery), so this package doesn't import cork-app-utils.
-If no AppStateModel is registered, e.g. in an app that doesn't use cork-app-state, the controller does nothing.
-
-The event fires on every app state change, not just location changes. Compare state.location to tell them apart.
-
-The [`cork-header`](../../elements/cork-header.md) element uses this to close its nav tray on navigation.
+Use it if you are unsure whether cork-app-state is registered, or if you want to avoid a direct dependency on it. If cork-app-state is not registered, the controller does nothing.
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -74,6 +69,13 @@ this.ctl = { appState: new AppStateController(this, { callback: this._onLocation
 
 ```js
 this.ctl = { appState: new AppStateController(this, { shouldInit: () => !this.noAppState }) };
+
+// and handle property changes in willUpdate() to start or stop the controller
+willUpdate(props){
+ if ( props.has('noAppState') ) {
+  this.noAppState ? this.ctl.appState.destroy() : this.ctl.appState.init();
+ }
+}
 ```
 
 **Start later**

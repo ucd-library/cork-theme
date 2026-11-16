@@ -20,7 +20,7 @@ const ALIASES = { classdesc: 'description', examples: 'example' };
 // Lit and custom element lifecycle callbacks: called by the browser or Lit, not by apps, so left out of Methods
 const LIFECYCLE = [
   'connectedCallback', 'disconnectedCallback', 'adoptedCallback', 'attributeChangedCallback',
-  'shouldUpdate', 'willUpdate', 'update', 'firstUpdated', 'updated',
+  'shouldUpdate', 'willUpdate', 'update', 'render', 'firstUpdated', 'updated',
   'hostConnected', 'hostDisconnected', 'hostUpdate', 'hostUpdated'
 ];
 
@@ -455,6 +455,15 @@ class Docs {
   }
 
   /**
+   * @description Capitalizes the first letter of a name, e.g. for a util folder's page title.
+   * @param {String} name - The name, e.g. 'controllers'.
+   * @returns {String} e.g. 'Controllers'.
+   */
+  _capitalize(name) {
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  }
+
+  /**
    * @description Removes the leading '- ' that separates a tag's name from its description.
    * @param {String} text - The description.
    * @returns {String}
@@ -467,13 +476,14 @@ class Docs {
    * @description Renders a reference page.
    * - Element and split folder file pages are headed by the page name, with their main symbol's sections (see _mainSymbol) at level 2,
    *   then any typedefs and other symbols.
-   * - Util pages start with their import statements (see _importLines). A util folder page then has a level 2 section per class,
+   * - Util pages are headed by the capitalized page name (e.g. Assets), then an intro from the @file block in the folder's index.js, if any
+   *   (see _fileIntro), and their import statements (see _importLines), unless the intro has examples. A util folder page then has a level 2 section per class,
    *   function, const, or typedef. Both get a table of contents (see _toc) above their first heading.
    * @param {Object} page - A page from _listPages, with its symbols.
    * @returns {Promise<String>} Markdown.
    */
   async _renderPage(page) {
-    const out = [`# ${page.name}`, ''];
+    const out = [`# ${page.kind === 'util' ? this._capitalize(page.name) : page.name}`, ''];
     const body = [];
     let tocLevels = [2, 4];
 
@@ -495,7 +505,9 @@ class Docs {
     if ( page.kind === 'element' ) {
       out.push(...body);
     } else {
-      const imports = await this._importLines(page);
+      const intro = page.kind === 'util' ? await this._fileIntro(path.join(UTILS_DIR, page.folder, 'index.js')) : { lines: [] };
+      out.push(...intro.lines);
+      const imports = intro.hasExamples ? [] : await this._importLines(page);
       if ( imports.length ) out.push('```js', ...imports, '```', '');
       // The contents go just above the first heading, i.e. after a main symbol's description
       const firstHeading = Math.max(0, body.findIndex(line => /^#{2,6} /.test(line)));
@@ -507,20 +519,50 @@ class Docs {
   }
 
   /**
-   * @description Renders a split util folder's index page: its import statement, and each of its files' pages
-   * with the first sentence of the main symbol's description.
+   * @description Renders a split util folder's index page: a capitalized title (e.g. Controllers), an intro from the @file block in the folder's
+   * index.js, if any (see _fileIntro), its import statement (unless the intro has examples), and each of its files' pages with the first sentence of the main symbol's description.
    * @param {Object} page - A util-index page from _listPages.
    * @returns {Promise<String>} Markdown.
    */
   async _renderUtilIndex(page) {
-    const out = [`# ${page.name}`, ''];
-    const imports = await this._importLines({ ...page, symbols: page.children.flatMap(child => child.symbols) });
+    const out = [`# ${this._capitalize(page.name)}`, ''];
+    const intro = await this._fileIntro(path.join(UTILS_DIR, page.folder, 'index.js'));
+    out.push(...intro.lines);
+    const imports = intro.hasExamples ? [] : await this._importLines({ ...page, symbols: page.children.flatMap(child => child.symbols) });
     if ( imports.length ) out.push('```js', ...imports, '```', '');
     for ( const child of page.children ) {
       const description = this._mainSymbol(child)?.doc.description || '';
       out.push(`- [${child.name}](${path.basename(child.dest)}): ${this._escape(this._firstSentence(description))}`);
     }
     return out.join('\n') + '\n';
+  }
+
+  /**
+   * @description Renders a file's @file block (or @fileoverview, @overview), e.g. a folder's intro at the top of its index.js:
+   * its text, then any @example tags in the block, rendered as in other symbols but without an Examples heading.
+   * Markdown and {@link} work as in other descriptions.
+   * @param {String} file - Absolute path. A missing file is treated as having no block.
+   * @returns {Promise<Object>} lines (String[], markdown lines, empty if there's no block) and hasExamples (Boolean).
+   * A page skips its generated import statement when hasExamples, since the examples are expected to show the imports.
+   */
+  async _fileIntro(file) {
+    let source;
+    try {
+      source = await fs.readFile(file, 'utf8');
+    } catch (e) {
+      return { lines: [], hasExamples: false };
+    }
+    for ( const block of parse(source, { spacing: 'preserve' }) ) {
+      const tag = block.tags.find(tag => ['file', 'fileoverview', 'overview'].includes(tag.tag));
+      if ( !tag ) continue;
+      const out = [];
+      const text = [block.description.trim(), this._tagText(tag)].filter(Boolean).join('\n');
+      if ( text ) out.push(this._escape(text), '');
+      const examples = this._normalizeDoc(block).examples;
+      out.push(...this._renderExamples(examples));
+      return { lines: out, hasExamples: examples.length > 0 };
+    }
+    return { lines: [], hasExamples: false };
   }
 
   /**
@@ -613,12 +655,22 @@ class Docs {
     }
     if ( doc.examples.length ) {
       out.push(`${sections} Examples`, '');
-      doc.examples.forEach(example => {
-        if ( example.caption ) out.push(`**${this._escape(example.caption)}**`, '');
-        out.push(...(example.fenced ? [example.code] : ['```' + example.lang, example.code, '```']), '');
-      });
+      out.push(...this._renderExamples(doc.examples));
     }
     return out;
+  }
+
+  /**
+   * @description Renders examples: each one's caption in bold, if any, then its code in a fenced block (see _parseExample).
+   * @param {Object[]} examples - Examples from _parseExample.
+   * @returns {String[]} Markdown lines.
+   */
+  _renderExamples(examples) {
+    return examples.flatMap(example => [
+      ...(example.caption ? [`**${this._escape(example.caption)}**`, ''] : []),
+      ...(example.fenced ? [example.code] : ['```' + example.lang, example.code, '```']),
+      ''
+    ]);
   }
 
   /**

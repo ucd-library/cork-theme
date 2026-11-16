@@ -1,5 +1,6 @@
 // global styles
 import sharedStyles from '@ucd-lib/cork-theme/styles/css/style-ucdlib.css';
+import codeHighlightStyles from './code-highlight.css';
 import { setFontFaces, setImageCssCustomProperties } from '@ucd-lib/cork-theme/utils/assets';
 
 // Fonts and images are served by this app, straight from the package (see controllers/assets.js)
@@ -8,6 +9,7 @@ setImageCssCustomProperties('/images');
 
 const styles = `
   ${sharedStyles}
+  ${codeHighlightStyles}
 
   [hidden] {
     display: none !important;

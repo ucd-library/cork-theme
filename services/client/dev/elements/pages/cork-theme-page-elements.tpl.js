@@ -12,6 +12,22 @@ export function styles() {
 
 export function render() { 
   return html`
-    <p>a list of elements</p>
+    <section>
+      <h1 class="page-title">Elements</h1>
+    </section>
+    <ol class="breadcrumbs ">
+      <li>
+        <a href="/">Home</a>
+      </li>
+      <li>
+        <a href="/elements">Elements</a>
+      </li>
+    </ol>
+    <div class="breadcrumbs__dots"></div>
+    <div class="l-container">
+      <div class="l-content">
+        ${this.ctl.markdown.renderSection('elements', { stripTopHeading: true })}
+      </div>
+    </div>
   `;
 }
