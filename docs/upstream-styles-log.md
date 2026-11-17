@@ -4,6 +4,17 @@
 
 Each entry records one sync of campus's `source/sass`, `source/images`, `source/fonts` into `services/package/styles` on the `upstream-styles` branch. Newest first.
 
+## 2026-11-17: campus redesign (06b4d780)
+
+- Upstream commit: `06b4d780375bff085f21753fdf5835e020135157`
+- Previous upstream commit: `e039219`
+- Files: 1 modified, 2 added, 0 renamed, 0 deleted
+
+### Campus commits
+
+- 2026-11-16 SITEFARM-4180 fix lint
+- 2026-11-04 SITEFARM-4180 add header bar links for user and shopping cart
+
 ## 2026-11-06: campus redesign (e039219f)
 
 - Upstream commit: `e039219ffe632342b17674909efe5fb30ee05bed`
