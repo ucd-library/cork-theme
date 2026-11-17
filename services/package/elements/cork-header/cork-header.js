@@ -4,6 +4,10 @@ import {render, styles} from "./cork-header.tpl.js";
 import { AppStateController, MutationObserverController, PageWidthController } from '@ucd-lib/cork-theme/utils/controllers';
 import { setImageCssCustomProperties, setFontFaces } from '@ucd-lib/cork-theme/utils/assets';
 
+// Connected sticky headers. The page's scroll-padding-top is set while there is at least one.
+// for use when multiple headers are on the page, such as the cork-theme demo app
+const stickyHeaders = new Set();
+
 /**
  * @typedef {Object} SlottedComponent
  * @property {String} name - The slot's name, as used in the slot attribute (e.g. 'primary-nav').
@@ -27,6 +31,10 @@ import { setImageCssCustomProperties, setFontFaces } from '@ucd-lib/cork-theme/u
  * The header also sets --page-width on the document with a {@link PageWidthController}, for layout classes such as l-full-width.
  * Set the no-page-width attribute to turn this off.
  *
+ * The header bar (UC Davis logo, inline menu and tray toggles) is sticky: it stays fixed to the top of the screen, and shrinks once the page scrolls.
+ * The branding bar scrolls away as usual. The header sets scroll-padding-top on the page (to --sticky-header-scroll-offset), so #hash links land below the bar.
+ * Set the no-sticky attribute to turn this off.
+ *
  * In an SPA using @ucd-lib/cork-app-state, the header closes its open nav tray when the location changes, with an {@link AppStateController}.
  * Set the no-app-state-close attribute to turn this off. In any other SPA, call closeNavTray() from your router on navigation.
  *
@@ -45,6 +53,7 @@ import { setImageCssCustomProperties, setFontFaces } from '@ucd-lib/cork-theme/u
  * @property {String} fontUrl - Base URL of the theme fonts, e.g. '/fonts/cork-theme'. Passed to setFontFaces(), so it loads the fonts for the whole document. Attribute: font-url.
  * @property {Boolean} noPageWidth - Stops the header from setting --page-width, e.g. if the app sets it itself. Attribute: no-page-width.
  * @property {Boolean} noAppStateClose - Stops the header from closing its nav tray on cork-app-state location changes. Attribute: no-app-state-close.
+ * @property {Boolean} noSticky - Stops the header bar from sticking to the top of the screen. Attribute: no-sticky.
  * @property {String} selectedNavComponentName - Name of the component whose nav tray is currently open. One of the keys of _slottedComponents.
  * @slot primary-nav - Main menu. A child {@link cork-primary-nav} is assigned here automatically.
  * @slot search - Search. A child {@link cork-search-tray} (form and common searches) or a bare {@link cork-search-form} is assigned here automatically.
@@ -93,6 +102,11 @@ import { setImageCssCustomProperties, setFontFaces } from '@ucd-lib/cork-theme/u
  *   <cork-primary-nav>…</cork-primary-nav>
  * </cork-header>
  *
+ * @example <caption>Header bar that scrolls with the page</caption>
+ * <cork-header no-sticky>
+ *   <cork-primary-nav>…</cork-primary-nav>
+ * </cork-header>
+ *
  * @example <caption>Custom slotted element</caption>
  * <!-- any element can fill a slot with the slot attribute, in place of the cork element -->
  * <cork-header>
@@ -117,6 +131,8 @@ export default class CorkHeader extends LitElement {
       fontUrl: { type: String, attribute: 'font-url' },
       noPageWidth: { type: Boolean, attribute: 'no-page-width' },
       noAppStateClose: { type: Boolean, attribute: 'no-app-state-close' },
+      noSticky: { type: Boolean, attribute: 'no-sticky' },
+      _isScrolled: { state: true },
       _selectedNavComponent: { state: true },
       _slottedComponents: { type: Object }
     }
@@ -138,9 +154,12 @@ export default class CorkHeader extends LitElement {
     this.fontUrl = '';
     this.noPageWidth = false;
     this.noAppStateClose = false;
+    this.noSticky = false;
+    this._isScrolled = false;
     this._lastFullpath = null;
     this.render = render.bind(this);
     this._onWindowResize = this._onWindowResize.bind(this);
+    this._onWindowScroll = this._onWindowScroll.bind(this);
     this.addEventListener('cork-nav-tray-close-request', this._onNavTrayCloseRequest.bind(this));
 
     this.ctl = {
@@ -206,24 +225,27 @@ export default class CorkHeader extends LitElement {
   }
 
   /**
-   * @description Standard custom element lifecycle method. Adds the window resize listener.
+   * @description Standard custom element lifecycle method. Adds the window resize listener,
+   * and restarts sticky mode if the header was moved. On first connect, willUpdate starts it.
    */
   connectedCallback(){
     super.connectedCallback();
     window.addEventListener('resize', this._onWindowResize);
+    if ( this.hasUpdated && !this.noSticky ) this._startSticky();
   }
 
   /**
-   * @description Standard custom element lifecycle method. Removes the window resize listener.
+   * @description Standard custom element lifecycle method. Removes the window resize listener, and stops sticky mode.
    */
   disconnectedCallback(){
     window.removeEventListener('resize', this._onWindowResize);
+    this._stopSticky();
     super.disconnectedCallback();
   }
 
   /**
    * @description Standard Lit lifecycle method. Opens or closes the nav tray, sets the image and font origins when imageUrl or fontUrl change to a non-empty value,
-   * and starts or stops applicable controllers.
+   * and starts or stops applicable controllers and sticky mode.
    * @param {Map} props - Map of changed properties and their previous values
    */
   willUpdate(props){
@@ -242,6 +264,40 @@ export default class CorkHeader extends LitElement {
     if ( props.has('noAppStateClose') ) {
       this.noAppStateClose ? this.ctl.appState.destroy() : this.ctl.appState.init();
     }
+    if ( props.has('noSticky') ) {
+      this.noSticky ? this._stopSticky() : this._startSticky();
+    }
+  }
+
+  /**
+   * @description Starts sticky mode: listens for window scrolls, to shrink the header bar once the page has scrolled,
+   * and sets the page's scroll-padding-top so #hash targets land below the fixed bar. Does nothing if it's already started.
+   */
+  _startSticky(){
+    if ( stickyHeaders.has(this) ) return;
+    stickyHeaders.add(this);
+    window.addEventListener('scroll', this._onWindowScroll, { passive: true });
+    this._onWindowScroll();
+    document.documentElement.style.scrollPaddingTop = 'var(--sticky-header-scroll-offset)';
+  }
+
+  /**
+   * @description Stops sticky mode: removes the scroll listener, and clears the page's scroll-padding-top
+   * if no other sticky header is connected. Does nothing if it isn't started.
+   */
+  _stopSticky(){
+    if ( !stickyHeaders.delete(this) ) return;
+    window.removeEventListener('scroll', this._onWindowScroll);
+    this._isScrolled = false;
+    if ( !stickyHeaders.size ) document.documentElement.style.removeProperty('scroll-padding-top');
+  }
+
+  /**
+   * @description Callback for the window scroll event in sticky mode. Notes whether the page has scrolled from the top,
+   * which shrinks the header bar.
+   */
+  _onWindowScroll(){
+    this._isScrolled = window.scrollY > 0;
   }
 
   /**

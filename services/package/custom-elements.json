@@ -153,142 +153,11 @@
     },
     {
       "kind": "javascript-module",
-      "path": "package/elements/cork-nav-lite/cork-nav-lite.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "A single-level main menu, shown inline in the cork-header bar. For sites with only a few top-level links. Add it as a child of the {@link cork-header } element.\n\nThe header shows it on larger screens, in place of the menu tray toggle.\nSmaller screens use the menu tray, so the site still also needs a cork-primary-nav.\n\nThe links can be written in the element, or copied from the header's cork-primary-nav with copyFromPrimaryNav, so they're only written once.\nOnly top-level items are shown: sub menus and fields are ignored.",
-          "name": "CorkNavLite",
-          "slots": [
-            {
-              "description": "Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM by {@link NavController}. See its examples for the markup formats. Ignored with copyFromPrimaryNav.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "method",
-              "name": "define",
-              "static": true,
-              "parameters": [
-                {
-                  "name": "tagName",
-                  "default": "'cork-nav-lite'",
-                  "description": "Tag name to register. Default: 'cork-nav-lite'",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "description": "Registers the element as a custom element."
-            },
-            {
-              "kind": "field",
-              "name": "headerComponentLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Main Menu'",
-              "description": "Label for the menu, used as the nav's aria-label. Default: 'Main Menu'. Attribute: header-component-label.",
-              "attribute": "header-component-label"
-            },
-            {
-              "kind": "field",
-              "name": "ctl",
-              "type": {
-                "text": "object"
-              },
-              "default": "{ nav: new NavController(this, { noParseHostProperty: 'copyFromPrimaryNav' }) }"
-            },
-            {
-              "kind": "field",
-              "name": "copyFromPrimaryNav",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Copies the top-level items of the cork-primary-nav in the same cork-header, instead of reading the element's own links. Attribute: copy-from-primary-nav.",
-              "attribute": "copy-from-primary-nav"
-            },
-            {
-              "kind": "field",
-              "name": "primaryNavMaxItems",
-              "privacy": "public",
-              "type": {
-                "text": "number"
-              },
-              "description": "With copyFromPrimaryNav, the number of items to copy, from the start. Default: all. Attribute: primary-nav-max-items.",
-              "attribute": "primary-nav-max-items"
-            }
-          ],
-          "events": [
-            {
-              "description": "Fired when a rendered link or button is clicked, with the clicked item in detail.navItem. See {@link NavController}.",
-              "name": "cork-nav-item-click"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "header-component-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Main Menu'",
-              "description": "Label for the menu, used as the nav's aria-label. Default: 'Main Menu'. Attribute: header-component-label.",
-              "fieldName": "headerComponentLabel"
-            },
-            {
-              "name": "copy-from-primary-nav",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Copies the top-level items of the cork-primary-nav in the same cork-header, instead of reading the element's own links. Attribute: copy-from-primary-nav.",
-              "fieldName": "copyFromPrimaryNav"
-            },
-            {
-              "name": "primary-nav-max-items",
-              "type": {
-                "text": "number"
-              },
-              "description": "With copyFromPrimaryNav, the number of items to copy, from the start. Default: all. Attribute: primary-nav-max-items.",
-              "fieldName": "primaryNavMaxItems"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "customElement": true,
-          "tagName": "cork-nav-lite"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "CorkNavLite",
-            "module": "package/elements/cork-nav-lite/cork-nav-lite.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "cork-nav-lite",
-          "declaration": {
-            "name": "CorkNavLite",
-            "module": "package/elements/cork-nav-lite/cork-nav-lite.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "package/elements/cork-header/cork-header.js",
       "declarations": [
         {
           "kind": "class",
-          "description": "The primary site header component that accepts various slotted header components and controls their visibility in the nav tray.\n\nBy default, background images are set via global CSS properties. Without the image-url or background-image-url attributes, the header will have no background art.\n\nThe image-url and font-url attributes are conveniences for apps without a js entry point to make those calls from.\nThey act on the whole document, not just the header, so use one or the other, not both.\n\nThe header also sets --page-width on the document with a {@link PageWidthController }, for layout classes such as l-full-width.\nSet the no-page-width attribute to turn this off.\n\nIn an SPA using",
+          "description": "The primary site header component that accepts various slotted header components and controls their visibility in the nav tray.\n\nBy default, background images are set via global CSS properties. Without the image-url or background-image-url attributes, the header will have no background art.\n\nThe image-url and font-url attributes are conveniences for apps without a js entry point to make those calls from.\nThey act on the whole document, not just the header, so use one or the other, not both.\n\nThe header also sets --page-width on the document with a {@link PageWidthController }, for layout classes such as l-full-width.\nSet the no-page-width attribute to turn this off.\n\nThe header bar (UC Davis logo, inline menu and tray toggles) is sticky: it stays fixed to the top of the screen, and shrinks once the page scrolls.\nThe branding bar scrolls away as usual. The header reserves the bar's space itself, so the page needs no sticky-header class or padding,\nand it sets scroll-padding-top on the page (to --sticky-header-scroll-offset), so #hash links land below the bar.\nSet the no-sticky attribute to turn this off.\n\nIn an SPA using",
           "name": "CorkHeader",
           "slots": [
             {
@@ -460,6 +329,17 @@
             },
             {
               "kind": "field",
+              "name": "noSticky",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Stops the header bar from sticking to the top of the screen. Attribute: no-sticky.",
+              "attribute": "no-sticky"
+            },
+            {
+              "kind": "field",
               "name": "ctl",
               "type": {
                 "text": "object"
@@ -575,6 +455,15 @@
               "default": "false",
               "description": "Stops the header from closing its nav tray on cork-app-state location changes. Attribute: no-app-state-close.",
               "fieldName": "noAppStateClose"
+            },
+            {
+              "name": "no-sticky",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Stops the header bar from sticking to the top of the screen. Attribute: no-sticky.",
+              "fieldName": "noSticky"
             }
           ],
           "superclass": {
@@ -600,6 +489,137 @@
           "declaration": {
             "name": "CorkHeader",
             "module": "package/elements/cork-header/cork-header.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "package/elements/cork-nav-lite/cork-nav-lite.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A single-level main menu, shown inline in the cork-header bar. For sites with only a few top-level links. Add it as a child of the {@link cork-header } element.\n\nThe header shows it on larger screens, in place of the menu tray toggle.\nSmaller screens use the menu tray, so the site still also needs a cork-primary-nav.\n\nThe links can be written in the element, or copied from the header's cork-primary-nav with copyFromPrimaryNav, so they're only written once.\nOnly top-level items are shown: sub menus and fields are ignored.",
+          "name": "CorkNavLite",
+          "slots": [
+            {
+              "description": "Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM by {@link NavController}. See its examples for the markup formats. Ignored with copyFromPrimaryNav.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tagName",
+                  "default": "'cork-nav-lite'",
+                  "description": "Tag name to register. Default: 'cork-nav-lite'",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Registers the element as a custom element."
+            },
+            {
+              "kind": "field",
+              "name": "headerComponentLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Main Menu'",
+              "description": "Label for the menu, used as the nav's aria-label. Default: 'Main Menu'. Attribute: header-component-label.",
+              "attribute": "header-component-label"
+            },
+            {
+              "kind": "field",
+              "name": "ctl",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ nav: new NavController(this, { noParseHostProperty: 'copyFromPrimaryNav' }) }"
+            },
+            {
+              "kind": "field",
+              "name": "copyFromPrimaryNav",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Copies the top-level items of the cork-primary-nav in the same cork-header, instead of reading the element's own links. Attribute: copy-from-primary-nav.",
+              "attribute": "copy-from-primary-nav"
+            },
+            {
+              "kind": "field",
+              "name": "primaryNavMaxItems",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "description": "With copyFromPrimaryNav, the number of items to copy, from the start. Default: all. Attribute: primary-nav-max-items.",
+              "attribute": "primary-nav-max-items"
+            }
+          ],
+          "events": [
+            {
+              "description": "Fired when a rendered link or button is clicked, with the clicked item in detail.navItem. See {@link NavController}.",
+              "name": "cork-nav-item-click"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "header-component-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Main Menu'",
+              "description": "Label for the menu, used as the nav's aria-label. Default: 'Main Menu'. Attribute: header-component-label.",
+              "fieldName": "headerComponentLabel"
+            },
+            {
+              "name": "copy-from-primary-nav",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Copies the top-level items of the cork-primary-nav in the same cork-header, instead of reading the element's own links. Attribute: copy-from-primary-nav.",
+              "fieldName": "copyFromPrimaryNav"
+            },
+            {
+              "name": "primary-nav-max-items",
+              "type": {
+                "text": "number"
+              },
+              "description": "With copyFromPrimaryNav, the number of items to copy, from the start. Default: all. Attribute: primary-nav-max-items.",
+              "fieldName": "primaryNavMaxItems"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true,
+          "tagName": "cork-nav-lite"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "CorkNavLite",
+            "module": "package/elements/cork-nav-lite/cork-nav-lite.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "cork-nav-lite",
+          "declaration": {
+            "name": "CorkNavLite",
+            "module": "package/elements/cork-nav-lite/cork-nav-lite.js"
           }
         }
       ]
@@ -914,126 +934,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "package/elements/cork-primary-nav/cork-primary-nav.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "The site's main menu. Add it as a child of the {@link cork-header } element, which opens it in its nav tray.",
-          "name": "CorkPrimaryNav",
-          "slots": [
-            {
-              "description": "Menu: a ul/ol of li elements, nested for sub menus. Not an actual slot, but rather parsed and rendered into the shadow DOM by {@link NavController}. See its examples for the markup formats.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "method",
-              "name": "onNavTrayHide",
-              "description": "Called by cork-header when its nav tray hides this element. Collapses any open submenus,\nso the menu reopens collapsed."
-            },
-            {
-              "kind": "method",
-              "name": "define",
-              "static": true,
-              "parameters": [
-                {
-                  "name": "tagName",
-                  "default": "'cork-primary-nav'",
-                  "description": "Tag name to register. Default: 'cork-primary-nav'",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "description": "Registers the element as a custom element."
-            },
-            {
-              "kind": "field",
-              "name": "headerComponentLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Main Menu'",
-              "description": "Label for the menu, e.g. in the header's nav tray. Default: 'Main Menu'. Attribute: header-component-label.",
-              "attribute": "header-component-label"
-            },
-            {
-              "kind": "field",
-              "name": "focusedNavItem",
-              "privacy": "public",
-              "type": {
-                "text": "number[]"
-              },
-              "default": "[]",
-              "description": "navPosition of the focused item, e.g. [1, 0]. Attribute: focused-nav-item, comma-separated (e.g. \"1,0\").",
-              "attribute": "focused-nav-item"
-            },
-            {
-              "kind": "field",
-              "name": "ctl",
-              "type": {
-                "text": "object"
-              },
-              "default": "{ nav: new NavController(this, { closeSubmenusOnEscape: true, setChildHeight: true }) }"
-            }
-          ],
-          "events": [
-            {
-              "description": "Fired when a rendered link or button is clicked, with the clicked item in detail.navItem. See {@link NavController}.",
-              "name": "cork-nav-item-click"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "header-component-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Main Menu'",
-              "description": "Label for the menu, e.g. in the header's nav tray. Default: 'Main Menu'. Attribute: header-component-label.",
-              "fieldName": "headerComponentLabel"
-            },
-            {
-              "name": "focused-nav-item",
-              "type": {
-                "text": "number[]"
-              },
-              "default": "[]",
-              "description": "navPosition of the focused item, e.g. [1, 0]. Attribute: focused-nav-item, comma-separated (e.g. \"1,0\").",
-              "fieldName": "focusedNavItem"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "customElement": true,
-          "tagName": "cork-primary-nav"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "CorkPrimaryNav",
-            "module": "package/elements/cork-primary-nav/cork-primary-nav.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "cork-primary-nav",
-          "declaration": {
-            "name": "CorkPrimaryNav",
-            "module": "package/elements/cork-primary-nav/cork-primary-nav.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "package/elements/cork-quick-links/cork-quick-links.js",
       "declarations": [
         {
@@ -1183,6 +1083,126 @@
           "declaration": {
             "name": "CorkQuickLinks",
             "module": "package/elements/cork-quick-links/cork-quick-links.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "package/elements/cork-primary-nav/cork-primary-nav.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The site's main menu. Add it as a child of the {@link cork-header } element, which opens it in its nav tray.",
+          "name": "CorkPrimaryNav",
+          "slots": [
+            {
+              "description": "Menu: a ul/ol of li elements, nested for sub menus. Not an actual slot, but rather parsed and rendered into the shadow DOM by {@link NavController}. See its examples for the markup formats.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "onNavTrayHide",
+              "description": "Called by cork-header when its nav tray hides this element. Collapses any open submenus,\nso the menu reopens collapsed."
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tagName",
+                  "default": "'cork-primary-nav'",
+                  "description": "Tag name to register. Default: 'cork-primary-nav'",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Registers the element as a custom element."
+            },
+            {
+              "kind": "field",
+              "name": "headerComponentLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Main Menu'",
+              "description": "Label for the menu, e.g. in the header's nav tray. Default: 'Main Menu'. Attribute: header-component-label.",
+              "attribute": "header-component-label"
+            },
+            {
+              "kind": "field",
+              "name": "focusedNavItem",
+              "privacy": "public",
+              "type": {
+                "text": "number[]"
+              },
+              "default": "[]",
+              "description": "navPosition of the focused item, e.g. [1, 0]. Attribute: focused-nav-item, comma-separated (e.g. \"1,0\").",
+              "attribute": "focused-nav-item"
+            },
+            {
+              "kind": "field",
+              "name": "ctl",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ nav: new NavController(this, { closeSubmenusOnEscape: true, setChildHeight: true }) }"
+            }
+          ],
+          "events": [
+            {
+              "description": "Fired when a rendered link or button is clicked, with the clicked item in detail.navItem. See {@link NavController}.",
+              "name": "cork-nav-item-click"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "header-component-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Main Menu'",
+              "description": "Label for the menu, e.g. in the header's nav tray. Default: 'Main Menu'. Attribute: header-component-label.",
+              "fieldName": "headerComponentLabel"
+            },
+            {
+              "name": "focused-nav-item",
+              "type": {
+                "text": "number[]"
+              },
+              "default": "[]",
+              "description": "navPosition of the focused item, e.g. [1, 0]. Attribute: focused-nav-item, comma-separated (e.g. \"1,0\").",
+              "fieldName": "focusedNavItem"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true,
+          "tagName": "cork-primary-nav"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "CorkPrimaryNav",
+            "module": "package/elements/cork-primary-nav/cork-primary-nav.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "cork-primary-nav",
+          "declaration": {
+            "name": "CorkPrimaryNav",
+            "module": "package/elements/cork-primary-nav/cork-primary-nav.js"
           }
         }
       ]

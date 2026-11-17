@@ -77,7 +77,7 @@ For your own slotted element:
 | --- | --- |
 | `site-name`, `slogan`, `figure-src`, `site-url`, `branding-figure-aria-label` | Moved to a child `cork-branding-bar`. See [Branding bar](#branding-bar). |
 | `opened`, `open()`, `close()` | `selectedNavComponentName`: the slot name of the open component (`primary-nav`, `search` or `quick-links`), or `null` when closed. Set it to open or close a tray, or call `openNavTray(name)` and `closeNavTray()`. |
-| `prevent-fixed` | Removed. The header isn't fixed to the top of the screen. Campus's sticky header isn't supported yet. |
+| `prevent-fixed` | Renamed `no-sticky`. The header bar sticks to the top of the screen by default, and shrinks once the page scrolls. The header handles this itself, so the page doesn't need campus's `sticky-header` class or script. |
 | `is-demo`, `silence-warnings` | Removed. |
 | (new) `backdrop`, `background-image-url`, `nav-tray-*-image-url` | Header bar variant and image overrides. See [Images and Fonts](images-and-fonts.md#cork-header). |
 | (new) `no-page-width` | The header sets `--page-width` on the document by default. This turns it off, e.g. if the app runs its own `PageWidthController`. See [Controllers](controllers.md#pagewidthcontroller). |

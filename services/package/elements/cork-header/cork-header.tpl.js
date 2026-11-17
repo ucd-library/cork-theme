@@ -1,6 +1,8 @@
 import { html, css } from 'lit';
 import { styleMap } from 'lit/directives/style-map.js';
+import { classMap } from 'lit/directives/class-map.js';
 
+import normalizeCss from '@ucd-lib/cork-theme/styles/js/1_base_html/_normalize.css.js';
 import formsCss from '@ucd-lib/cork-theme/styles/js/1_base_html/_forms.css.js';
 import headerCss from '@ucd-lib/cork-theme/styles/js/4_component/_header.css.js';
 import navTrayToggleCss from '@ucd-lib/cork-theme/styles/js/4_component/_nav-tray-toggle.css.js';
@@ -27,6 +29,7 @@ export function styles() {
   `;
 
   return [
+    normalizeCss,
     formsCss,
     headerCss,
     navTrayToggleCss,
@@ -55,7 +58,14 @@ export function render() {
   };
   const toggleButtons = ['primary-nav', 'search', 'quick-links'];
 
+  // Campus's sticky header classes, which its header styles expect above .header
+  const stickyClasses = {
+    'sticky-header': !this.noSticky,
+    'sticky-header--is-fixed': !this.noSticky && this._isScrolled
+  };
+
   return html`
+  <div class=${classMap(stickyClasses)}>
   <header class='header ${this._slottedComponents.navLite?.ele ? 'header--has-nav-lite' : ''}'>
     <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
       <symbol id="ucd-logo" viewBox="-12 -1.92 124 20">
@@ -112,6 +122,7 @@ export function render() {
     </dialog>
     <slot name="branding-bar"></slot>
   </header>
+  </div>
 
   `;
 }

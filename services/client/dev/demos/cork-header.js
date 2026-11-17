@@ -6,7 +6,7 @@ import '@ucd-lib/cork-theme/elements/cork-branding-bar';
 
 // Starting markup for the cork-header demo
 export default `
-<cork-header backdrop="1">
+<cork-header backdrop="1" no-sticky>
   <cork-primary-nav>
     <ul>
       <li>

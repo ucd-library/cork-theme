@@ -12,6 +12,11 @@ They act on the whole document, not just the header, so use one or the other, no
 The header also sets --page-width on the document with a [`PageWidthController`](../utils/controllers/PageWidthController.md), for layout classes such as l-full-width.
 Set the no-page-width attribute to turn this off.
 
+The header bar (UC Davis logo, inline menu and tray toggles) is sticky: it stays fixed to the top of the screen, and shrinks once the page scrolls.
+The branding bar scrolls away as usual. The header reserves the bar's space itself, so the page needs no sticky-header class or padding,
+and it sets scroll-padding-top on the page (to --sticky-header-scroll-offset), so #hash links land below the bar.
+Set the no-sticky attribute to turn this off.
+
 In an SPA using @ucd-lib/cork-app-state, the header closes its open nav tray when the location changes, with an [`AppStateController`](../utils/controllers/AppStateController.md).
 Set the no-app-state-close attribute to turn this off. In any other SPA, call closeNavTray() from your router on navigation.
 
@@ -35,6 +40,7 @@ A slotted component that opens in a nav tray can hook into it:
 | `fontUrl` | `String` | Base URL of the theme fonts, e.g. '/fonts/cork-theme'. Passed to setFontFaces(), so it loads the fonts for the whole document. Attribute: font-url. |
 | `noPageWidth` | `Boolean` | Stops the header from setting --page-width, e.g. if the app sets it itself. Attribute: no-page-width. |
 | `noAppStateClose` | `Boolean` | Stops the header from closing its nav tray on cork-app-state location changes. Attribute: no-app-state-close. |
+| `noSticky` | `Boolean` | Stops the header bar from sticking to the top of the screen. Attribute: no-sticky. |
 | `selectedNavComponentName` | `String` | Name of the component whose nav tray is currently open. One of the keys of _slottedComponents. |
 
 ## Slots
@@ -116,6 +122,14 @@ setFontFaces('https://cork-theme.library.ucdavis.edu/fonts');
 <cork-header
   background-image-url="/images/my-header-bar.webp"
   nav-tray-menu-background-image-url="/images/my-menu-tray.webp">
+  <cork-primary-nav>…</cork-primary-nav>
+</cork-header>
+```
+
+**Header bar that scrolls with the page**
+
+```html
+<cork-header no-sticky>
   <cork-primary-nav>…</cork-primary-nav>
 </cork-header>
 ```
