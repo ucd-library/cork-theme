@@ -4386,7 +4386,7 @@ mark {
 .header__bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   overflow: hidden;
   height: 3.25rem;
   padding: 1px 1rem;
@@ -4401,8 +4401,8 @@ mark {
     padding-left: 1.5rem;
   }
 }
-.header__bar--logo-right {
-  justify-content: flex-end;
+.header__bar--logo-right .header__university {
+  margin-right: 0;
 }
 .header__bar--backdrop2 {
   background-image: var(--cork-image-header-bar2, none);
@@ -4433,6 +4433,9 @@ mark {
 .sticky-header--is-fixed .header__bar {
   height: calc(3.25rem - 1rem);
 }
+.header__university {
+  margin-right: auto;
+}
 .header__university a {
   display: flex;
 }
@@ -4461,9 +4464,60 @@ mark {
   display: flex;
   align-items: center;
 }
+.header__links {
+  display: flex;
+  align-items: center;
+  margin-right: -0.5rem;
+}
+.header__links::after {
+  height: 2rem;
+  margin-left: 0.5rem;
+  border-right: 4px dotted oklch(from #fff l c h/0.2);
+  content: "";
+}
+.header__link {
+  position: relative;
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.header__link::before {
+  position: absolute;
+  background-color: #ffbf00;
+  content: "";
+  inset: 0;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: 55%;
+  transition: mask-size 0.2s ease-in-out;
+}
+.header__link--account::before {
+  mask-image: var(--cork-image-user, url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDEiIHZpZXdCb3g9IjAgMCA0MCA0MSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMxLjE3MTkgMzAuNzY2QzI5LjQ0NTMgMjcuNjkxIDI2LjIwMzEgMjUuNjI1IDIyLjUgMjUuNjI1SDE3LjVDMTMuNzk2OSAyNS42MjUgMTAuNTU0NyAyNy42OTEgOC44MjgxMiAzMC43NjZDMTEuNTc4MSAzMy45MDUxIDE1LjU2MjUgMzUuODc1IDIwIDM1Ljg3NUMyNC40Mzc1IDM1Ljg3NSAyOC40MjE5IDMzLjg5NzEgMzEuMTcxOSAzMC43NjZaTTAgMjAuNUMwIDkuMTc2OTUgOC45NTMxMiAwIDIwIDBDMzEuMDQ2OSAwIDQwIDkuMTc2OTUgNDAgMjAuNUM0MCAzMS44MjMgMzEuMDQ2OSA0MSAyMCA0MUM4Ljk1MzEyIDQxIDAgMzEuODIzIDAgMjAuNVpNMjAgMjEuNzgxMkMyMy4xMDk0IDIxLjc4MTIgMjUuNjI1IDE5LjIwMjcgMjUuNjI1IDE2LjAxNTZDMjUuNjI1IDEyLjgyODUgMjMuMTA5NCAxMC4yNSAyMCAxMC4yNUMxNi44OTA2IDEwLjI1IDE0LjM3NSAxMi44Mjg1IDE0LjM3NSAxNi4wMTU2QzE0LjM3NSAxOS4yMDI3IDE2Ljg5MDYgMjEuNzgxMiAyMCAyMS43ODEyWiIgZmlsbD0iI0ZGQkYwMCIvPgo8L3N2Zz4K"));
+}
+.header__link--cart::before {
+  mask-image: var(--cork-image-shop, url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDQiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0NCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEuODU0MzkgMEMwLjgyNjc0OCAwIDAgMC44MTA2MDYgMCAxLjgxODE4QzAgMi44MjU3NiAwLjgyNjc0OCAzLjYzNjM2IDEuODU0MzkgMy42MzYzNkg1LjM1NDU1QzUuNjU1ODggMy42MzYzNiA1LjkxMDg2IDMuODQ4NDggNS45NjQ5NSA0LjEzNjM2TDkuOTkwNTIgMjUuODI1OEMxMC40Njk2IDI4LjQxNjcgMTIuNzcyMSAzMC4zMDMgMTUuNDYxIDMwLjMwM0gzNS4yMzM0QzM2LjI2MSAzMC4zMDMgMzcuMDg3OCAyOS40OTI0IDM3LjA4NzggMjguNDg0OEMzNy4wODc4IDI3LjQ3NzMgMzYuMjYxIDI2LjY2NjcgMzUuMjMzNCAyNi42NjY3SDE1LjQ2MUMxNC41NjQ3IDI2LjY2NjcgMTMuNzk5NyAyNi4wMzc5IDEzLjYzNzUgMjUuMTc0MkwxMy4yNDM0IDIzLjAzMDNIMzYuNzAxNEMzOS4wODEyIDIzLjAzMDMgNDEuMTIxMSAyMS4zNzEyIDQxLjU2MTUgMTkuMDc1OEw0My45NTY3IDYuNTA3NThDNDQuMjQyNiA1LjAxNTE1IDQzLjA3NTkgMy42MzYzNiA0MS41MjI4IDMuNjM2MzZIOS42MzUwOUw5LjYwNDE5IDMuNDg0ODVDOS4yMzMzMSAxLjQ2OTcgNy40NDA3MyAwIDUuMzQ2ODIgMEgxLjg1NDM5Wk0xNi4wNzE0IDQwQzE4LjExODkgNDAgMTkuNzgwMSAzOC4zNzEyIDE5Ljc4MDEgMzYuMzYzNkMxOS43ODAxIDM0LjM1NjEgMTguMTE4OSAzMi43MjczIDE2LjA3MTQgMzIuNzI3M0MxNC4wMjM4IDMyLjcyNzMgMTIuMzYyNiAzNC4zNTYxIDEyLjM2MjYgMzYuMzYzNkMxMi4zNjI2IDM4LjM3MTIgMTQuMDIzOCA0MCAxNi4wNzE0IDQwWk0zMy4zNzkgNDBDMzUuNDI2NSA0MCAzNy4wODc4IDM4LjM3MTIgMzcuMDg3OCAzNi4zNjM2QzM3LjA4NzggMzQuMzU2MSAzNS40MjY1IDMyLjcyNzMgMzMuMzc5IDMyLjcyNzNDMzEuMzMxNCAzMi43MjczIDI5LjY3MDIgMzQuMzU2MSAyOS42NzAyIDM2LjM2MzZDMjkuNjcwMiAzOC4zNzEyIDMxLjMzMTQgNDAgMzMuMzc5IDQwWiIgZmlsbD0iI0ZGQkYwMCIvPgo8L3N2Zz4K"));
+}
+.header__link::after {
+  position: absolute;
+  bottom: 3px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #fff;
+  content: "";
+  opacity: 0;
+  transform: scaleX(0);
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+.header__link:hover::after, .header__link:focus-visible::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+.sticky-header--is-fixed .header__link::before {
+  mask-size: 40%;
+}
 .header__nav-lite {
   display: none;
-  margin-left: auto;
 }
 @media (min-width: 768px) {
   .header__nav-lite {
