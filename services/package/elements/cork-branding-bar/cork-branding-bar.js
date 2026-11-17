@@ -25,7 +25,7 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
  * <cork-branding-bar></cork-branding-bar>
  * 
  * <!-- Custom Site Branding -->
- * <cork-branding-bar site-name="Special Collections" site-url="/special-collections" slogan="Archives and rare books"></cork-branding-bar>
+ * <cork-branding-bar site-name="UC Davis Library" site-url="/digital" slogan="Digital Collections"></cork-branding-bar>
  *
  * <!-- with a custom logo -->
  * <cork-branding-bar site-name="DataLab">

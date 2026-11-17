@@ -4,447 +4,6 @@
   "modules": [
     {
       "kind": "javascript-module",
-      "path": "package/elements/cork-markdown/cork-markdown.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Renders markdown as sanitized HTML in the light DOM (no shadow root), so it inherits styles.\n\n- The markdown comes from the markdown property, or from a child script tag with type=\"text/markdown\", \nwhich is reread whenever its text changes. \n- Uses marked and DOMPurify packages, for parsing and sanitization. Behavior can be customized via markedOptions property.\n- Headings get GitHub-style ids (via marked-gfm-heading-id), with headingIdPrefix in front, e.g. '## Slots' gets id=\"md-slots\".\nThe prefix stops DOMPurify from removing ids that match DOM properties, such as 'children' or 'title'.\nRelative links with a #hash get the same prefix added, so `[Slots](#slots)` and `[Slots](other.md#slots)` still point at the heading.",
-          "name": "CorkMarkdown",
-          "members": [
-            {
-              "kind": "method",
-              "name": "define",
-              "static": true,
-              "parameters": [
-                {
-                  "name": "tagName",
-                  "default": "'cork-markdown'",
-                  "description": "Tag name to register. Default: 'cork-markdown'",
-                  "type": {
-                    "text": "String"
-                  }
-                }
-              ],
-              "description": "Registers the element as a custom element."
-            },
-            {
-              "kind": "field",
-              "name": "markdown",
-              "privacy": "public",
-              "type": {
-                "text": "String"
-              },
-              "default": "''",
-              "description": "The markdown to render. Set from the \"text/markdown\" script child, if there is one. Attribute: markdown.",
-              "attribute": "markdown"
-            },
-            {
-              "kind": "field",
-              "name": "markedOptions",
-              "privacy": "public",
-              "type": {
-                "text": "Object|Object[]"
-              },
-              "default": "{}",
-              "description": "Options for marked package, merged over the defaults: {breaks: true, gfm: true}, and custom list and table renderers that add certain theme classes. Takes the same object as marked.use(), including renderer methods. See https://marked.js.org/using_advanced. Or an array of them, applied in order, e.g. to add an extension such as marked-highlight alongside your own options. Property only."
-            },
-            {
-              "kind": "field",
-              "name": "headingIdPrefix",
-              "privacy": "public",
-              "type": {
-                "text": "String"
-              },
-              "default": "'md-'",
-              "description": "Put in front of each heading's id, and of the #hash in relative links. Default: 'md-'. Attribute: heading-id-prefix.",
-              "attribute": "heading-id-prefix"
-            },
-            {
-              "kind": "field",
-              "name": "ctl",
-              "type": {
-                "text": "object"
-              },
-              "default": "{ mutationObserver: new MutationObserverController(this, {childList: true, subtree: true, characterData: true}, this._onChildListMutation) }"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "markdown",
-              "type": {
-                "text": "String"
-              },
-              "default": "''",
-              "description": "The markdown to render. Set from the \"text/markdown\" script child, if there is one. Attribute: markdown.",
-              "fieldName": "markdown"
-            },
-            {
-              "name": "heading-id-prefix",
-              "type": {
-                "text": "String"
-              },
-              "default": "'md-'",
-              "description": "Put in front of each heading's id, and of the #hash in relative links. Default: 'md-'. Attribute: heading-id-prefix.",
-              "fieldName": "headingIdPrefix"
-            }
-          ],
-          "mixins": [
-            {
-              "name": "MainDomElementMixin",
-              "package": "@ucd-lib/cork-theme/utils/mixins"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "customElement": true,
-          "tagName": "cork-markdown"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "CorkMarkdown",
-            "module": "package/elements/cork-markdown/cork-markdown.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "cork-markdown",
-          "declaration": {
-            "name": "CorkMarkdown",
-            "module": "package/elements/cork-markdown/cork-markdown.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "package/elements/cork-header/cork-header.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "The primary site header component that accepts various slotted header components and controls their visibility in the nav tray.\n\nBy default, background images are set via global CSS properties. Without the image-url or background-image-url attributes, the header will have no background art.\n\nThe image-url and font-url attributes are conveniences for apps without a js entry point to make those calls from.\nThey act on the whole document, not just the header, so use one or the other, not both.\n\nThe header also sets --page-width on the document with a {@link PageWidthController }, for layout classes such as l-full-width.\nSet the no-page-width attribute to turn this off.\n\nIn an SPA using",
-          "name": "CorkHeader",
-          "slots": [
-            {
-              "description": "Main menu. A child {@link cork-primary-nav} is assigned here automatically.",
-              "name": "primary-nav"
-            },
-            {
-              "description": "Search. A child {@link cork-search-tray} (form and common searches) or a bare {@link cork-search-form} is assigned here automatically.",
-              "name": "search"
-            },
-            {
-              "description": "Quick links section. A child {@link cork-quick-links} is assigned here automatically.",
-              "name": "quick-links"
-            },
-            {
-              "description": "Branding bar. A child {@link cork-branding-bar} is assigned here automatically.",
-              "name": "branding-bar"
-            },
-            {
-              "description": "Inline main menu in the header bar, shown on larger screens in place of the menu tray toggle. A child {@link cork-nav-lite} is assigned here automatically.",
-              "name": "nav-lite"
-            }
-          ],
-          "members": [
-            {
-              "kind": "method",
-              "name": "openNavTray",
-              "parameters": [
-                {
-                  "name": "name",
-                  "description": "Name of the slot whose tray to open, e.g. 'primary-nav', 'search' or 'quick-links'.",
-                  "type": {
-                    "text": "String"
-                  }
-                }
-              ],
-              "description": "Opens a nav tray, closing any other. Same as setting selectedNavComponentName."
-            },
-            {
-              "kind": "method",
-              "name": "closeNavTray",
-              "description": "Closes the open nav tray, if any. Call it from an SPA's router on navigation, unless the app uses cork-app-state."
-            },
-            {
-              "kind": "method",
-              "name": "define",
-              "static": true,
-              "parameters": [
-                {
-                  "name": "tagName",
-                  "default": "'cork-header'",
-                  "description": "Tag name to register. Default: 'cork-header'",
-                  "type": {
-                    "text": "String"
-                  }
-                }
-              ],
-              "description": "Registers the element as a custom element, unless the tag name is already registered.\nA class can only be registered once, under one tag name. To register it under another name as well, subclass it first,\ne.g. class MyElement extends CorkHeader {}; MyElement.define('my-element');"
-            },
-            {
-              "kind": "field",
-              "name": "backdrop",
-              "privacy": "public",
-              "type": {
-                "text": "String"
-              },
-              "default": "'1'",
-              "description": "Campus's header bar variant, '1' (default) to '7'. Attribute: backdrop.",
-              "attribute": "backdrop"
-            },
-            {
-              "kind": "field",
-              "name": "backgroundImageUrl",
-              "privacy": "public",
-              "type": {
-                "text": "String"
-              },
-              "default": "''",
-              "description": "Overrides the header bar's background image, whichever backdrop is picked. Attribute: background-image-url.",
-              "attribute": "background-image-url"
-            },
-            {
-              "kind": "field",
-              "name": "navTrayMenuBackgroundImageUrl",
-              "privacy": "public",
-              "type": {
-                "text": "String"
-              },
-              "default": "''",
-              "description": "Overrides the menu tray's background image. Attribute: nav-tray-menu-background-image-url.",
-              "attribute": "nav-tray-menu-background-image-url"
-            },
-            {
-              "kind": "field",
-              "name": "navTraySearchBackgroundImageUrl",
-              "privacy": "public",
-              "type": {
-                "text": "String"
-              },
-              "default": "''",
-              "description": "Overrides the search tray's background image. Attribute: nav-tray-search-background-image-url.",
-              "attribute": "nav-tray-search-background-image-url"
-            },
-            {
-              "kind": "field",
-              "name": "navTrayQuicklinksBackgroundImageUrl",
-              "privacy": "public",
-              "type": {
-                "text": "String"
-              },
-              "default": "''",
-              "description": "Overrides the quick links tray's main (bottom right) background image. Attribute: nav-tray-quicklinks-background-image-url.",
-              "attribute": "nav-tray-quicklinks-background-image-url"
-            },
-            {
-              "kind": "field",
-              "name": "navTrayQuicklinksAccentImageUrl",
-              "privacy": "public",
-              "type": {
-                "text": "String"
-              },
-              "default": "''",
-              "description": "Overrides the quick links tray's accent (top left outline) image. Attribute: nav-tray-quicklinks-accent-image-url.",
-              "attribute": "nav-tray-quicklinks-accent-image-url"
-            },
-            {
-              "kind": "field",
-              "name": "imageUrl",
-              "privacy": "public",
-              "type": {
-                "text": "String"
-              },
-              "default": "''",
-              "description": "Base URL of the theme's large images, e.g. '/images/cork-theme'. Passed to setImageCssCustomProperties(), so it sets the --cork-image-* properties for the whole document. Attribute: image-url.",
-              "attribute": "image-url"
-            },
-            {
-              "kind": "field",
-              "name": "fontUrl",
-              "privacy": "public",
-              "type": {
-                "text": "String"
-              },
-              "default": "''",
-              "description": "Base URL of the theme fonts, e.g. '/fonts/cork-theme'. Passed to setFontFaces(), so it loads the fonts for the whole document. Attribute: font-url.",
-              "attribute": "font-url"
-            },
-            {
-              "kind": "field",
-              "name": "noPageWidth",
-              "privacy": "public",
-              "type": {
-                "text": "Boolean"
-              },
-              "default": "false",
-              "description": "Stops the header from setting --page-width, e.g. if the app sets it itself. Attribute: no-page-width.",
-              "attribute": "no-page-width"
-            },
-            {
-              "kind": "field",
-              "name": "noAppStateClose",
-              "privacy": "public",
-              "type": {
-                "text": "Boolean"
-              },
-              "default": "false",
-              "description": "Stops the header from closing its nav tray on cork-app-state location changes. Attribute: no-app-state-close.",
-              "attribute": "no-app-state-close"
-            },
-            {
-              "kind": "field",
-              "name": "ctl",
-              "type": {
-                "text": "object"
-              },
-              "default": "{ mutationObserver: new MutationObserverController(this, {childList: true}, this._onChildListMutation), pageWidth: new PageWidthController(this, { shouldInit: () => !this.noPageWidth }), appState: new AppStateController(this, { callback: this._onAppStateUpdate, shouldInit: () => !this.noAppStateClose }) }"
-            },
-            {
-              "kind": "field",
-              "name": "selectedNavComponentName",
-              "privacy": "public",
-              "type": {
-                "text": "String"
-              },
-              "description": "Name of the component whose nav tray is currently open. One of the keys of _slottedComponents.",
-              "attribute": "selectedNavComponentName"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "backdrop",
-              "type": {
-                "text": "String"
-              },
-              "default": "'1'",
-              "description": "Campus's header bar variant, '1' (default) to '7'. Attribute: backdrop.",
-              "fieldName": "backdrop"
-            },
-            {
-              "name": "background-image-url",
-              "type": {
-                "text": "String"
-              },
-              "default": "''",
-              "description": "Overrides the header bar's background image, whichever backdrop is picked. Attribute: background-image-url.",
-              "fieldName": "backgroundImageUrl"
-            },
-            {
-              "name": "nav-tray-menu-background-image-url",
-              "type": {
-                "text": "String"
-              },
-              "default": "''",
-              "description": "Overrides the menu tray's background image. Attribute: nav-tray-menu-background-image-url.",
-              "fieldName": "navTrayMenuBackgroundImageUrl"
-            },
-            {
-              "name": "nav-tray-search-background-image-url",
-              "type": {
-                "text": "String"
-              },
-              "default": "''",
-              "description": "Overrides the search tray's background image. Attribute: nav-tray-search-background-image-url.",
-              "fieldName": "navTraySearchBackgroundImageUrl"
-            },
-            {
-              "name": "nav-tray-quicklinks-background-image-url",
-              "type": {
-                "text": "String"
-              },
-              "default": "''",
-              "description": "Overrides the quick links tray's main (bottom right) background image. Attribute: nav-tray-quicklinks-background-image-url.",
-              "fieldName": "navTrayQuicklinksBackgroundImageUrl"
-            },
-            {
-              "name": "nav-tray-quicklinks-accent-image-url",
-              "type": {
-                "text": "String"
-              },
-              "default": "''",
-              "description": "Overrides the quick links tray's accent (top left outline) image. Attribute: nav-tray-quicklinks-accent-image-url.",
-              "fieldName": "navTrayQuicklinksAccentImageUrl"
-            },
-            {
-              "name": "selectedNavComponentName",
-              "type": {
-                "text": "String"
-              },
-              "description": "Name of the component whose nav tray is currently open. One of the keys of _slottedComponents.",
-              "fieldName": "selectedNavComponentName"
-            },
-            {
-              "name": "image-url",
-              "type": {
-                "text": "String"
-              },
-              "default": "''",
-              "description": "Base URL of the theme's large images, e.g. '/images/cork-theme'. Passed to setImageCssCustomProperties(), so it sets the --cork-image-* properties for the whole document. Attribute: image-url.",
-              "fieldName": "imageUrl"
-            },
-            {
-              "name": "font-url",
-              "type": {
-                "text": "String"
-              },
-              "default": "''",
-              "description": "Base URL of the theme fonts, e.g. '/fonts/cork-theme'. Passed to setFontFaces(), so it loads the fonts for the whole document. Attribute: font-url.",
-              "fieldName": "fontUrl"
-            },
-            {
-              "name": "no-page-width",
-              "type": {
-                "text": "Boolean"
-              },
-              "default": "false",
-              "description": "Stops the header from setting --page-width, e.g. if the app sets it itself. Attribute: no-page-width.",
-              "fieldName": "noPageWidth"
-            },
-            {
-              "name": "no-app-state-close",
-              "type": {
-                "text": "Boolean"
-              },
-              "default": "false",
-              "description": "Stops the header from closing its nav tray on cork-app-state location changes. Attribute: no-app-state-close.",
-              "fieldName": "noAppStateClose"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "customElement": true,
-          "tagName": "cork-header"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "CorkHeader",
-            "module": "package/elements/cork-header/cork-header.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "cork-header",
-          "declaration": {
-            "name": "CorkHeader",
-            "module": "package/elements/cork-header/cork-header.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "package/elements/cork-branding-bar/cork-branding-bar.js",
       "declarations": [
         {
@@ -468,7 +27,7 @@
                   "default": "'cork-branding-bar'",
                   "description": "Tag name to register. Default: 'cork-branding-bar'",
                   "type": {
-                    "text": "String"
+                    "text": "string"
                   }
                 }
               ],
@@ -479,7 +38,7 @@
               "name": "noSiteLogo",
               "privacy": "public",
               "type": {
-                "text": "Boolean"
+                "text": "boolean"
               },
               "default": "false",
               "description": "Hides the logo. Attribute: no-site-logo.",
@@ -490,7 +49,7 @@
               "name": "siteName",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"UC Davis Library\"",
               "description": "Name of the site. Default: 'UC Davis Library'. Attribute: site-name.",
@@ -501,7 +60,7 @@
               "name": "siteUrl",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"/\"",
               "description": "URL for the logo and site name links. Default: '/'. Attribute: site-url.",
@@ -512,7 +71,7 @@
               "name": "slogan",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"\"",
               "description": "Optional text below the site name. Attribute: slogan.",
@@ -531,7 +90,7 @@
             {
               "name": "no-site-logo",
               "type": {
-                "text": "Boolean"
+                "text": "boolean"
               },
               "default": "false",
               "description": "Hides the logo. Attribute: no-site-logo.",
@@ -540,7 +99,7 @@
             {
               "name": "site-name",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"UC Davis Library\"",
               "description": "Name of the site. Default: 'UC Davis Library'. Attribute: site-name.",
@@ -549,7 +108,7 @@
             {
               "name": "site-url",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"/\"",
               "description": "URL for the logo and site name links. Default: '/'. Attribute: site-url.",
@@ -558,7 +117,7 @@
             {
               "name": "slogan",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"\"",
               "description": "Optional text below the site name. Attribute: slogan.",
@@ -617,7 +176,7 @@
                   "default": "'cork-nav-lite'",
                   "description": "Tag name to register. Default: 'cork-nav-lite'",
                   "type": {
-                    "text": "String"
+                    "text": "string"
                   }
                 }
               ],
@@ -628,7 +187,7 @@
               "name": "headerComponentLabel",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "'Main Menu'",
               "description": "Label for the menu, used as the nav's aria-label. Default: 'Main Menu'. Attribute: header-component-label.",
@@ -647,7 +206,7 @@
               "name": "copyFromPrimaryNav",
               "privacy": "public",
               "type": {
-                "text": "Boolean"
+                "text": "boolean"
               },
               "description": "Copies the top-level items of the cork-primary-nav in the same cork-header, instead of reading the element's own links. Attribute: copy-from-primary-nav.",
               "attribute": "copy-from-primary-nav"
@@ -657,7 +216,7 @@
               "name": "primaryNavMaxItems",
               "privacy": "public",
               "type": {
-                "text": "Number"
+                "text": "number"
               },
               "description": "With copyFromPrimaryNav, the number of items to copy, from the start. Default: all. Attribute: primary-nav-max-items.",
               "attribute": "primary-nav-max-items"
@@ -673,7 +232,7 @@
             {
               "name": "header-component-label",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "'Main Menu'",
               "description": "Label for the menu, used as the nav's aria-label. Default: 'Main Menu'. Attribute: header-component-label.",
@@ -682,7 +241,7 @@
             {
               "name": "copy-from-primary-nav",
               "type": {
-                "text": "Boolean"
+                "text": "boolean"
               },
               "description": "Copies the top-level items of the cork-primary-nav in the same cork-header, instead of reading the element's own links. Attribute: copy-from-primary-nav.",
               "fieldName": "copyFromPrimaryNav"
@@ -690,7 +249,7 @@
             {
               "name": "primary-nav-max-items",
               "type": {
-                "text": "Number"
+                "text": "number"
               },
               "description": "With copyFromPrimaryNav, the number of items to copy, from the start. Default: all. Attribute: primary-nav-max-items.",
               "fieldName": "primaryNavMaxItems"
@@ -725,6 +284,447 @@
     },
     {
       "kind": "javascript-module",
+      "path": "package/elements/cork-header/cork-header.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The primary site header component that accepts various slotted header components and controls their visibility in the nav tray.\n\nBy default, background images are set via global CSS properties. Without the image-url or background-image-url attributes, the header will have no background art.\n\nThe image-url and font-url attributes are conveniences for apps without a js entry point to make those calls from.\nThey act on the whole document, not just the header, so use one or the other, not both.\n\nThe header also sets --page-width on the document with a {@link PageWidthController }, for layout classes such as l-full-width.\nSet the no-page-width attribute to turn this off.\n\nIn an SPA using",
+          "name": "CorkHeader",
+          "slots": [
+            {
+              "description": "Main menu. A child {@link cork-primary-nav} is assigned here automatically.",
+              "name": "primary-nav"
+            },
+            {
+              "description": "Search. A child {@link cork-search-tray} (form and common searches) or a bare {@link cork-search-form} is assigned here automatically.",
+              "name": "search"
+            },
+            {
+              "description": "Quick links section. A child {@link cork-quick-links} is assigned here automatically.",
+              "name": "quick-links"
+            },
+            {
+              "description": "Branding bar. A child {@link cork-branding-bar} is assigned here automatically.",
+              "name": "branding-bar"
+            },
+            {
+              "description": "Inline main menu in the header bar, shown on larger screens in place of the menu tray toggle. A child {@link cork-nav-lite} is assigned here automatically.",
+              "name": "nav-lite"
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "openNavTray",
+              "parameters": [
+                {
+                  "name": "name",
+                  "description": "Name of the slot whose tray to open, e.g. 'primary-nav', 'search' or 'quick-links'.",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Opens a nav tray, closing any other. Same as setting selectedNavComponentName."
+            },
+            {
+              "kind": "method",
+              "name": "closeNavTray",
+              "description": "Closes the open nav tray, if any. Call it from an SPA's router on navigation, unless the app uses cork-app-state."
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tagName",
+                  "default": "'cork-header'",
+                  "description": "Tag name to register. Default: 'cork-header'",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Registers the element as a custom element, unless the tag name is already registered.\nA class can only be registered once, under one tag name. To register it under another name as well, subclass it first,\ne.g. class MyElement extends CorkHeader {}; MyElement.define('my-element');"
+            },
+            {
+              "kind": "field",
+              "name": "backdrop",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'1'",
+              "description": "Campus's header bar variant, '1' (default) to '7'. Attribute: backdrop.",
+              "attribute": "backdrop"
+            },
+            {
+              "kind": "field",
+              "name": "backgroundImageUrl",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Overrides the header bar's background image, whichever backdrop is picked. Attribute: background-image-url.",
+              "attribute": "background-image-url"
+            },
+            {
+              "kind": "field",
+              "name": "navTrayMenuBackgroundImageUrl",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Overrides the menu tray's background image. Attribute: nav-tray-menu-background-image-url.",
+              "attribute": "nav-tray-menu-background-image-url"
+            },
+            {
+              "kind": "field",
+              "name": "navTraySearchBackgroundImageUrl",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Overrides the search tray's background image. Attribute: nav-tray-search-background-image-url.",
+              "attribute": "nav-tray-search-background-image-url"
+            },
+            {
+              "kind": "field",
+              "name": "navTrayQuicklinksBackgroundImageUrl",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Overrides the quick links tray's main (bottom right) background image. Attribute: nav-tray-quicklinks-background-image-url.",
+              "attribute": "nav-tray-quicklinks-background-image-url"
+            },
+            {
+              "kind": "field",
+              "name": "navTrayQuicklinksAccentImageUrl",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Overrides the quick links tray's accent (top left outline) image. Attribute: nav-tray-quicklinks-accent-image-url.",
+              "attribute": "nav-tray-quicklinks-accent-image-url"
+            },
+            {
+              "kind": "field",
+              "name": "imageUrl",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Base URL of the theme's large images, e.g. '/images/cork-theme'. Passed to setImageCssCustomProperties(), so it sets the --cork-image-* properties for the whole document. Attribute: image-url.",
+              "attribute": "image-url"
+            },
+            {
+              "kind": "field",
+              "name": "fontUrl",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Base URL of the theme fonts, e.g. '/fonts/cork-theme'. Passed to setFontFaces(), so it loads the fonts for the whole document. Attribute: font-url.",
+              "attribute": "font-url"
+            },
+            {
+              "kind": "field",
+              "name": "noPageWidth",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Stops the header from setting --page-width, e.g. if the app sets it itself. Attribute: no-page-width.",
+              "attribute": "no-page-width"
+            },
+            {
+              "kind": "field",
+              "name": "noAppStateClose",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Stops the header from closing its nav tray on cork-app-state location changes. Attribute: no-app-state-close.",
+              "attribute": "no-app-state-close"
+            },
+            {
+              "kind": "field",
+              "name": "ctl",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ mutationObserver: new MutationObserverController(this, {childList: true}, this._onChildListMutation), pageWidth: new PageWidthController(this, { shouldInit: () => !this.noPageWidth }), appState: new AppStateController(this, { callback: this._onAppStateUpdate, shouldInit: () => !this.noAppStateClose }) }"
+            },
+            {
+              "kind": "field",
+              "name": "selectedNavComponentName",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the component whose nav tray is currently open. One of the keys of _slottedComponents.",
+              "attribute": "selectedNavComponentName"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "backdrop",
+              "type": {
+                "text": "string"
+              },
+              "default": "'1'",
+              "description": "Campus's header bar variant, '1' (default) to '7'. Attribute: backdrop.",
+              "fieldName": "backdrop"
+            },
+            {
+              "name": "background-image-url",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Overrides the header bar's background image, whichever backdrop is picked. Attribute: background-image-url.",
+              "fieldName": "backgroundImageUrl"
+            },
+            {
+              "name": "nav-tray-menu-background-image-url",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Overrides the menu tray's background image. Attribute: nav-tray-menu-background-image-url.",
+              "fieldName": "navTrayMenuBackgroundImageUrl"
+            },
+            {
+              "name": "nav-tray-search-background-image-url",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Overrides the search tray's background image. Attribute: nav-tray-search-background-image-url.",
+              "fieldName": "navTraySearchBackgroundImageUrl"
+            },
+            {
+              "name": "nav-tray-quicklinks-background-image-url",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Overrides the quick links tray's main (bottom right) background image. Attribute: nav-tray-quicklinks-background-image-url.",
+              "fieldName": "navTrayQuicklinksBackgroundImageUrl"
+            },
+            {
+              "name": "nav-tray-quicklinks-accent-image-url",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Overrides the quick links tray's accent (top left outline) image. Attribute: nav-tray-quicklinks-accent-image-url.",
+              "fieldName": "navTrayQuicklinksAccentImageUrl"
+            },
+            {
+              "name": "selectedNavComponentName",
+              "type": {
+                "text": "string"
+              },
+              "description": "Name of the component whose nav tray is currently open. One of the keys of _slottedComponents.",
+              "fieldName": "selectedNavComponentName"
+            },
+            {
+              "name": "image-url",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Base URL of the theme's large images, e.g. '/images/cork-theme'. Passed to setImageCssCustomProperties(), so it sets the --cork-image-* properties for the whole document. Attribute: image-url.",
+              "fieldName": "imageUrl"
+            },
+            {
+              "name": "font-url",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Base URL of the theme fonts, e.g. '/fonts/cork-theme'. Passed to setFontFaces(), so it loads the fonts for the whole document. Attribute: font-url.",
+              "fieldName": "fontUrl"
+            },
+            {
+              "name": "no-page-width",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Stops the header from setting --page-width, e.g. if the app sets it itself. Attribute: no-page-width.",
+              "fieldName": "noPageWidth"
+            },
+            {
+              "name": "no-app-state-close",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Stops the header from closing its nav tray on cork-app-state location changes. Attribute: no-app-state-close.",
+              "fieldName": "noAppStateClose"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true,
+          "tagName": "cork-header"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "CorkHeader",
+            "module": "package/elements/cork-header/cork-header.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "cork-header",
+          "declaration": {
+            "name": "CorkHeader",
+            "module": "package/elements/cork-header/cork-header.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "package/elements/cork-markdown/cork-markdown.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Renders markdown as sanitized HTML in the light DOM (no shadow root), so it inherits styles.\n\n- The markdown comes from the markdown property, or from a child script tag with type=\"text/markdown\", \nwhich is reread whenever its text changes. \n- Uses marked and DOMPurify packages, for parsing and sanitization. Behavior can be customized via markedOptions property.\n- Headings get GitHub-style ids (via marked-gfm-heading-id), with headingIdPrefix in front, e.g. '## Slots' gets id=\"md-slots\".\nThe prefix stops DOMPurify from removing ids that match DOM properties, such as 'children' or 'title'.\nRelative links with a #hash get the same prefix added, so `[Slots](#slots)` and `[Slots](other.md#slots)` still point at the heading.",
+          "name": "CorkMarkdown",
+          "members": [
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tagName",
+                  "default": "'cork-markdown'",
+                  "description": "Tag name to register. Default: 'cork-markdown'",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Registers the element as a custom element."
+            },
+            {
+              "kind": "field",
+              "name": "markdown",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The markdown to render. Set from the \"text/markdown\" script child, if there is one. Attribute: markdown.",
+              "attribute": "markdown"
+            },
+            {
+              "kind": "field",
+              "name": "markedOptions",
+              "privacy": "public",
+              "type": {
+                "text": "Object|Object[]"
+              },
+              "default": "{}",
+              "description": "Options for marked package, merged over the defaults: {breaks: true, gfm: true}, and custom list and table renderers that add certain theme classes. Takes the same object as marked.use(), including renderer methods. See https://marked.js.org/using_advanced. Or an array of them, applied in order, e.g. to add an extension such as marked-highlight alongside your own options. Property only."
+            },
+            {
+              "kind": "field",
+              "name": "headingIdPrefix",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'md-'",
+              "description": "Put in front of each heading's id, and of the #hash in relative links. Default: 'md-'. Attribute: heading-id-prefix.",
+              "attribute": "heading-id-prefix"
+            },
+            {
+              "kind": "field",
+              "name": "ctl",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ mutationObserver: new MutationObserverController(this, {childList: true, subtree: true, characterData: true}, this._onChildListMutation) }"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "markdown",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The markdown to render. Set from the \"text/markdown\" script child, if there is one. Attribute: markdown.",
+              "fieldName": "markdown"
+            },
+            {
+              "name": "heading-id-prefix",
+              "type": {
+                "text": "string"
+              },
+              "default": "'md-'",
+              "description": "Put in front of each heading's id, and of the #hash in relative links. Default: 'md-'. Attribute: heading-id-prefix.",
+              "fieldName": "headingIdPrefix"
+            }
+          ],
+          "mixins": [
+            {
+              "name": "MainDomElementMixin",
+              "package": "@ucd-lib/cork-theme/utils/mixins"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true,
+          "tagName": "cork-markdown"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "CorkMarkdown",
+            "module": "package/elements/cork-markdown/cork-markdown.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "cork-markdown",
+          "declaration": {
+            "name": "CorkMarkdown",
+            "module": "package/elements/cork-markdown/cork-markdown.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "package/elements/cork-pages/cork-pages.js",
       "declarations": [
         {
@@ -742,7 +742,7 @@
                   "default": "'cork-pages'",
                   "description": "Tag name to register. Default: 'cork-pages'",
                   "type": {
-                    "text": "String"
+                    "text": "string"
                   }
                 }
               ],
@@ -753,7 +753,7 @@
               "name": "selected",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "''",
               "description": "The child to show. A whole number (e.g. '0') is a child index. Anything else is matched against each child's propForSelected property, if set, or else its attrForSelected attribute. Attribute: selected.",
@@ -764,7 +764,7 @@
               "name": "attrForSelected",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "'id'",
               "description": "Attribute of the children that selected value is matched against. Default (and when empty): 'id'. Attribute: attr-for-selected.",
@@ -775,7 +775,7 @@
               "name": "propForSelected",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "''",
               "description": "Property of the children that selected value is matched against, with strict equality. Takes precedence over attrForSelected when set. Default: ''. Attribute: prop-for-selected.",
@@ -786,7 +786,7 @@
               "name": "selectedAttribute",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "''",
               "description": "An attribute to add to the selected child, and remove from the rest. Optional. Attribute: selected-attribute.",
@@ -797,7 +797,7 @@
               "name": "fallbackSelection",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "''",
               "description": "The child to show when selected matches nothing, e.g. a not-found page. Matched like selected. Attribute: fallback-selection.",
@@ -808,7 +808,7 @@
               "name": "inlineDisplayValue",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "'block'",
               "description": "Inline display style for the selected child, e.g. ele.style.display = 'flex'. Default: 'block'. Attribute: inline-display-value.",
@@ -827,7 +827,7 @@
             {
               "name": "selected",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "''",
               "description": "The child to show. A whole number (e.g. '0') is a child index. Anything else is matched against each child's propForSelected property, if set, or else its attrForSelected attribute. Attribute: selected.",
@@ -836,7 +836,7 @@
             {
               "name": "attr-for-selected",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "'id'",
               "description": "Attribute of the children that selected value is matched against. Default (and when empty): 'id'. Attribute: attr-for-selected.",
@@ -845,7 +845,7 @@
             {
               "name": "prop-for-selected",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "''",
               "description": "Property of the children that selected value is matched against, with strict equality. Takes precedence over attrForSelected when set. Default: ''. Attribute: prop-for-selected.",
@@ -854,7 +854,7 @@
             {
               "name": "selected-attribute",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "''",
               "description": "An attribute to add to the selected child, and remove from the rest. Optional. Attribute: selected-attribute.",
@@ -863,7 +863,7 @@
             {
               "name": "fallback-selection",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "''",
               "description": "The child to show when selected matches nothing, e.g. a not-found page. Matched like selected. Attribute: fallback-selection.",
@@ -872,7 +872,7 @@
             {
               "name": "inline-display-value",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "'block'",
               "description": "Inline display style for the selected child, e.g. ele.style.display = 'flex'. Default: 'block'. Attribute: inline-display-value.",
@@ -942,7 +942,7 @@
                   "default": "'cork-primary-nav'",
                   "description": "Tag name to register. Default: 'cork-primary-nav'",
                   "type": {
-                    "text": "String"
+                    "text": "string"
                   }
                 }
               ],
@@ -953,7 +953,7 @@
               "name": "headerComponentLabel",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "'Main Menu'",
               "description": "Label for the menu, e.g. in the header's nav tray. Default: 'Main Menu'. Attribute: header-component-label.",
@@ -964,7 +964,7 @@
               "name": "focusedNavItem",
               "privacy": "public",
               "type": {
-                "text": "Number[]"
+                "text": "number[]"
               },
               "default": "[]",
               "description": "navPosition of the focused item, e.g. [1, 0]. Attribute: focused-nav-item, comma-separated (e.g. \"1,0\").",
@@ -989,7 +989,7 @@
             {
               "name": "header-component-label",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "'Main Menu'",
               "description": "Label for the menu, e.g. in the header's nav tray. Default: 'Main Menu'. Attribute: header-component-label.",
@@ -998,7 +998,7 @@
             {
               "name": "focused-nav-item",
               "type": {
-                "text": "Number[]"
+                "text": "number[]"
               },
               "default": "[]",
               "description": "navPosition of the focused item, e.g. [1, 0]. Attribute: focused-nav-item, comma-separated (e.g. \"1,0\").",
@@ -1057,7 +1057,7 @@
                   "default": "'cork-quick-links'",
                   "description": "Tag name to register. Default: 'cork-quick-links'",
                   "type": {
-                    "text": "String"
+                    "text": "string"
                   }
                 }
               ],
@@ -1068,7 +1068,7 @@
               "name": "headerComponentLabel",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "'Quick Links'",
               "description": "Label for the menu, e.g. in the header's nav tray. Default: 'Quick Links'. Attribute: header-component-label.",
@@ -1087,7 +1087,7 @@
               "name": "highlight",
               "privacy": "public",
               "type": {
-                "text": "Boolean"
+                "text": "boolean"
               },
               "default": "false",
               "description": "Shows the first three links as large highlighted buttons. Attribute: highlight.",
@@ -1098,7 +1098,7 @@
               "name": "twoColumns",
               "privacy": "public",
               "type": {
-                "text": "Boolean"
+                "text": "boolean"
               },
               "default": "false",
               "description": "Shows the links in two columns, when there's room. Attribute: two-columns.",
@@ -1109,7 +1109,7 @@
               "name": "homeSite",
               "privacy": "public",
               "type": {
-                "text": "Boolean"
+                "text": "boolean"
               },
               "default": "false",
               "description": "Adds the ucdavis home site's icons to the first three links. Attribute: home-site.",
@@ -1126,7 +1126,7 @@
             {
               "name": "header-component-label",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "'Quick Links'",
               "description": "Label for the menu, e.g. in the header's nav tray. Default: 'Quick Links'. Attribute: header-component-label.",
@@ -1135,7 +1135,7 @@
             {
               "name": "highlight",
               "type": {
-                "text": "Boolean"
+                "text": "boolean"
               },
               "default": "false",
               "description": "Shows the first three links as large highlighted buttons. Attribute: highlight.",
@@ -1144,7 +1144,7 @@
             {
               "name": "two-columns",
               "type": {
-                "text": "Boolean"
+                "text": "boolean"
               },
               "default": "false",
               "description": "Shows the links in two columns, when there's room. Attribute: two-columns.",
@@ -1153,7 +1153,7 @@
             {
               "name": "home-site",
               "type": {
-                "text": "Boolean"
+                "text": "boolean"
               },
               "default": "false",
               "description": "Adds the ucdavis home site's icons to the first three links. Attribute: home-site.",
@@ -1189,6 +1189,101 @@
     },
     {
       "kind": "javascript-module",
+      "path": "package/elements/cork-search-common/cork-search-common.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A list of common searches, shown below the search form in the cork-header's search tray.\nAdd it as a child of a {@link cork-search-tray } in {@link cork-header }, alongside a {@link cork-search-form }.",
+          "name": "CorkSearchCommon",
+          "slots": [
+            {
+              "description": "Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM by {@link NavController}. See its examples for the markup formats. Only top-level items are shown.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tagName",
+                  "default": "'cork-search-common'",
+                  "description": "Tag name to register. Default: 'cork-search-common'",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Registers the element as a custom element."
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Common Searches'",
+              "description": "Heading shown above the list. Default: 'Common Searches'. Attribute: heading.",
+              "attribute": "heading"
+            },
+            {
+              "kind": "field",
+              "name": "ctl",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ nav: new NavController(this) }"
+            }
+          ],
+          "events": [
+            {
+              "description": "Fired when a rendered link or button is clicked, with the clicked item in detail.navItem. See {@link NavController}.",
+              "name": "cork-nav-item-click"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Common Searches'",
+              "description": "Heading shown above the list. Default: 'Common Searches'. Attribute: heading.",
+              "fieldName": "heading"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true,
+          "tagName": "cork-search-common"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "CorkSearchCommon",
+            "module": "package/elements/cork-search-common/cork-search-common.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "cork-search-common",
+          "declaration": {
+            "name": "CorkSearchCommon",
+            "module": "package/elements/cork-search-common/cork-search-common.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "package/elements/cork-search-form/cork-search-form.js",
       "declarations": [
         {
@@ -1217,7 +1312,7 @@
                   "default": "'cork-search-form'",
                   "description": "Tag name to register. Default: 'cork-search-form'",
                   "type": {
-                    "text": "String"
+                    "text": "string"
                   }
                 }
               ],
@@ -1228,7 +1323,7 @@
               "name": "formAction",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"\"",
               "description": "URL to submit the form to. If unset, the form fires a cork-search event instead. Attribute: form-action.",
@@ -1239,7 +1334,7 @@
               "name": "formMethod",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"POST\"",
               "description": "HTTP method for a native submit. Default: 'POST'. Attribute: form-method.",
@@ -1250,7 +1345,7 @@
               "name": "labelText",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"Search\"",
               "description": "Visually hidden label for the input. Default: 'Search'. Attribute: label-text.",
@@ -1261,7 +1356,7 @@
               "name": "placeholder",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"Search...\"",
               "description": "The input's placeholder. Default: 'Search...'. Attribute: placeholder.",
@@ -1272,7 +1367,7 @@
               "name": "value",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"\"",
               "description": "The search text. Cleared when the header's nav tray hides the form.",
@@ -1283,7 +1378,7 @@
               "name": "queryParam",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"searchterm\"",
               "description": "Name of the input, i.e. the search text's key in the request. Default: 'searchterm'. Attribute: query-param.",
@@ -1294,7 +1389,7 @@
               "name": "submitParam",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"search\"",
               "description": "Name of the search button, i.e. its key in the request. Default: 'search'. Attribute: submit-param.",
@@ -1305,7 +1400,7 @@
               "name": "submitAriaLabel",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"Search\"",
               "description": "Accessible name of the search button, which shows an icon. Default: 'Search'. Attribute: submit-aria-label.",
@@ -1316,7 +1411,7 @@
               "name": "clearOnSearch",
               "privacy": "public",
               "type": {
-                "text": "Boolean"
+                "text": "boolean"
               },
               "default": "false",
               "description": "Clears the input after a cork-search event. Attribute: clear-on-search.",
@@ -1327,7 +1422,7 @@
               "name": "keepTrayOpen",
               "privacy": "public",
               "type": {
-                "text": "Boolean"
+                "text": "boolean"
               },
               "default": "false",
               "description": "Keeps the cork-header's nav tray open after a search. Attribute: keep-tray-open.",
@@ -1338,7 +1433,7 @@
               "name": "categoryBrand",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"\"",
               "description": "A campus category brand name, e.g. 'admin-blue', for the form's background color. Attribute: category-brand.",
@@ -1373,7 +1468,7 @@
             {
               "name": "value",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"\"",
               "description": "The search text. Cleared when the header's nav tray hides the form.",
@@ -1382,7 +1477,7 @@
             {
               "name": "placeholder",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"Search...\"",
               "description": "The input's placeholder. Default: 'Search...'. Attribute: placeholder.",
@@ -1391,7 +1486,7 @@
             {
               "name": "form-action",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"\"",
               "description": "URL to submit the form to. If unset, the form fires a cork-search event instead. Attribute: form-action.",
@@ -1400,7 +1495,7 @@
             {
               "name": "form-method",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"POST\"",
               "description": "HTTP method for a native submit. Default: 'POST'. Attribute: form-method.",
@@ -1409,7 +1504,7 @@
             {
               "name": "label-text",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"Search\"",
               "description": "Visually hidden label for the input. Default: 'Search'. Attribute: label-text.",
@@ -1418,7 +1513,7 @@
             {
               "name": "query-param",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"searchterm\"",
               "description": "Name of the input, i.e. the search text's key in the request. Default: 'searchterm'. Attribute: query-param.",
@@ -1427,7 +1522,7 @@
             {
               "name": "submit-param",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"search\"",
               "description": "Name of the search button, i.e. its key in the request. Default: 'search'. Attribute: submit-param.",
@@ -1436,7 +1531,7 @@
             {
               "name": "submit-aria-label",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"Search\"",
               "description": "Accessible name of the search button, which shows an icon. Default: 'Search'. Attribute: submit-aria-label.",
@@ -1445,7 +1540,7 @@
             {
               "name": "clear-on-search",
               "type": {
-                "text": "Boolean"
+                "text": "boolean"
               },
               "default": "false",
               "description": "Clears the input after a cork-search event. Attribute: clear-on-search.",
@@ -1454,7 +1549,7 @@
             {
               "name": "keep-tray-open",
               "type": {
-                "text": "Boolean"
+                "text": "boolean"
               },
               "default": "false",
               "description": "Keeps the cork-header's nav tray open after a search. Attribute: keep-tray-open.",
@@ -1463,7 +1558,7 @@
             {
               "name": "category-brand",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "\"\"",
               "description": "A campus category brand name, e.g. 'admin-blue', for the form's background color. Attribute: category-brand.",
@@ -1545,7 +1640,7 @@
                   "default": "'cork-search-tray'",
                   "description": "Tag name to register. Default: 'cork-search-tray'",
                   "type": {
-                    "text": "String"
+                    "text": "string"
                   }
                 }
               ],
@@ -1556,7 +1651,7 @@
               "name": "headerComponentLabel",
               "privacy": "public",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "'Search'",
               "description": "Label for the tray, e.g. in the header's nav tray bar. Default: 'Search'. Attribute: header-component-label.",
@@ -1575,7 +1670,7 @@
             {
               "name": "header-component-label",
               "type": {
-                "text": "String"
+                "text": "string"
               },
               "default": "'Search'",
               "description": "Label for the tray, e.g. in the header's nav tray bar. Default: 'Search'. Attribute: header-component-label.",
@@ -1605,101 +1700,6 @@
           "declaration": {
             "name": "CorkSearchTray",
             "module": "package/elements/cork-search-tray/cork-search-tray.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "package/elements/cork-search-common/cork-search-common.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "A list of common searches, shown below the search form in the cork-header's search tray.\nAdd it as a child of a {@link cork-search-tray } in {@link cork-header }, alongside a {@link cork-search-form }.",
-          "name": "CorkSearchCommon",
-          "slots": [
-            {
-              "description": "Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM by {@link NavController}. See its examples for the markup formats. Only top-level items are shown.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "method",
-              "name": "define",
-              "static": true,
-              "parameters": [
-                {
-                  "name": "tagName",
-                  "default": "'cork-search-common'",
-                  "description": "Tag name to register. Default: 'cork-search-common'",
-                  "type": {
-                    "text": "String"
-                  }
-                }
-              ],
-              "description": "Registers the element as a custom element."
-            },
-            {
-              "kind": "field",
-              "name": "heading",
-              "privacy": "public",
-              "type": {
-                "text": "String"
-              },
-              "default": "'Common Searches'",
-              "description": "Heading shown above the list. Default: 'Common Searches'. Attribute: heading.",
-              "attribute": "heading"
-            },
-            {
-              "kind": "field",
-              "name": "ctl",
-              "type": {
-                "text": "object"
-              },
-              "default": "{ nav: new NavController(this) }"
-            }
-          ],
-          "events": [
-            {
-              "description": "Fired when a rendered link or button is clicked, with the clicked item in detail.navItem. See {@link NavController}.",
-              "name": "cork-nav-item-click"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "heading",
-              "type": {
-                "text": "String"
-              },
-              "default": "'Common Searches'",
-              "description": "Heading shown above the list. Default: 'Common Searches'. Attribute: heading.",
-              "fieldName": "heading"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "customElement": true,
-          "tagName": "cork-search-common"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "CorkSearchCommon",
-            "module": "package/elements/cork-search-common/cork-search-common.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "cork-search-common",
-          "declaration": {
-            "name": "CorkSearchCommon",
-            "module": "package/elements/cork-search-common/cork-search-common.js"
           }
         }
       ]

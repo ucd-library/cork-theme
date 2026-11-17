@@ -123,3 +123,11 @@ The indexes, `docs/reference/readme.md` and `docs/reference/utils/controllers/re
 #### Custom Element Manifest
 
 `docs cem` builds `services/package/custom-elements.json`, the [Custom Elements Manifest](https://github.com/webcomponents/custom-elements-manifest) for the elements. It's published with the package (`customElements` in `package.json`), and read by tools such as IDE custom data generators, Storybook and api-viewer. It's made by `@custom-elements-manifest/analyzer`, with the config and plugins in `services/package-tools/lib/cem/`. 
+
+The analyzer's own plugins are extended with ours, which read this package's patterns: tag names from `static define()`, superclasses from `Mixin(LitElement).with(...)`, lowercase primitive types (`boolean`, not `Boolean`), and no private (`_`) members.
+
+### Element Demos
+
+Each element page on the docs site starts with a live demo: the element, knobs for its properties, an events log, and its HTML, which can be edited and applied. The demo is `cork-theme-element-demo` (`services/client/dev/elements/components/`), built on [api-viewer](https://api-viewer.open-wc.org/)'s `@api-viewer/demo` and driven by `custom-elements.json`, so re-run `docs cem` after changing an element's API.
+
+The starting markup for each demo is in `services/client/dev/demos/`, one module per element. Each imports the elements its markup uses, and is listed in `demos/index.js`. An element with no demo module gets no demo. Only `boolean`, `string` and `number` properties get knobs. Object and array properties, such as `ctl`, are left out. A demo module can leave out more by exporting `hiddenKnobs`, an array of property names, e.g. `cork-markdown` hides `markdown`, which its script fills. It can also export `background`, a CSS background for the demo area, using brand variables, e.g. `cork-primary-nav` uses `var(--ucd-blue)`.

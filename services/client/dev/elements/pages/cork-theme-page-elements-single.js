@@ -5,6 +5,9 @@ import { LitCorkUtils, Mixin } from '@ucd-lib/cork-app-utils';
 import { MainDomElementMixin } from '@ucd-lib/cork-theme/utils/mixins';
 
 import { MarkdownController } from '../../controllers/index.js';
+import '../components/cork-theme-element-demo.js';
+import DEMOS from '../../demos/index.js';
+import manifest from '@ucd-lib/cork-theme/custom-elements.json';
 
 export default class CorkThemePageElementsSingle extends Mixin(LitElement)
   .with(LitCorkUtils, MainDomElementMixin) {
@@ -24,6 +27,8 @@ export default class CorkThemePageElementsSingle extends Mixin(LitElement)
     super();
     this.render = render.bind(this);
     this.elementTag = '';
+    this.manifest = manifest;
+    this.demos = DEMOS;
 
     this.ctl = {
       markdown: new MarkdownController(this, e => `reference/${e.location.path.slice(0,2).join('/')}.md`)

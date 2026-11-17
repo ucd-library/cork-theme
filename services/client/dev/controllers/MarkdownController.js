@@ -84,16 +84,52 @@ export default class MarkdownController {
    * @description Renders the whole loaded document with a cork-markdown element.
    * @param {Object} opts - Options
    * @param {Boolean} opts.stripTopHeading - Leaves out the top-level (h1) headings, e.g. when the page shows its own title. Default: false
+   * @param {Boolean} opts.stripIntro - Leaves out the intro (see renderIntro), e.g. when the page shows it elsewhere. Default: false
    * @param {Object|Object[]} opts.markedOptions - Passed to the cork-markdown element's markedOptions.
    * @returns {TemplateResult}
    */
   render(opts={}){
-    if ( !opts.stripTopHeading ) return this._render(this.document, opts);
+    if ( !opts.stripTopHeading && !opts.stripIntro ) return this._render(this.document, opts);
+    const [introStart, introEnd] = opts.stripIntro ? this._getIntroRange() : [0, 0];
     const markdown = this._getTokens()
-      .filter(t => !(t.type === 'heading' && t.depth === 1))
+      .filter((t, i) => {
+        if ( opts.stripTopHeading && t.type === 'heading' && t.depth === 1 ) return false;
+        return i < introStart || i >= introEnd;
+      })
       .map(t => t.raw)
       .join('');
     return this._render(markdown, opts);
+  }
+
+  /**
+   * @description Renders only the loaded document's intro: everything after its top-level heading (first h1), up to the next heading.
+   * Renders nothing if the document has no intro.
+   * @param {Object} opts - Options
+   * @param {Object|Object[]} opts.markedOptions - Passed to the cork-markdown element's markedOptions.
+   * @returns {TemplateResult}
+   */
+  renderIntro(opts={}){
+    return this._render(this.getIntroMarkdown(), opts);
+  }
+
+  /**
+   * @description Gets the markdown of the loaded document's intro. See renderIntro.
+   * @returns {String} The intro's markdown, or '' if there is none.
+   */
+  getIntroMarkdown(){
+    const [start, end] = this._getIntroRange();
+    return this._getTokens().slice(start, end).map(t => t.raw).join('');
+  }
+
+  /**
+   * @description Gets the token range of the loaded document's intro: from just after its first h1 (or the start, if it has none) to the next heading.
+   * @returns {Number[]} [start, end] token indexes, end exclusive.
+   */
+  _getIntroRange(){
+    const tokens = this._getTokens();
+    const start = tokens.indexOf(this._getTitleToken()) + 1;
+    const end = tokens.findIndex((t, i) => i >= start && t.type === 'heading');
+    return [start, end === -1 ? tokens.length : end];
   }
 
   /**
