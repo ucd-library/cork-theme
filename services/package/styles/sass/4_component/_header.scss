@@ -14,7 +14,7 @@
   &__bar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     overflow: hidden;
     height: $header-bar-height;
     padding: 1px $container-edge-space;
@@ -28,8 +28,8 @@
       padding-left: $container-edge-space--md;
     }
 
-    &--logo-right {
-      justify-content: flex-end;
+    &--logo-right .header__university {
+      margin-right: 0;
     }
 
     // Loop through 7 styles for the header bar images.
@@ -54,6 +54,8 @@
   }
 
   &__university {
+    margin-right: auto;
+
     // Fix weird vertical alignment due to being inline.
     a {
       display: flex;
@@ -88,10 +90,73 @@
     align-items: center;
   }
 
+  // Optional account/cart links.
+  &__links {
+    display: flex;
+    align-items: center;
+    margin-right: -.5rem;
+
+    // Vertical divider line.
+    &::after {
+      height: 2rem;
+      margin-left: $spacer--small;
+      border-right: 4px dotted oklch(from $white l c h / .2);
+      content: "";
+    }
+  }
+
+  &__link {
+    position: relative;
+    flex-shrink: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+
+    &::before {
+      position: absolute;
+      background-color: $ucd-gold;
+      content: "";
+      inset: 0;
+      mask-position: center;
+      mask-repeat: no-repeat;
+      mask-size: 55%;
+      transition: mask-size .2s ease-in-out;
+    }
+
+    &--account::before {
+      mask-image: url("../images/icons/user.svg");
+    }
+
+    &--cart::before {
+      mask-image: url("../images/icons/shop.svg");
+    }
+
+    &::after {
+      position: absolute;
+      bottom: 3px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: $white;
+      content: "";
+      opacity: 0;
+      transform: scaleX(0);
+      transition: opacity .2s ease-in-out, transform .2s ease-in-out;
+    }
+
+    &:hover::after,
+    &:focus-visible::after {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+
+    .sticky-header--is-fixed &::before {
+      mask-size: 40%;
+    }
+  }
+
   // Inline Main Menu; small screens use the nav tray instead.
   &__nav-lite {
     display: none;
-    margin-left: auto;
 
     @media (min-width: $media-narrow) {
       display: block;
