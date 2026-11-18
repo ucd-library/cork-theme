@@ -31,8 +31,91 @@ Menu elements read their links with a new markup format: see [Nav Markup](nav-ma
 | `ucd-theme-search-popup`, `ucd-theme-search-form` | `cork-search-form`, and the new `cork-search-tray` and `cork-search-common`. See [Header](header.md#search). |
 | `ucd-theme-quick-links` | `cork-quick-links`. See [Header](header.md#quick-links). |
 | `ucdlib-branding-bar` | `cork-branding-bar`. See [Header](header.md#branding-bar). |
+| `ucd-theme-subnav` | `cork-nav-sub`. See [cork-nav-sub](#cork-nav-sub). |
 | `ucdlib-pages` | `cork-pages`. See [cork-pages](#cork-pages). |
 | `ucdlib-md`, `ucdlib-md-content` | `cork-markdown`. See [cork-markdown](#cork-markdown). |
+
+## cork-nav-sub
+
+`ucd-theme-subnav` is replaced by `cork-nav-sub`. The old element was an accordion: each item with children had a toggle that expanded them in place. The new one is campus's drill-down menu, the same one `cork-primary-nav` uses, with an optional title above it. The title moves from attributes into the light DOM.
+
+### Steps
+
+1. Find the old element:
+
+   ```
+   grep -rn "ucd-theme-subnav" src
+   ```
+
+2. Change the import:
+
+   ```js
+   // Before
+   import '@ucd-lib/theme-elements/brand/ucd-theme-subnav/ucd-theme-subnav.js';
+
+   // After
+   import '@ucd-lib/cork-theme/elements/cork-nav-sub';
+   ```
+
+3. Rename the tag, move the title into a heading as the first child, and rewrite the menu as nested `li` items. Old-style `<ul link-text="…">` lists still parse, but are deprecated. See [Nav Markup](nav-markup.md).
+
+   ```html
+   <!-- Before -->
+   <ucd-theme-subnav nav-title="Services" title-href="/services">
+     <li><a href="/services/borrow">Borrowing</a></li>
+     <ul link-text="Digital Services" href="/services/digital">
+       <li><a href="/services/digital/gis">GIS and Mapping</a></li>
+     </ul>
+   </ucd-theme-subnav>
+
+   <!-- After -->
+   <cork-nav-sub>
+     <h2><a href="/services">Services</a></h2>
+     <ul>
+       <li><a href="/services/borrow">Borrowing</a></li>
+       <li>
+         <a href="/services/digital">Digital Services</a>
+         <ul>
+           <li><a href="/services/digital/gis">GIS and Mapping</a></li>
+         </ul>
+       </li>
+     </ul>
+   </cork-nav-sub>
+   ```
+
+4. Change the remaining attributes, properties and events, as in the table below.
+5. If you query the element in code or style it in CSS, change the tag name there too.
+
+### Title
+
+The title is the element's first direct child that is an `h1`-`h6`, or that has the `data-heading` attribute. It's rendered with the same tag, so the heading level is up to you. It's parsed by `HeadingController` (see [Controllers](controllers.md#headingcontroller)).
+
+| Title | Markup |
+| --- | --- |
+| Plain (was `nav-title`) | `<h2>Services</h2>` |
+| Linked (was `nav-title` with `title-href`) | `<h2><a href="/services">Services</a></h2>` |
+| Clickable, no link (was `nav-title` with `title-click-event`) | `<h2><button>Services</button></h2>`. Listen for clicks on the button itself, or for `cork-heading-click` on the element. |
+| Not a heading | `<div data-heading>Services</div>`, or `<div data-heading="h2">Services</div>` to look like an `h2`. |
+
+### Attributes, properties and events
+
+| Old | New |
+| --- | --- |
+| `nav-title`, `title-href`, `title-click-event` | A heading child. See [Title](#title). |
+| `title-click` event | `cork-heading-click`, with `detail.heading` and `detail.originalEvent`. Fired for linked and button titles. Click listeners on a title `<button>` also run. |
+| `item-click` event (items without an `href`), with `detail.linkText` and `detail.location` | `cork-nav-item-click`, fired for every item link and button, with `detail.navItem` and `detail.originalEvent`. For an item without a link, use a `<button>`; its click listeners run. See [Controllers](controllers.md#navcontroller). |
+| `nav-aria-label` | Unchanged. Its default is now the title's text, or `Submenu` if there's no title. It was `Sub navigation`. |
+| `openNavItem()`, `closeNavItem()` | `focused-nav-item` (`focusedNavItem`): the `navPosition` of the open submenu, e.g. `[1, 0]`, or `"1,0"` as an attribute. Its ancestors open with it. `[]` closes them all. |
+| `animation-duration` | Removed. Transitions come from campus's styles, and are off with `prefers-reduced-motion`. |
+| `navItems` | On the controller: `this.ctl.nav.navItems`. |
+| (new) `auto-height` (`autoHeight`) | On wide screens, the menu is as tall as its first level, and follows that level's size. On narrow screens its height is `auto`. Without it, the menu is as tall as its container, and at least 18rem. |
+
+### Keyboard
+
+- Opening a submenu moves focus into it: to the parent's own link, or its first item. Closing it returns focus to its toggle.
+- Escape closes the submenu that has focus (moving up a level), or all submenus if focus isn't in one.
+
+See the [reference](../../reference/elements/cork-nav-sub.md) for every property.
 
 ## cork-pages
 

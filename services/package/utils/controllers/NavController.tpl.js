@@ -93,7 +93,7 @@ export function renderItem(item, opts={}){
 export function renderDrillDown(){
   return html`
     <div class="nav-drill__inner" ${ref(ele => { this._drillDownInnerEle = ele; })}>
-      <ul class="nav-drill__list">
+      <ul class="nav-drill__list" ${ref(ele => { this._drillDownFirstListEle = ele; })}>
         ${this.navItems.map(item => html`
           <li>${renderDrillDownTopItem.call(this, item)}</li>
         `)}

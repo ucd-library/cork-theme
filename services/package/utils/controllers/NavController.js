@@ -101,6 +101,8 @@ export default class NavController {
    * @param {Boolean} opts.closeSubmenusOnEscape - Drill-down: the Escape key closes the submenu that has focus (or all submenus, if none has focus). Default: false
    * @param {Boolean} opts.setChildHeight - Drill-down: on narrow screens, sizes the expanded submenus to the deepest one, since submenus from level 3 down are absolutely positioned. Default: false
    * @param {String} opts.noParseHostProperty - If set, the host's property of this name is checked before parsing the light DOM. If truthy, parsing is skipped. Default: undefined
+   * @param {String} opts.autoHeightHostProperty - Drill-down: if set, the host's property of this name turns auto height on when truthy.
+   * On wide screens, the drill-down is then as tall as its first menu level, and follows that menu's size; on narrow screens its height is auto. Default: undefined
    */
   constructor(host, opts={}){
     this.host = host;
@@ -110,6 +112,7 @@ export default class NavController {
     this.noParseHostProperty = opts.noParseHostProperty;
     this.closeSubmenusOnEscape = opts.closeSubmenusOnEscape || false;
     this.setChildHeight = opts.setChildHeight || false;
+    this.autoHeightHostProperty = opts.autoHeightHostProperty;
     this._onKeydown = this._onKeydown.bind(this);
     this.renderDrillDown = renderDrillDown.bind(this);
 
@@ -133,26 +136,79 @@ export default class NavController {
   }
 
   /**
-   * @description Lit controller lifecycle method. Adds the Escape key listener, if opts.closeSubmenusOnEscape is set.
+   * @description Lit controller lifecycle method. Adds the Escape key listener, if opts.closeSubmenusOnEscape is set,
+   * and restarts auto height for a host that's been moved, since it may not update on reconnection.
    */
   hostConnected(){
     this.host._corkNavController = this;
     if ( this.closeSubmenusOnEscape ) this.host.addEventListener('keydown', this._onKeydown);
+    if ( this.host.hasUpdated ) this.setNavDrillAutoHeight();
   }
 
   /**
-   * @description Lit controller lifecycle method. Removes the Escape key listener.
+   * @description Lit controller lifecycle method. Removes the Escape key listener, and stops the auto height observer.
    */
   hostDisconnected(){
     this.host.removeEventListener('keydown', this._onKeydown);
+    this._stopAutoHeight();
   }
 
   /**
-   * @description Lit controller lifecycle method.
+   * @description Lit controller lifecycle method. Updates the drill-down's child height and auto height.
    */
   hostUpdated(){
     this.setNavDrillChildHeight();
+    this.setNavDrillAutoHeight();
+  }
 
+  /**
+   * @description Starts, re-targets, or stops drill-down auto height (see opts.autoHeightHostProperty), from the host property's current value.
+   * While on, a ResizeObserver on the first menu level keeps --nav-drill-height up to date. When turned off, the CSS default height comes back.
+   */
+  setNavDrillAutoHeight(){
+    const on = this.autoHeightHostProperty && this.host[this.autoHeightHostProperty] && this._drillDownFirstListEle;
+    if ( !on ) {
+      if ( this._autoHeightObserver ) {
+        this._stopAutoHeight();
+        this._drillDownInnerEle?.style.removeProperty('--nav-drill-height');
+      }
+      return;
+    }
+    if ( this._autoHeightObserver && this._autoHeightTarget === this._drillDownFirstListEle ) return;
+
+    this._stopAutoHeight();
+    this._autoHeightTarget = this._drillDownFirstListEle;
+    // Defer to the next frame, since setting the height resizes the observed menu (ResizeObserver loop), as campus does
+    this._autoHeightObserver = new ResizeObserver(() => {
+      cancelAnimationFrame(this._autoHeightFrame);
+      this._autoHeightFrame = requestAnimationFrame(() => this._setNavDrillHeight());
+    });
+    this._autoHeightObserver.observe(this._autoHeightTarget);
+    this._setNavDrillHeight();
+  }
+
+  /**
+   * @description Sets --nav-drill-height to the first menu level's full height, or auto on narrow screens. Only writes when the value changes.
+   */
+  _setNavDrillHeight(){
+    const inner = this._drillDownInnerEle;
+    const firstList = this._drillDownFirstListEle;
+    if ( !inner || !firstList ) return;
+    // scrollHeight, since the list's max-height is --nav-drill-height
+    const height = this.host.offsetWidth <= 999 ? 'auto' : `${firstList.scrollHeight}px`;
+    if ( inner.style.getPropertyValue('--nav-drill-height') !== height ) {
+      inner.style.setProperty('--nav-drill-height', height);
+    }
+  }
+
+  /**
+   * @description Disconnects the auto height observer, if any, and cancels a pending height update. Leaves --nav-drill-height as it is.
+   */
+  _stopAutoHeight(){
+    this._autoHeightObserver?.disconnect();
+    cancelAnimationFrame(this._autoHeightFrame);
+    this._autoHeightObserver = null;
+    this._autoHeightTarget = null;
   }
 
   /**

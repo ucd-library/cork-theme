@@ -11,6 +11,7 @@ or `docs jsdoc <name>` for one page.
 - [cork-header](elements/cork-header.md): The primary site header component that accepts various slotted header components and controls their visibility in the nav tray.
 - [cork-markdown](elements/cork-markdown.md): Renders markdown as sanitized HTML in the light DOM (no shadow root), so it inherits styles.
 - [cork-nav-lite](elements/cork-nav-lite.md): A single-level main menu, shown inline in the cork-header bar.
+- [cork-nav-sub](elements/cork-nav-sub.md): A sub menu, rendered as a drill-down, with an optional title above it.
 - [cork-pages](elements/cork-pages.md): Shows one of its children at a time, and hides the rest.
 - [cork-primary-nav](elements/cork-primary-nav.md): The site's main menu.
 - [cork-quick-links](elements/cork-quick-links.md): A quick links menu component: a short list of links/buttons outside of the main navigation.
@@ -23,6 +24,7 @@ or `docs jsdoc <name>` for one page.
 - [assets](utils/assets.md): `cssUrl`, `optionalCssUrl`, `setImageCssCustomProperties`, `setFontFaces`, `copyImages`, `copyFonts`
 - [controllers](utils/controllers/readme.md)
   - [AppStateController](utils/controllers/AppStateController.md): Lit controller that calls back on @ucd-lib/cork-app-state's app-state-update event, if it exists.
+  - [HeadingController](utils/controllers/HeadingController.md): Lit controller that parses a heading in the host's light DOM, for the host element to render in its shadow DOM.
   - [MutationObserverController](utils/controllers/MutationObserverController.md): Lit controller that attaches a MutationObserver to an element
   - [NavController](utils/controllers/NavController.md): Lit controller that parses menu markup in the host's light DOM into navItems, for the host element to render in its shadow DOM.
   - [PageWidthController](utils/controllers/PageWidthController.md): Sets the theme's page width CSS custom property (--page-width), and keeps it current as the window resizes.

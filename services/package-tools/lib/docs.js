@@ -20,12 +20,15 @@ const TPL_EXCLUDED = ['render', 'styles'];
 // Tags whose whole text is the content, rather than a name, type and description
 const ALIASES = { classdesc: 'description', examples: 'example' };
 
-// Lit and custom element lifecycle callbacks: called by the browser or Lit, not by apps, so left out of Methods
-const LIFECYCLE = [
+// Lit and custom element lifecycle callbacks: called by the browser or Lit, not by apps, so left out of Methods.
+// Only for classes that extend another (elements), since a controller's render, for example, is called by apps
+const ELEMENT_LIFECYCLE = [
   'connectedCallback', 'disconnectedCallback', 'adoptedCallback', 'attributeChangedCallback',
-  'shouldUpdate', 'willUpdate', 'update', 'render', 'firstUpdated', 'updated',
-  'hostConnected', 'hostDisconnected', 'hostUpdate', 'hostUpdated'
+  'shouldUpdate', 'willUpdate', 'update', 'render', 'firstUpdated', 'updated'
 ];
+
+// Lit reactive controller lifecycle callbacks, left out of Methods for any class
+const CONTROLLER_LIFECYCLE = ['hostConnected', 'hostDisconnected', 'hostUpdate', 'hostUpdated'];
 
 // Static members left out of Methods: custom element registration, which every element has, and Lit's shadow root options
 const STATIC_EXCLUDED = ['define', 'shadowRootOptions'];
@@ -72,7 +75,7 @@ class Docs {
    * @description Builds markdown reference pages from the JSDoc in package/elements and package/utils, into docs/reference.
    * One page per element, and one per util folder, except the folders in SPLIT_UTILS, which get a page per source file and an index page.
    * Only the public API is documented: members starting with _, blocks tagged @private,
-   * lifecycle callbacks (see LIFECYCLE), static define() and shadowRootOptions (see STATIC_EXCLUDED), and top-level functions that aren't exported are left out.
+   * lifecycle callbacks (see ELEMENT_LIFECYCLE and CONTROLLER_LIFECYCLE), static define() and shadowRootOptions (see STATIC_EXCLUDED), and top-level functions that aren't exported are left out.
    * The indexes (docs/reference/readme.md, and each split folder's readme.md) are always rebuilt from every source.
    * @param {String[]} names - Pages to build: element names (e.g. 'cork-header'), util folders (e.g. 'controllers', which for a split folder
    * builds all of its pages), or a split folder's files (e.g. 'NavController'). Empty builds all, and first clears the old pages.
@@ -264,7 +267,9 @@ class Docs {
       if ( !id || id.name.startsWith('_') ) continue;
 
       if ( id.kind === 'method' ) {
-        const excluded = LIFECYCLE.includes(id.name) || (id.isStatic && STATIC_EXCLUDED.includes(id.name));
+        const excluded = CONTROLLER_LIFECYCLE.includes(id.name)
+          || (container?.isSubclass && ELEMENT_LIFECYCLE.includes(id.name))
+          || (id.isStatic && STATIC_EXCLUDED.includes(id.name));
         if ( container && !excluded ) container.members.push({ ...id, doc });
         continue;
       }
@@ -272,7 +277,11 @@ class Docs {
         container = null;
         continue;
       }
-      container = { ...id, doc, members: [], tplFunctions: [], file, isDefault: this._isDefaultExport(source, id.name) };
+      container = {
+        ...id, doc, members: [], tplFunctions: [], file,
+        isDefault: this._isDefaultExport(source, id.name),
+        isSubclass: id.kind === 'class' && /\bextends\b/.test(line)
+      };
       symbols.push(container);
     }
 

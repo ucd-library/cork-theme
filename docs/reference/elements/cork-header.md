@@ -13,8 +13,7 @@ The header also sets --page-width on the document with a [`PageWidthController`]
 Set the no-page-width attribute to turn this off.
 
 The header bar (UC Davis logo, inline menu and tray toggles) is sticky: it stays fixed to the top of the screen, and shrinks once the page scrolls.
-The branding bar scrolls away as usual. The header reserves the bar's space itself, so the page needs no sticky-header class or padding,
-and it sets scroll-padding-top on the page (to --sticky-header-scroll-offset), so #hash links land below the bar.
+The branding bar scrolls away as usual. The header sets scroll-padding-top on the page (to --sticky-header-scroll-offset), so #hash links land below the bar.
 Set the no-sticky attribute to turn this off.
 
 In an SPA using @ucd-lib/cork-app-state, the header closes its open nav tray when the location changes, with an [`AppStateController`](../utils/controllers/AppStateController.md).

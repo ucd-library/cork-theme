@@ -48,6 +48,12 @@ function renderHeader(){
                 <li><a href='/elements/cork-branding-bar'>Branding Bar</a></li>
               </ul>
             </li>
+            <li>
+              <a>Other Navigation</a>
+              <ul>
+                <li><a href='/elements/cork-nav-sub'>Submenu</a></li>
+              </ul>
+            </li>
           </ul>
         </li>
         <li><a>Styles</a></li>

@@ -15,6 +15,7 @@ See examples for supported light DOM markup formats.
 - [Events](#events)
 - [Methods](#methods)
   - [constructor(host, opts)](#constructorhost-opts)
+  - [setNavDrillAutoHeight()](#setnavdrillautoheight)
   - [setNavDrillChildHeight()](#setnavdrillchildheight)
   - [parse()](#parse)
   - [getNavItem(navPosition)](#getnavitemnavposition)
@@ -55,6 +56,12 @@ See examples for supported light DOM markup formats.
 | `opts.closeSubmenusOnEscape` | `Boolean` | Drill-down: the Escape key closes the submenu that has focus (or all submenus, if none has focus). Default: false |
 | `opts.setChildHeight` | `Boolean` | Drill-down: on narrow screens, sizes the expanded submenus to the deepest one, since submenus from level 3 down are absolutely positioned. Default: false |
 | `opts.noParseHostProperty` | `String` | If set, the host's property of this name is checked before parsing the light DOM. If truthy, parsing is skipped. Default: undefined |
+| `opts.autoHeightHostProperty` | `String` | Drill-down: if set, the host's property of this name turns auto height on when truthy. On wide screens, the drill-down is then as tall as its first menu level, and follows that menu's size; on narrow screens its height is auto. Default: undefined |
+
+### setNavDrillAutoHeight()
+
+Starts, re-targets, or stops drill-down auto height (see opts.autoHeightHostProperty), from the host property's current value.
+While on, a ResizeObserver on the first menu level keeps --nav-drill-height up to date. When turned off, the CSS default height comes back.
 
 ### setNavDrillChildHeight()
 
