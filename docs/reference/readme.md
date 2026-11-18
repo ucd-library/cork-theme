@@ -28,4 +28,5 @@ or `docs jsdoc <name>` for one page.
   - [MutationObserverController](utils/controllers/MutationObserverController.md): Lit controller that attaches a MutationObserver to an element
   - [NavController](utils/controllers/NavController.md): Lit controller that parses menu markup in the host's light DOM into navItems, for the host element to render in its shadow DOM.
   - [PageWidthController](utils/controllers/PageWidthController.md): Sets the theme's page width CSS custom property (--page-width), and keeps it current as the window resizes.
+- [layout](utils/layout.md): `toGridRows`
 - [mixins](utils/mixins.md): `MainDomElementMixin`

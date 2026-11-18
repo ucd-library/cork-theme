@@ -2,11 +2,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import spaMiddleware from '@ucd-lib/spa-router-middleware';
+import { preload } from '@ucd-lib/cork-icon';
 
 import loaderHtml from '../html/loader.html.js';
 import logger from '../dev/lib/logger.js';
 import config from '../dev/lib/config.js';
-import preloadedIcons from './icons.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -15,6 +15,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * @param {import('express').Application} app - The Express application instance
  */
 export default (app) => {
+  const preloadedIcons = preload();
   let assetsDir = path.join(__dirname, '../public');
   logger.info(`Serving static assets from ${assetsDir}`);
 

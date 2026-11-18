@@ -24,6 +24,7 @@ import './pages/cork-theme-page-elements-single.js';
 import './pages/cork-theme-page-utils.js';
 import './pages/cork-theme-page-utils-single.js';
 import './pages/cork-theme-page-controllers-single.js';
+import './pages/cork-theme-page-home.js';
 
 // icon elements and model
 import '@ucd-lib/cork-icon';

@@ -15,7 +15,8 @@ return html`
   ${renderHeader.call(this)}
 
   <main class="l-main">
-    <cork-pages selected=${this.page} attr-for-selected='page-id'>
+    <cork-pages selected=${this.page} attr-for-selected='page-id' fallback-selection='home'>
+      <cork-theme-page-home page-id="home"></cork-theme-page-home>
       <cork-theme-page-elements page-id="elements"></cork-theme-page-elements>
       <cork-theme-page-elements-single page-id="elements-single"></cork-theme-page-elements-single>
       <cork-theme-page-utils page-id="utils"></cork-theme-page-utils>
@@ -23,7 +24,6 @@ return html`
       <cork-theme-page-controllers-single page-id="controllers-single"></cork-theme-page-controllers-single>
     </cork-pages>
   </main>
-
 `;}
 
 function renderHeader(){
@@ -64,6 +64,7 @@ function renderHeader(){
             <li><a href="/utils/controllers">Controllers</a></li>
             <li><a href="/utils/mixins">Mixins</a></li>
             <li><a href="/utils/assets">Assets</a></li>
+            <li><a href="/utils/layout">Layout</a></li>
           </ul>
         </li>
       </ul>

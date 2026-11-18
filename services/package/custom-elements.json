@@ -153,18 +153,12 @@
     },
     {
       "kind": "javascript-module",
-      "path": "package/elements/cork-nav-lite/cork-nav-lite.js",
+      "path": "package/elements/cork-markdown/cork-markdown.js",
       "declarations": [
         {
           "kind": "class",
-          "description": "A single-level main menu, shown inline in the cork-header bar. For sites with only a few top-level links. Add it as a child of the {@link cork-header } element.\n\nThe header shows it on larger screens, in place of the menu tray toggle.\nSmaller screens use the menu tray, so the site still also needs a cork-primary-nav.\n\nThe links can be written in the element, or copied from the header's cork-primary-nav with copyFromPrimaryNav, so they're only written once.\nOnly top-level items are shown: sub menus and fields are ignored.",
-          "name": "CorkNavLite",
-          "slots": [
-            {
-              "description": "Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM by {@link NavController}. See its examples for the markup formats. Ignored with copyFromPrimaryNav.",
-              "name": ""
-            }
-          ],
+          "description": "Renders markdown as sanitized HTML in the light DOM (no shadow root), so it inherits styles.\n\n- The markdown comes from the markdown property, or from a child script tag with type=\"text/markdown\", \nwhich is reread whenever its text changes. \n- Uses marked and DOMPurify packages, for parsing and sanitization. Behavior can be customized via markedOptions property.\n- Headings get GitHub-style ids (via marked-gfm-heading-id), with headingIdPrefix in front, e.g. '## Slots' gets id=\"md-slots\".\nThe prefix stops DOMPurify from removing ids that match DOM properties, such as 'children' or 'title'.\nRelative links with a #hash get the same prefix added, so `[Slots](#slots)` and `[Slots](other.md#slots)` still point at the heading.",
+          "name": "CorkMarkdown",
           "members": [
             {
               "kind": "method",
@@ -173,8 +167,8 @@
               "parameters": [
                 {
                   "name": "tagName",
-                  "default": "'cork-nav-lite'",
-                  "description": "Tag name to register. Default: 'cork-nav-lite'",
+                  "default": "'cork-markdown'",
+                  "description": "Tag name to register. Default: 'cork-markdown'",
                   "type": {
                     "text": "string"
                   }
@@ -184,14 +178,35 @@
             },
             {
               "kind": "field",
-              "name": "headerComponentLabel",
+              "name": "markdown",
               "privacy": "public",
               "type": {
                 "text": "string"
               },
-              "default": "'Main Menu'",
-              "description": "Label for the menu, used as the nav's aria-label. Default: 'Main Menu'. Attribute: header-component-label.",
-              "attribute": "header-component-label"
+              "default": "''",
+              "description": "The markdown to render. Set from the \"text/markdown\" script child, if there is one. Attribute: markdown.",
+              "attribute": "markdown"
+            },
+            {
+              "kind": "field",
+              "name": "markedOptions",
+              "privacy": "public",
+              "type": {
+                "text": "Object|Object[]"
+              },
+              "default": "{}",
+              "description": "Options for marked package, merged over the defaults: {breaks: true, gfm: true}, and custom list and table renderers that add certain theme classes. Takes the same object as marked.use(), including renderer methods. See https://marked.js.org/using_advanced. Or an array of them, applied in order, e.g. to add an extension such as marked-highlight alongside your own options. Property only."
+            },
+            {
+              "kind": "field",
+              "name": "headingIdPrefix",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'md-'",
+              "description": "Put in front of each heading's id, and of the #hash in relative links. Default: 'md-'. Attribute: heading-id-prefix.",
+              "attribute": "heading-id-prefix"
             },
             {
               "kind": "field",
@@ -199,60 +214,33 @@
               "type": {
                 "text": "object"
               },
-              "default": "{ nav: new NavController(this, { noParseHostProperty: 'copyFromPrimaryNav' }) }"
-            },
-            {
-              "kind": "field",
-              "name": "copyFromPrimaryNav",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Copies the top-level items of the cork-primary-nav in the same cork-header, instead of reading the element's own links. Attribute: copy-from-primary-nav.",
-              "attribute": "copy-from-primary-nav"
-            },
-            {
-              "kind": "field",
-              "name": "primaryNavMaxItems",
-              "privacy": "public",
-              "type": {
-                "text": "number"
-              },
-              "description": "With copyFromPrimaryNav, the number of items to copy, from the start. Default: all. Attribute: primary-nav-max-items.",
-              "attribute": "primary-nav-max-items"
-            }
-          ],
-          "events": [
-            {
-              "description": "Fired when a rendered link or button is clicked, with the clicked item in detail.navItem. See {@link NavController}.",
-              "name": "cork-nav-item-click"
+              "default": "{ mutationObserver: new MutationObserverController(this, {childList: true, subtree: true, characterData: true}, this._onChildListMutation) }"
             }
           ],
           "attributes": [
             {
-              "name": "header-component-label",
+              "name": "markdown",
               "type": {
                 "text": "string"
               },
-              "default": "'Main Menu'",
-              "description": "Label for the menu, used as the nav's aria-label. Default: 'Main Menu'. Attribute: header-component-label.",
-              "fieldName": "headerComponentLabel"
+              "default": "''",
+              "description": "The markdown to render. Set from the \"text/markdown\" script child, if there is one. Attribute: markdown.",
+              "fieldName": "markdown"
             },
             {
-              "name": "copy-from-primary-nav",
+              "name": "heading-id-prefix",
               "type": {
-                "text": "boolean"
+                "text": "string"
               },
-              "description": "Copies the top-level items of the cork-primary-nav in the same cork-header, instead of reading the element's own links. Attribute: copy-from-primary-nav.",
-              "fieldName": "copyFromPrimaryNav"
-            },
+              "default": "'md-'",
+              "description": "Put in front of each heading's id, and of the #hash in relative links. Default: 'md-'. Attribute: heading-id-prefix.",
+              "fieldName": "headingIdPrefix"
+            }
+          ],
+          "mixins": [
             {
-              "name": "primary-nav-max-items",
-              "type": {
-                "text": "number"
-              },
-              "description": "With copyFromPrimaryNav, the number of items to copy, from the start. Default: all. Attribute: primary-nav-max-items.",
-              "fieldName": "primaryNavMaxItems"
+              "name": "MainDomElementMixin",
+              "package": "@ucd-lib/cork-theme/utils/mixins"
             }
           ],
           "superclass": {
@@ -260,7 +248,7 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "cork-nav-lite"
+          "tagName": "cork-markdown"
         }
       ],
       "exports": [
@@ -268,16 +256,16 @@
           "kind": "js",
           "name": "default",
           "declaration": {
-            "name": "CorkNavLite",
-            "module": "package/elements/cork-nav-lite/cork-nav-lite.js"
+            "name": "CorkMarkdown",
+            "module": "package/elements/cork-markdown/cork-markdown.js"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "cork-nav-lite",
+          "name": "cork-markdown",
           "declaration": {
-            "name": "CorkNavLite",
-            "module": "package/elements/cork-nav-lite/cork-nav-lite.js"
+            "name": "CorkMarkdown",
+            "module": "package/elements/cork-markdown/cork-markdown.js"
           }
         }
       ]
@@ -626,12 +614,18 @@
     },
     {
       "kind": "javascript-module",
-      "path": "package/elements/cork-markdown/cork-markdown.js",
+      "path": "package/elements/cork-nav-lite/cork-nav-lite.js",
       "declarations": [
         {
           "kind": "class",
-          "description": "Renders markdown as sanitized HTML in the light DOM (no shadow root), so it inherits styles.\n\n- The markdown comes from the markdown property, or from a child script tag with type=\"text/markdown\", \nwhich is reread whenever its text changes. \n- Uses marked and DOMPurify packages, for parsing and sanitization. Behavior can be customized via markedOptions property.\n- Headings get GitHub-style ids (via marked-gfm-heading-id), with headingIdPrefix in front, e.g. '## Slots' gets id=\"md-slots\".\nThe prefix stops DOMPurify from removing ids that match DOM properties, such as 'children' or 'title'.\nRelative links with a #hash get the same prefix added, so `[Slots](#slots)` and `[Slots](other.md#slots)` still point at the heading.",
-          "name": "CorkMarkdown",
+          "description": "A single-level main menu, shown inline in the cork-header bar. For sites with only a few top-level links. Add it as a child of the {@link cork-header } element.\n\nThe header shows it on larger screens, in place of the menu tray toggle.\nSmaller screens use the menu tray, so the site still also needs a cork-primary-nav.\n\nThe links can be written in the element, or copied from the header's cork-primary-nav with copyFromPrimaryNav, so they're only written once.\nOnly top-level items are shown: sub menus and fields are ignored.",
+          "name": "CorkNavLite",
+          "slots": [
+            {
+              "description": "Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM by {@link NavController}. See its examples for the markup formats. Ignored with copyFromPrimaryNav.",
+              "name": ""
+            }
+          ],
           "members": [
             {
               "kind": "method",
@@ -640,8 +634,8 @@
               "parameters": [
                 {
                   "name": "tagName",
-                  "default": "'cork-markdown'",
-                  "description": "Tag name to register. Default: 'cork-markdown'",
+                  "default": "'cork-nav-lite'",
+                  "description": "Tag name to register. Default: 'cork-nav-lite'",
                   "type": {
                     "text": "string"
                   }
@@ -651,35 +645,14 @@
             },
             {
               "kind": "field",
-              "name": "markdown",
+              "name": "headerComponentLabel",
               "privacy": "public",
               "type": {
                 "text": "string"
               },
-              "default": "''",
-              "description": "The markdown to render. Set from the \"text/markdown\" script child, if there is one. Attribute: markdown.",
-              "attribute": "markdown"
-            },
-            {
-              "kind": "field",
-              "name": "markedOptions",
-              "privacy": "public",
-              "type": {
-                "text": "Object|Object[]"
-              },
-              "default": "{}",
-              "description": "Options for marked package, merged over the defaults: {breaks: true, gfm: true}, and custom list and table renderers that add certain theme classes. Takes the same object as marked.use(), including renderer methods. See https://marked.js.org/using_advanced. Or an array of them, applied in order, e.g. to add an extension such as marked-highlight alongside your own options. Property only."
-            },
-            {
-              "kind": "field",
-              "name": "headingIdPrefix",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'md-'",
-              "description": "Put in front of each heading's id, and of the #hash in relative links. Default: 'md-'. Attribute: heading-id-prefix.",
-              "attribute": "heading-id-prefix"
+              "default": "'Main Menu'",
+              "description": "Label for the menu, used as the nav's aria-label. Default: 'Main Menu'. Attribute: header-component-label.",
+              "attribute": "header-component-label"
             },
             {
               "kind": "field",
@@ -687,33 +660,60 @@
               "type": {
                 "text": "object"
               },
-              "default": "{ mutationObserver: new MutationObserverController(this, {childList: true, subtree: true, characterData: true}, this._onChildListMutation) }"
+              "default": "{ nav: new NavController(this, { noParseHostProperty: 'copyFromPrimaryNav' }) }"
+            },
+            {
+              "kind": "field",
+              "name": "copyFromPrimaryNav",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Copies the top-level items of the cork-primary-nav in the same cork-header, instead of reading the element's own links. Attribute: copy-from-primary-nav.",
+              "attribute": "copy-from-primary-nav"
+            },
+            {
+              "kind": "field",
+              "name": "primaryNavMaxItems",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "description": "With copyFromPrimaryNav, the number of items to copy, from the start. Default: all. Attribute: primary-nav-max-items.",
+              "attribute": "primary-nav-max-items"
+            }
+          ],
+          "events": [
+            {
+              "description": "Fired when a rendered link or button is clicked, with the clicked item in detail.navItem. See {@link NavController}.",
+              "name": "cork-nav-item-click"
             }
           ],
           "attributes": [
             {
-              "name": "markdown",
+              "name": "header-component-label",
               "type": {
                 "text": "string"
               },
-              "default": "''",
-              "description": "The markdown to render. Set from the \"text/markdown\" script child, if there is one. Attribute: markdown.",
-              "fieldName": "markdown"
+              "default": "'Main Menu'",
+              "description": "Label for the menu, used as the nav's aria-label. Default: 'Main Menu'. Attribute: header-component-label.",
+              "fieldName": "headerComponentLabel"
             },
             {
-              "name": "heading-id-prefix",
+              "name": "copy-from-primary-nav",
               "type": {
-                "text": "string"
+                "text": "boolean"
               },
-              "default": "'md-'",
-              "description": "Put in front of each heading's id, and of the #hash in relative links. Default: 'md-'. Attribute: heading-id-prefix.",
-              "fieldName": "headingIdPrefix"
-            }
-          ],
-          "mixins": [
+              "description": "Copies the top-level items of the cork-primary-nav in the same cork-header, instead of reading the element's own links. Attribute: copy-from-primary-nav.",
+              "fieldName": "copyFromPrimaryNav"
+            },
             {
-              "name": "MainDomElementMixin",
-              "package": "@ucd-lib/cork-theme/utils/mixins"
+              "name": "primary-nav-max-items",
+              "type": {
+                "text": "number"
+              },
+              "description": "With copyFromPrimaryNav, the number of items to copy, from the start. Default: all. Attribute: primary-nav-max-items.",
+              "fieldName": "primaryNavMaxItems"
             }
           ],
           "superclass": {
@@ -721,7 +721,7 @@
             "package": "lit"
           },
           "customElement": true,
-          "tagName": "cork-markdown"
+          "tagName": "cork-nav-lite"
         }
       ],
       "exports": [
@@ -729,16 +729,16 @@
           "kind": "js",
           "name": "default",
           "declaration": {
-            "name": "CorkMarkdown",
-            "module": "package/elements/cork-markdown/cork-markdown.js"
+            "name": "CorkNavLite",
+            "module": "package/elements/cork-nav-lite/cork-nav-lite.js"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "cork-markdown",
+          "name": "cork-nav-lite",
           "declaration": {
-            "name": "CorkMarkdown",
-            "module": "package/elements/cork-markdown/cork-markdown.js"
+            "name": "CorkNavLite",
+            "module": "package/elements/cork-nav-lite/cork-nav-lite.js"
           }
         }
       ]
@@ -1443,6 +1443,118 @@
     },
     {
       "kind": "javascript-module",
+      "path": "package/elements/cork-search-tray/cork-search-tray.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Lays out the cork-header's search tray when it has more than just a search form. Add it as a child of the {@link cork-header } element.",
+          "name": "CorkSearchTray",
+          "slots": [
+            {
+              "description": "Search form. A child {@link cork-search-form} is assigned here automatically.",
+              "name": "form"
+            },
+            {
+              "description": "Common searches, shown below the form. A child {@link cork-search-common} is assigned here automatically.",
+              "name": "common"
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "focus",
+              "parameters": [
+                {
+                  "name": "opts",
+                  "description": "Focus options, passed on to the child's focus().",
+                  "type": {
+                    "text": "Object"
+                  }
+                }
+              ],
+              "description": "Focuses the form, or else the common searches. Called by cork-header when it opens the tray.\nThe children are slotted, so delegatesFocus on this element wouldn't reliably reach their controls."
+            },
+            {
+              "kind": "method",
+              "name": "onNavTrayHide",
+              "description": "Called by cork-header when its nav tray hides this element. Passes the call on to each child that has the method,\ne.g. so the form clears its input."
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tagName",
+                  "default": "'cork-search-tray'",
+                  "description": "Tag name to register. Default: 'cork-search-tray'",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Registers the element as a custom element."
+            },
+            {
+              "kind": "field",
+              "name": "headerComponentLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Search'",
+              "description": "Label for the tray, e.g. in the header's nav tray bar. Default: 'Search'. Attribute: header-component-label.",
+              "attribute": "header-component-label"
+            },
+            {
+              "kind": "field",
+              "name": "ctl",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ mutationObserver: new MutationObserverController(this, {childList: true}, this._onChildListMutation) }"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "header-component-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Search'",
+              "description": "Label for the tray, e.g. in the header's nav tray bar. Default: 'Search'. Attribute: header-component-label.",
+              "fieldName": "headerComponentLabel"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true,
+          "tagName": "cork-search-tray"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "CorkSearchTray",
+            "module": "package/elements/cork-search-tray/cork-search-tray.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "cork-search-tray",
+          "declaration": {
+            "name": "CorkSearchTray",
+            "module": "package/elements/cork-search-tray/cork-search-tray.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "package/elements/cork-search-form/cork-search-form.js",
       "declarations": [
         {
@@ -1747,118 +1859,6 @@
           "declaration": {
             "name": "CorkSearchForm",
             "module": "package/elements/cork-search-form/cork-search-form.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "package/elements/cork-search-tray/cork-search-tray.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Lays out the cork-header's search tray when it has more than just a search form. Add it as a child of the {@link cork-header } element.",
-          "name": "CorkSearchTray",
-          "slots": [
-            {
-              "description": "Search form. A child {@link cork-search-form} is assigned here automatically.",
-              "name": "form"
-            },
-            {
-              "description": "Common searches, shown below the form. A child {@link cork-search-common} is assigned here automatically.",
-              "name": "common"
-            }
-          ],
-          "members": [
-            {
-              "kind": "method",
-              "name": "focus",
-              "parameters": [
-                {
-                  "name": "opts",
-                  "description": "Focus options, passed on to the child's focus().",
-                  "type": {
-                    "text": "Object"
-                  }
-                }
-              ],
-              "description": "Focuses the form, or else the common searches. Called by cork-header when it opens the tray.\nThe children are slotted, so delegatesFocus on this element wouldn't reliably reach their controls."
-            },
-            {
-              "kind": "method",
-              "name": "onNavTrayHide",
-              "description": "Called by cork-header when its nav tray hides this element. Passes the call on to each child that has the method,\ne.g. so the form clears its input."
-            },
-            {
-              "kind": "method",
-              "name": "define",
-              "static": true,
-              "parameters": [
-                {
-                  "name": "tagName",
-                  "default": "'cork-search-tray'",
-                  "description": "Tag name to register. Default: 'cork-search-tray'",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "description": "Registers the element as a custom element."
-            },
-            {
-              "kind": "field",
-              "name": "headerComponentLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Search'",
-              "description": "Label for the tray, e.g. in the header's nav tray bar. Default: 'Search'. Attribute: header-component-label.",
-              "attribute": "header-component-label"
-            },
-            {
-              "kind": "field",
-              "name": "ctl",
-              "type": {
-                "text": "object"
-              },
-              "default": "{ mutationObserver: new MutationObserverController(this, {childList: true}, this._onChildListMutation) }"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "header-component-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Search'",
-              "description": "Label for the tray, e.g. in the header's nav tray bar. Default: 'Search'. Attribute: header-component-label.",
-              "fieldName": "headerComponentLabel"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "customElement": true,
-          "tagName": "cork-search-tray"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "CorkSearchTray",
-            "module": "package/elements/cork-search-tray/cork-search-tray.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "cork-search-tray",
-          "declaration": {
-            "name": "CorkSearchTray",
-            "module": "package/elements/cork-search-tray/cork-search-tray.js"
           }
         }
       ]

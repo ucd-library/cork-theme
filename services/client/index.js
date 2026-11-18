@@ -9,6 +9,9 @@ import config from './dev/lib/config.js';
 import logger from './dev/lib/logger.js';
 import { middleware as contextMiddleware } from './dev/lib/context.js';
 
+import iconsets from './icons.js';
+import { iconApiMiddleware } from '@ucd-lib/cork-icon'; 
+
 /**
  * @description Allows any origin to load the app's responses, so other apps can use the fonts and stylesheets it hosts.
  * @param {import('express').Request} req - The request
@@ -26,6 +29,7 @@ app.use(logReqMiddleware(logger));
 app.use(contextMiddleware);
 assetRoutes(app);
 docsRoutes(app);
+app.use('/icon', express.json(), iconApiMiddleware({iconsets}));
 staticRoutes(app);
 
 app.listen(config.app.containerPort, () => {

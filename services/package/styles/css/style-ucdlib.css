@@ -11507,3 +11507,7 @@ layout-columns:not(:defined) {
 .search-tray__common button:disabled {
   cursor: default;
 }
+
+.focal-link__icon {
+  --cork-icon-size: 2rem;
+}
