@@ -33,7 +33,18 @@ export function styles() {
   ];
 }
 
-export function render() { 
+export function render() {
+  return renderNav.call(this);
+}
+
+/**
+ * @description Renders the nav: the title and the drill-down. Shared with elements that extend cork-nav-sub, e.g. cork-nav-sub-popover.
+ * Call with the element as this.
+ * @param {Object} opts - Options
+ * @param {Boolean} opts.hideHeading - Leaves out the title. Default: false
+ * @returns {TemplateResult}
+ */
+export function renderNav(opts={}) {
   const navClasses = {
     'nav-sub': true,
     'nav-drill': true,
@@ -43,7 +54,7 @@ export function render() {
   const ariaLabel = this.navAriaLabel || this.ctl.heading.heading?.title || 'Submenu';
   return html`
     <nav class=${classMap(navClasses)} aria-label="${ariaLabel}">
-      ${this.ctl.heading.render({ typeClasses: { a: 'nav-sub__title-linked', button: 'nav-sub__title-linked', text: 'nav-sub__title' } })}
+      ${opts.hideHeading ? '' : this.ctl.heading.render({ typeClasses: { a: 'nav-sub__title-linked', button: 'nav-sub__title-linked', text: 'nav-sub__title' } })}
       ${this.ctl.nav.renderDrillDown()}
     </nav>
   `;

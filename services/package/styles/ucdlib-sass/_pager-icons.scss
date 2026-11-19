@@ -1,0 +1,18 @@
+//------------------------------------
+//  Pager icons
+//------------------------------------
+
+// Lines the prev/next arrows up with the text in every browser. Firefox drew them slightly high.
+// Campus's pager-icon mixin (sass/4_component/_pager.scss) centers the arrow and the text with align-items: center,
+// which compares the heights of their font boxes. Proxima Nova's font boxes differ by browser: its hhea and OS/2 typo
+// metrics disagree (ascent 1079 vs 790), and Chrome and Firefox don't pick the same set, so the text's center moves.
+// Aligning on the shared baseline doesn't depend on those metrics, and matches what Chrome shows with center.
+// Covers links and buttons (see _pager-buttons.scss).
+
+.pager__item--previous,
+.pager__item--next {
+  a,
+  button {
+    align-items: baseline;
+  }
+}

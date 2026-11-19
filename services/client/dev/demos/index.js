@@ -8,6 +8,8 @@ import * as corkHeader from './cork-header.js';
 import * as corkMarkdown from './cork-markdown.js';
 import * as corkNavLite from './cork-nav-lite.js';
 import * as corkNavSub from './cork-nav-sub.js';
+import * as corkPager from './cork-pager.js';
+import * as corkNavSubPopover from './cork-nav-sub-popover.js';
 import * as corkPages from './cork-pages.js';
 import * as corkPrimaryNav from './cork-primary-nav.js';
 import * as corkQuickLinks from './cork-quick-links.js';
@@ -21,6 +23,8 @@ export default {
   'cork-markdown': corkMarkdown,
   'cork-nav-lite': corkNavLite,
   'cork-nav-sub': corkNavSub,
+  'cork-pager': corkPager,
+  'cork-nav-sub-popover': corkNavSubPopover,
   'cork-pages': corkPages,
   'cork-primary-nav': corkPrimaryNav,
   'cork-quick-links': corkQuickLinks,

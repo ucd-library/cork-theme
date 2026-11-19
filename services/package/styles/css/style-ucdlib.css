@@ -11508,6 +11508,129 @@ layout-columns:not(:defined) {
   cursor: default;
 }
 
+.pager__item button {
+  appearance: none;
+  margin: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  padding: 0.25rem 0.5rem;
+  color: var(--forced-contrast, #4c4c4c);
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+}
+.pager__item button:not(:disabled):hover {
+  background: #ffbf00;
+  color: #022851;
+}
+.pager__item button:disabled {
+  color: var(--forced-contrast, #999);
+  cursor: default;
+}
+.pager__item--current button {
+  background: #13639e;
+  color: #fff;
+}
+.pager__item--current button:not(:disabled):hover {
+  background: #ffbf00;
+}
+.pager__item--previous button:before {
+  margin-right: 0.5rem;
+  content: "\f30a";
+  font-family: "Font Awesome 7 Free";
+  font-weight: 900;
+}
+.pager__item--next button:after {
+  margin-left: 0.5rem;
+  content: "\f30b";
+  font-family: "Font Awesome 7 Free";
+  font-weight: 900;
+}
+
+.pager__item--previous a,
+.pager__item--previous button,
+.pager__item--next a,
+.pager__item--next button {
+  align-items: baseline;
+}
+
 .focal-link__icon {
   --cork-icon-size: 2rem;
+}
+
+cork-markdown pre {
+  background-color: var(--black-10);
+  color: var(--black-90);
+  padding: 1rem;
+  margin: 0 0 1.5rem;
+  overflow: auto;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  tab-size: 2;
+}
+cork-markdown pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+cork-markdown :not(pre) > code {
+  background-color: var(--black-10);
+  color: var(--ucd-blue);
+  padding: 0.1em 0.3em;
+  font-size: 0.9em;
+}
+cork-markdown .token.comment,
+cork-markdown .token.prolog,
+cork-markdown .token.doctype,
+cork-markdown .token.cdata {
+  color: var(--black-70);
+  font-style: italic;
+}
+cork-markdown .token.punctuation,
+cork-markdown .token.operator {
+  color: var(--black-80);
+}
+cork-markdown .token.keyword,
+cork-markdown .token.atrule,
+cork-markdown .token.important {
+  color: var(--pinot);
+}
+cork-markdown .token.string,
+cork-markdown .token.char,
+cork-markdown .token.attr-value,
+cork-markdown .token.template-string {
+  color: var(--redwood);
+}
+cork-markdown .token.number,
+cork-markdown .token.boolean,
+cork-markdown .token.constant,
+cork-markdown .token.regex {
+  color: var(--double-decker);
+}
+cork-markdown .token.function,
+cork-markdown .token.class-name {
+  color: var(--wonder-blue);
+}
+cork-markdown .token.tag,
+cork-markdown .token.selector {
+  color: var(--ucd-blue);
+}
+cork-markdown .token.attr-name,
+cork-markdown .token.property {
+  color: var(--delta);
+}
+cork-markdown .token.variable {
+  color: var(--black-90);
+}
+cork-markdown .token.important,
+cork-markdown .token.bold {
+  font-weight: bold;
+}
+cork-markdown .token.italic {
+  font-style: italic;
 }

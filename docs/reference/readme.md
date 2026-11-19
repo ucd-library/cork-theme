@@ -12,6 +12,8 @@ or `docs jsdoc <name>` for one page.
 - [cork-markdown](elements/cork-markdown.md): Renders markdown as sanitized HTML in the light DOM (no shadow root), so it inherits styles.
 - [cork-nav-lite](elements/cork-nav-lite.md): A single-level main menu, shown inline in the cork-header bar.
 - [cork-nav-sub](elements/cork-nav-sub.md): A sub menu, rendered as a drill-down, with an optional title above it.
+- [cork-nav-sub-popover](elements/cork-nav-sub-popover.md): A sub menu in a popover: a full-width button that opens a tray with the title and drill-down of a [`CorkNavSub`](elements/cork-nav-sub.md).
+- [cork-pager](elements/cork-pager.md): A pager for navigating through pages of results: prev, a window of page numbers, and next.
 - [cork-pages](elements/cork-pages.md): Shows one of its children at a time, and hides the rest.
 - [cork-primary-nav](elements/cork-primary-nav.md): The site's main menu.
 - [cork-quick-links](elements/cork-quick-links.md): A quick links menu component: a short list of links/buttons outside of the main navigation.
@@ -28,5 +30,6 @@ or `docs jsdoc <name>` for one page.
   - [MutationObserverController](utils/controllers/MutationObserverController.md): Lit controller that attaches a MutationObserver to an element
   - [NavController](utils/controllers/NavController.md): Lit controller that parses menu markup in the host's light DOM into navItems, for the host element to render in its shadow DOM.
   - [PageWidthController](utils/controllers/PageWidthController.md): Sets the theme's page width CSS custom property (--page-width), and keeps it current as the window resizes.
+  - [PopoverController](utils/controllers/PopoverController.md): Lit controller that wires up a button and a popover, using the native Popover API.
 - [layout](utils/layout.md): `toGridRows`
 - [mixins](utils/mixins.md): `MainDomElementMixin`

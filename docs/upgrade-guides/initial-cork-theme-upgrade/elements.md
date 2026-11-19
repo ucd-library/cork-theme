@@ -32,6 +32,7 @@ Menu elements read their links with a new markup format: see [Nav Markup](nav-ma
 | `ucd-theme-quick-links` | `cork-quick-links`. See [Header](header.md#quick-links). |
 | `ucdlib-branding-bar` | `cork-branding-bar`. See [Header](header.md#branding-bar). |
 | `ucd-theme-subnav` | `cork-nav-sub`. See [cork-nav-sub](#cork-nav-sub). |
+| `ucd-theme-pagination` | `cork-pager`. See [cork-pager](#cork-pager). |
 | `ucdlib-pages` | `cork-pages`. See [cork-pages](#cork-pages). |
 | `ucdlib-md`, `ucdlib-md-content` | `cork-markdown`. See [cork-markdown](#cork-markdown). |
 
@@ -116,6 +117,82 @@ The title is the element's first direct child that is an `h1`-`h6`, or that has 
 - Escape closes the submenu that has focus (moving up a level), or all submenus if focus isn't in one.
 
 See the [reference](../../reference/elements/cork-nav-sub.md) for every property.
+
+### cork-nav-sub-popover
+
+New, with no old equivalent. It's `cork-nav-sub` in campus's popover: a full-width button that opens a tray with the title and menu. It takes the same light DOM as `cork-nav-sub`, and its menu always uses auto height.
+
+```html
+<cork-nav-sub-popover button-label="In this section">
+  <h2><a href="/services">Services</a></h2>
+  <ul>…</ul>
+</cork-nav-sub-popover>
+```
+
+- The button says "Submenu", or `button-label`. With `heading-label`, it uses the title's text instead.
+- `hide-heading` leaves the title out of the tray.
+- The tray closes when the user clicks outside it or presses Escape, and, in apps using cork-app-state, when the location changes (`no-app-state-close` turns that off). Other SPAs can call `hide()` from their router.
+
+See the [reference](../../reference/elements/cork-nav-sub-popover.md) for every property.
+
+## cork-pager
+
+`ucd-theme-pagination` is replaced by `cork-pager`. It still builds its links from a base path, or leaves them to the app, but it can also take a page query parameter or a link function, shows ellipses by default, and switches to a mini view on its own when it's narrow.
+
+### Steps
+
+1. Find the old element:
+
+   ```
+   grep -rn "ucd-theme-pagination" src
+   ```
+
+2. Change the import:
+
+   ```js
+   // Before
+   import '@ucd-lib/theme-elements/brand/ucd-theme-pagination/ucd-theme-pagination.js';
+
+   // After
+   import '@ucd-lib/cork-theme/elements/cork-pager';
+   ```
+
+3. Rename the tag, and change `max-pages` to `max-page`:
+
+   ```html
+   <!-- Before -->
+   <ucd-theme-pagination current-page="2" max-pages="33" base-path="/foo/bar/"></ucd-theme-pagination>
+
+   <!-- After -->
+   <cork-pager current-page="2" max-page="33" base-path="/foo/bar/"></cork-pager>
+   ```
+
+4. Change the remaining attributes and events, as in the table below. Remove `darkmode`, `size` and `disable-label`.
+5. If you listen for `page-change`, listen for `cork-pager-item-click` instead.
+6. If you query the element in code or style it in CSS, change the tag name there too.
+
+### Attributes, properties and events
+
+| Old | New |
+| --- | --- |
+| `current-page` | Unchanged, but no longer reflected back to the attribute. |
+| `max-pages` | `max-page` (`maxPage`). |
+| `base-path`, `query-params`, `use-hash` | Unchanged. A `base-path` without a trailing slash now gets one (`/search` makes `/search/2`, not `/search2`), and a leading `?` on `query-params` is dropped. |
+| (new) `page-param` | Puts the page in a query parameter instead of the path: `base-path="/search" page-param="page"` makes `/search?page=2`. |
+| (new) `linkFunction`, or a `<script type="text/link-function">` child | Makes each page's link yourself, e.g. `` pager.linkFunction = page => `/search?page=${page}` ``. The script tag needs a CSP that allows `unsafe-eval`. |
+| `visible-link-count` | Unchanged, default 7. It now sets the number of page numbers in the ellipses layout too, counting the first and last pages. |
+| `ellipses` | Ellipses are now on by default, at any page count. `no-ellipses` turns them off. Ellipses still link to the next hidden page; `static-ellipses` makes them plain text. A gap of one page shows that page instead. |
+| `xs-screen` | The mini view ("Page X of Y") now turns on by itself when the pager is under 768px wide (its own width, not the window's). `no-mini` turns that off, `only-mini` always shows it, and `no-max-on-mini` leaves out "of Y". |
+| `darkmode` | Removed. The pager's colors use campus's `--forced-contrast` custom property, which campus styles set on dark backgrounds, such as sections with `layout-section--force-contrast`. Put the pager inside one instead. |
+| `size`, `disable-label` | Removed. Neither had an effect. |
+| `page-change` event, with `detail.page`. Fired only when the pager had no links. | `cork-pager-item-click`, fired for every link and button click, with `detail.page`, `detail.item` and `detail.originalEvent`. It bubbles and is composed. Link clicks with a modifier key (e.g. cmd-click for a new tab) don't fire it. The pager still doesn't change `current-page` itself: set it in response. |
+| (new) `nav-aria-label` | Label for the pager's `nav`. Default: `Pagination`. |
+
+### Without links
+
+With no link options set, page items were `<a>` elements with no `href`. They're now `<button>` elements, styled like the links, so they're reachable by keyboard without a `tabindex`. The button styles are in `@ucd-lib/cork-theme/styles/js/ucdlib-sass/_pager-buttons.css.js` and `style-ucdlib.css`, for use outside the element.
+
+See the [reference](../../reference/elements/cork-pager.md) for every property.
 
 ## cork-pages
 

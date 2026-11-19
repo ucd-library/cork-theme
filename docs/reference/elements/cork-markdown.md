@@ -70,8 +70,8 @@ html`<cork-markdown .markdown=${this.doc} .markedOptions=${markedOptions}></cork
 
 ```js
 // npm install marked-highlight prismjs
-// Neither is a dependency of this package. Prism's CSS (a theme, or your own .token rules) goes in the page's styles,
-// since cork-markdown renders into the light DOM.
+// Neither is a dependency of this package. Code block and Prism token styles for cork-markdown are in style-ucdlib.css
+// (and @ucd-lib/cork-theme/styles/js/ucdlib-sass/_code-highlight.css.js), since cork-markdown renders into the light DOM.
 import { markedHighlight } from 'marked-highlight';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-js-templates.js'; // import your languages.

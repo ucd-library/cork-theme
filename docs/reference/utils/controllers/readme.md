@@ -7,7 +7,7 @@ Lit reactive controllers for theme elements and your own components.
 Controllers can manage state and behavior related to specific functionality, making it reusable across multiple components.
 
 ```js
-import { AppStateController, HeadingController, MutationObserverController, NavController, PageWidthController } from '@ucd-lib/cork-theme/utils/controllers';
+import { AppStateController, HeadingController, MutationObserverController, NavController, PageWidthController, PopoverController } from '@ucd-lib/cork-theme/utils/controllers';
 ```
 
 - [AppStateController](AppStateController.md): Lit controller that calls back on @ucd-lib/cork-app-state's app-state-update event, if it exists.
@@ -15,3 +15,4 @@ import { AppStateController, HeadingController, MutationObserverController, NavC
 - [MutationObserverController](MutationObserverController.md): Lit controller that attaches a MutationObserver to an element
 - [NavController](NavController.md): Lit controller that parses menu markup in the host's light DOM into navItems, for the host element to render in its shadow DOM.
 - [PageWidthController](PageWidthController.md): Sets the theme's page width CSS custom property (--page-width), and keeps it current as the window resizes.
+- [PopoverController](PopoverController.md): Lit controller that wires up a button and a popover, using the native Popover API.

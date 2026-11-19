@@ -1,0 +1,93 @@
+//------------------------------------
+//  Code highlighting
+//------------------------------------
+
+// Code blocks and Prism token colors for markdown rendered by cork-markdown, e.g. with marked-highlight (see the cork-markdown docs).
+// Brand colors only. Each token color has at least 4.5:1 contrast on the block background (--black-10).
+
+cork-markdown {
+  pre {
+    background-color: var(--black-10);
+    color: var(--black-90);
+    padding: 1rem;
+    margin: 0 0 1.5rem;
+    overflow: auto;
+    font-size: .875rem;
+    line-height: 1.5;
+    tab-size: 2;
+  }
+
+  pre code {
+    background: none;
+    padding: 0;
+    font-size: inherit;
+  }
+
+  :not(pre) > code {
+    background-color: var(--black-10);
+    color: var(--ucd-blue);
+    padding: .1em .3em;
+    font-size: .9em;
+  }
+
+  .token.comment,
+  .token.prolog,
+  .token.doctype,
+  .token.cdata {
+    color: var(--black-70);
+    font-style: italic;
+  }
+
+  .token.punctuation,
+  .token.operator {
+    color: var(--black-80);
+  }
+
+  .token.keyword,
+  .token.atrule,
+  .token.important {
+    color: var(--pinot);
+  }
+
+  .token.string,
+  .token.char,
+  .token.attr-value,
+  .token.template-string {
+    color: var(--redwood);
+  }
+
+  .token.number,
+  .token.boolean,
+  .token.constant,
+  .token.regex {
+    color: var(--double-decker);
+  }
+
+  .token.function,
+  .token.class-name {
+    color: var(--wonder-blue);
+  }
+
+  .token.tag,
+  .token.selector {
+    color: var(--ucd-blue);
+  }
+
+  .token.attr-name,
+  .token.property {
+    color: var(--delta);
+  }
+
+  .token.variable {
+    color: var(--black-90);
+  }
+
+  .token.important,
+  .token.bold {
+    font-weight: bold;
+  }
+
+  .token.italic {
+    font-style: italic;
+  }
+}

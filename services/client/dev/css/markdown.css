@@ -1,0 +1,17 @@
+/*
+  Docs site link styles for markdown rendered by cork-markdown.
+  Code blocks and highlighting come from the package stylesheet (ucdlib-sass/_code-highlight.scss).
+*/
+
+cork-markdown a {
+  font-weight: 700;
+  text-decoration: none;
+}
+
+cork-markdown a:hover {
+  text-decoration: none;
+}
+
+cork-markdown a:hover code {
+  color: var(--forced-contrast, #00b2e3) !important;
+}

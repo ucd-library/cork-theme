@@ -9,11 +9,13 @@ import HeadingController from './HeadingController.js';
 import MutationObserverController from './MutationObserverController.js'
 import NavController from './NavController.js';
 import PageWidthController from './PageWidthController.js';
+import PopoverController from './PopoverController.js';
 
 export {
   AppStateController,
   HeadingController,
   MutationObserverController,
   NavController,
-  PageWidthController
+  PageWidthController,
+  PopoverController
 }

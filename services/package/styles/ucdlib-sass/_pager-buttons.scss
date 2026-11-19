@@ -1,0 +1,66 @@
+//------------------------------------
+//  Pager buttons
+//------------------------------------
+
+// Styles buttons in .pager__item exactly like its links, e.g. for cork-pager items without a link.
+// Mirrors every `a` rule in campus's sass/4_component/_pager.scss: keep in step with it when syncing upstream styles.
+// Disabled buttons, e.g. prev on the first page, are grayed out and have no hover background (links have no disabled state to copy).
+
+@use "../sass/0_tools" as *;
+
+.pager__item {
+  button {
+    // Reset browser button defaults, so the button starts out like an inline link
+    appearance: none;
+    margin: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    cursor: pointer;
+
+    // Same as campus's `a`
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: $spacer--large;
+    padding: $spacer--tiny $spacer--small;
+    color: var(--forced-contrast, #{$gray});
+    text-decoration: none;
+    transition: all .2s ease-in-out;
+
+    &:not(:disabled):hover {
+      background: $brand--secondary;
+      color: $brand--primary;
+    }
+
+    &:disabled {
+      color: var(--forced-contrast, #{$gray-light});
+      cursor: default;
+    }
+  }
+
+  // Same as campus's pager--current mixin
+  &--current button {
+    background: $brand--primary-80;
+    color: $white;
+
+    &:not(:disabled):hover {
+      background: $brand--secondary;
+    }
+  }
+
+  // Same as campus's pager-icon mixin
+  &--previous button:before {
+    margin-right: $spacer--small;
+    content: "\f30a";
+    font-family: $font-family--icons;
+    font-weight: $font-weight--icons;
+  }
+
+  &--next button:after {
+    margin-left: $spacer--small;
+    content: "\f30b";
+    font-family: $font-family--icons;
+    font-weight: $font-weight--icons;
+  }
+}

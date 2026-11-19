@@ -96,6 +96,29 @@ this.ctl = { heading: new HeadingController(this) };
 - Clicks work as for `NavController` items: a `cork-heading-click` event (with `detail.heading` and `detail.originalEvent`), then, for buttons, the click is passed through to the light DOM button.
 - When the heading changes (including the first parse on connection, if there is one), `cork-heading-update` fires, with `detail.heading` (null if it was removed). Light DOM changes that leave the heading as it was, such as menu edits in `cork-nav-sub`, don't fire it or re-render the host.
 
+## PopoverController
+
+New. It wires up a button and a popover in an element's shadow DOM with the native [Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API), in place of campus's popover script, which can't see into shadow roots. `cork-nav-sub-popover` uses it for its tray.
+
+```js
+import { PopoverController } from '@ucd-lib/cork-theme/utils/controllers';
+import { ref } from 'lit/directives/ref.js';
+
+this.ctl = { popover: new PopoverController(this) };
+
+// in the template
+html`
+  <button ${ref(this.ctl.popover.buttonRef)}>Filters</button>
+  <div ${ref(this.ctl.popover.popoverRef)}>…</div>
+`;
+```
+
+- It adds the `popover` attribute (the `type` option, default `auto`), unless the template sets it, and links the button to the popover with `popoverTargetElement`, so no ids are needed.
+- When the popover opens, focus moves to its first focusable element. Turn this off with `focusOnOpen: false`.
+- `show()`, `hide()`, `toggle()` and `isOpen` open, close and check it from code.
+- `cork-popover-toggle` fires from the element when it opens or closes, with `detail.open`. The native `toggle` event doesn't leave the shadow root.
+- The browser does the rest: light dismiss (clicking outside or pressing Escape), returning focus to the button, and the button's ARIA state. If something in the popover cancels an Escape keydown, as `NavController` does when it closes a submenu, the popover stays open.
+
 ## PageWidthController
 
 Sets `--page-width` (the page width minus any scrollbar), which the theme's `--full-width` and layout classes such as `l-full-width` are derived from.

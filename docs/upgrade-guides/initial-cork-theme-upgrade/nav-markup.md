@@ -1,6 +1,6 @@
 # Nav Markup
 
-Elements that show a menu, such as `cork-primary-nav`, `cork-nav-lite`, `cork-quick-links` and `cork-nav-sub`, read their links from their light DOM children with `NavController` (see [Controllers](controllers.md#navcontroller)). The markup they accept differs from the old `@ucd-lib/theme-elements` elements, which used the `NavElement` mixin or their own parsing.
+Elements that show a menu, such as `cork-primary-nav`, `cork-nav-lite`, `cork-quick-links`, `cork-nav-sub` and `cork-nav-sub-popover`, read their links from their light DOM children with `NavController` (see [Controllers](controllers.md#navcontroller)). The markup they accept differs from the old `@ucd-lib/theme-elements` elements, which used the `NavElement` mixin or their own parsing.
 
 ## What changed
 

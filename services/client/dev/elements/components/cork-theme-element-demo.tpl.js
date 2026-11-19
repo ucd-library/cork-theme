@@ -49,7 +49,7 @@ export function styles() {
     }
   `;
 
-  // highlight-ts token colors, matching the Prism colors in css/code-highlight.css
+  // highlight-ts token colors, matching the Prism colors in the package's ucdlib-sass/_code-highlight.scss
   const snippetStyles = css`
     pre {
       color: var(--black-90);
