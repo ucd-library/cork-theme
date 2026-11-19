@@ -1,10 +1,12 @@
 import './prism-manual.js';
 import Prism from 'prismjs';
+import { markedHighlight } from 'marked-highlight';
 import 'prismjs/components/prism-markup.js';
 import 'prismjs/components/prism-css.js';
 import 'prismjs/components/prism-javascript.js';
 import 'prismjs/components/prism-scss.js';
 import 'prismjs/components/prism-docker.js';
+import 'prismjs/components/prism-bash.js';
 // highlights html and css inside Lit's html`` and css`` templates
 import 'prismjs/components/prism-js-templates.js';
 
@@ -19,5 +21,12 @@ export function highlight(code, lang) {
   if ( !grammar ) return code;
   return Prism.highlight(code, grammar, lang);
 }
+
+/**
+ * @description marked extension that highlights fenced code blocks with Prism, adding a language-* class to the code element.
+ * Pass it to a cork-markdown element's markedOptions. It's one shared object, so the element isn't re-parsed on every render.
+ * @type {Object}
+ */
+export const highlightExtension = markedHighlight({ langPrefix: 'language-', highlight });
 
 export default Prism;

@@ -1,6 +1,37 @@
 import { html, css } from 'lit';
 
 import { toGridRows } from '@ucd-lib/cork-theme/utils/layout';
+import '@ucd-lib/cork-theme/elements/cork-markdown';
+
+import { highlightExtension } from '../../lib/prism.js';
+
+// Get Started instructions. The hosted URLs are placeholders until the hosted build exists.
+const GET_STARTED = [
+  'Install the package, for apps with a build step:',
+  '```bash',
+  'npm install @ucd-lib/cork-theme',
+  '```',
+  '```js',
+  "import '@ucd-lib/cork-theme/elements/cork-header';",
+  '```',
+  'Or add it straight to a page:',
+  '```html',
+  '<!-- TODO: Replace with actual hosted URLs -->',
+  '<link rel="stylesheet" href="https://cork-theme.library.ucdavis.edu/css/style-ucdlib.css">',
+  '<script type="module" src="https://cork-theme.library.ucdavis.edu/js/cork-theme.js"></script>',
+  '```',
+  'Then just add the markup:',
+  '```html',
+  '<cork-header>',
+  '  <cork-primary-nav>',
+  '    <ul>',
+  '      <li><a href="/">Home</a></li>',
+  '      <li><a href="/about">About</a></li>',
+  '    </ul>',
+  '  </cork-primary-nav>',
+  '</cork-header>',
+  '```'
+].join('\n');
 
 export function styles() {
   const elementStyles = css`
@@ -104,9 +135,7 @@ export function render() {
         </div>
         <div class="l-second">
           <h2 class="heading--weighted-underline"><span class='heading--weighted--weighted'>Get Started</span></h2>
-          <p>To get started, install the package and add the stylesheet and script to your page. Then you can drop in any of the components, or use the utilities in your own components.</p>
-          <pre><code>npm install @ucd-lib/cork-theme</code></pre>
-
+          <cork-markdown .markdown=${GET_STARTED} .markedOptions=${highlightExtension}></cork-markdown>
           <a href="#" class="btn btn--primary btn--round">More Information</a>
         </div>
       </div>

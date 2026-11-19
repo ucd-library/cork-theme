@@ -1,9 +1,8 @@
 import { html } from 'lit';
 import { Lexer } from 'marked';
-import { markedHighlight } from 'marked-highlight';
 import { Registry } from '@ucd-lib/cork-app-utils';
 import AppComponentController from './AppComponentController.js';
-import { highlight } from '../lib/prism.js';
+import { highlightExtension } from '../lib/prism.js';
 
 import '@ucd-lib/cork-theme/elements/cork-markdown';
 
@@ -21,9 +20,6 @@ const DOC_ROUTES = [
 
 // cache key for _markedOptions when no options are given
 const NO_MARKED_OPTIONS = {};
-
-// marked extension that highlights fenced code blocks with Prism, adding a language-* class to the code element
-const HIGHLIGHT = markedHighlight({ langPrefix: 'language-', highlight });
 
 /**
  * @description Controller that loads a markdown document from the DocModel for its host, and reloads it on app state updates while the host is on the active page.
@@ -186,7 +182,7 @@ export default class MarkdownController {
     const key = markedOptions || NO_MARKED_OPTIONS;
     if ( !this._markedOptionsCache.has(key) ) {
       const options = [
-        HIGHLIGHT,
+        highlightExtension,
         { walkTokens: this._rewriteLink },
         ...[].concat(markedOptions || [])
       ];
