@@ -119,6 +119,29 @@ html`
 - `cork-popover-toggle` fires from the element when it opens or closes, with `detail.open`. The native `toggle` event doesn't leave the shadow root.
 - The browser does the rest: light dismiss (clicking outside or pressing Escape), returning focus to the button, and the button's ARIA state. If something in the popover cancels an Escape keydown, as `NavController` does when it closes a submenu, the popover stays open.
 
+## ScriptPropsController
+
+New. It sets an element's properties from a JSON script tag in its light DOM, so a server-rendered page can give the element its starting state without page JavaScript.
+
+```js
+import { ScriptPropsController } from '@ucd-lib/cork-theme/utils/controllers';
+
+this.ctl = { scriptProps: new ScriptPropsController(this) };
+```
+
+```html
+<my-results>
+  <script type="application/json">
+    { "query": "cats", "page": 2, "filters": { "format": "book" } }
+  </script>
+</my-results>
+```
+
+- It reads the first direct child `script[type="application/json"]`, or the tag matched by the `selector` option, when the element connects (before its first render) and whenever the script's text changes.
+- Only the element's declared reactive properties are set, leaving out `state: true` ones. Other keys are skipped with a console warning. Values are assigned as they are, so objects and arrays work, and so do `attribute: false` properties.
+- Last write wins: the script overrides defaults and attributes when the element connects, and later attribute or property changes override the script. Removing a key from the JSON doesn't change its property back.
+- `setProps(obj)` applies an object with the same checks.
+
 ## PageWidthController
 
 Sets `--page-width` (the page width minus any scrollbar), which the theme's `--full-width` and layout classes such as `l-full-width` are derived from.

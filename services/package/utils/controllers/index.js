@@ -10,6 +10,7 @@ import MutationObserverController from './MutationObserverController.js'
 import NavController from './NavController.js';
 import PageWidthController from './PageWidthController.js';
 import PopoverController from './PopoverController.js';
+import ScriptPropsController from './ScriptPropsController.js';
 
 export {
   AppStateController,
@@ -17,5 +18,6 @@ export {
   MutationObserverController,
   NavController,
   PageWidthController,
-  PopoverController
+  PopoverController,
+  ScriptPropsController
 }

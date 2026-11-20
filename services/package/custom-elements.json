@@ -153,6 +153,137 @@
     },
     {
       "kind": "javascript-module",
+      "path": "package/elements/cork-nav-lite/cork-nav-lite.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A single-level main menu, shown inline in the cork-header bar. For sites with only a few top-level links. Add it as a child of the {@link cork-header } element.\n\nThe header shows it on larger screens, in place of the menu tray toggle.\nSmaller screens use the menu tray, so the site still also needs a cork-primary-nav.\n\nThe links can be written in the element, or copied from the header's cork-primary-nav with copyFromPrimaryNav, so they're only written once.\nOnly top-level items are shown: sub menus and fields are ignored.",
+          "name": "CorkNavLite",
+          "slots": [
+            {
+              "description": "Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM by {@link NavController}. See its examples for the markup formats. Ignored with copyFromPrimaryNav.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tagName",
+                  "default": "'cork-nav-lite'",
+                  "description": "Tag name to register. Default: 'cork-nav-lite'",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Registers the element as a custom element."
+            },
+            {
+              "kind": "field",
+              "name": "headerComponentLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Main Menu'",
+              "description": "Label for the menu, used as the nav's aria-label. Default: 'Main Menu'. Attribute: header-component-label.",
+              "attribute": "header-component-label"
+            },
+            {
+              "kind": "field",
+              "name": "ctl",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ nav: new NavController(this, { noParseHostProperty: 'copyFromPrimaryNav' }) }"
+            },
+            {
+              "kind": "field",
+              "name": "copyFromPrimaryNav",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Copies the top-level items of the cork-primary-nav in the same cork-header, instead of reading the element's own links. Attribute: copy-from-primary-nav.",
+              "attribute": "copy-from-primary-nav"
+            },
+            {
+              "kind": "field",
+              "name": "primaryNavMaxItems",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "description": "With copyFromPrimaryNav, the number of items to copy, from the start. Default: all. Attribute: primary-nav-max-items.",
+              "attribute": "primary-nav-max-items"
+            }
+          ],
+          "events": [
+            {
+              "description": "Fired when a rendered link or button is clicked, with the clicked item in detail.navItem. See {@link NavController}.",
+              "name": "cork-nav-item-click"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "header-component-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Main Menu'",
+              "description": "Label for the menu, used as the nav's aria-label. Default: 'Main Menu'. Attribute: header-component-label.",
+              "fieldName": "headerComponentLabel"
+            },
+            {
+              "name": "copy-from-primary-nav",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Copies the top-level items of the cork-primary-nav in the same cork-header, instead of reading the element's own links. Attribute: copy-from-primary-nav.",
+              "fieldName": "copyFromPrimaryNav"
+            },
+            {
+              "name": "primary-nav-max-items",
+              "type": {
+                "text": "number"
+              },
+              "description": "With copyFromPrimaryNav, the number of items to copy, from the start. Default: all. Attribute: primary-nav-max-items.",
+              "fieldName": "primaryNavMaxItems"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true,
+          "tagName": "cork-nav-lite"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "CorkNavLite",
+            "module": "package/elements/cork-nav-lite/cork-nav-lite.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "cork-nav-lite",
+          "declaration": {
+            "name": "CorkNavLite",
+            "module": "package/elements/cork-nav-lite/cork-nav-lite.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "package/elements/cork-markdown/cork-markdown.js",
       "declarations": [
         {
@@ -614,137 +745,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "package/elements/cork-nav-lite/cork-nav-lite.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "A single-level main menu, shown inline in the cork-header bar. For sites with only a few top-level links. Add it as a child of the {@link cork-header } element.\n\nThe header shows it on larger screens, in place of the menu tray toggle.\nSmaller screens use the menu tray, so the site still also needs a cork-primary-nav.\n\nThe links can be written in the element, or copied from the header's cork-primary-nav with copyFromPrimaryNav, so they're only written once.\nOnly top-level items are shown: sub menus and fields are ignored.",
-          "name": "CorkNavLite",
-          "slots": [
-            {
-              "description": "Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM by {@link NavController}. See its examples for the markup formats. Ignored with copyFromPrimaryNav.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "method",
-              "name": "define",
-              "static": true,
-              "parameters": [
-                {
-                  "name": "tagName",
-                  "default": "'cork-nav-lite'",
-                  "description": "Tag name to register. Default: 'cork-nav-lite'",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "description": "Registers the element as a custom element."
-            },
-            {
-              "kind": "field",
-              "name": "headerComponentLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Main Menu'",
-              "description": "Label for the menu, used as the nav's aria-label. Default: 'Main Menu'. Attribute: header-component-label.",
-              "attribute": "header-component-label"
-            },
-            {
-              "kind": "field",
-              "name": "ctl",
-              "type": {
-                "text": "object"
-              },
-              "default": "{ nav: new NavController(this, { noParseHostProperty: 'copyFromPrimaryNav' }) }"
-            },
-            {
-              "kind": "field",
-              "name": "copyFromPrimaryNav",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Copies the top-level items of the cork-primary-nav in the same cork-header, instead of reading the element's own links. Attribute: copy-from-primary-nav.",
-              "attribute": "copy-from-primary-nav"
-            },
-            {
-              "kind": "field",
-              "name": "primaryNavMaxItems",
-              "privacy": "public",
-              "type": {
-                "text": "number"
-              },
-              "description": "With copyFromPrimaryNav, the number of items to copy, from the start. Default: all. Attribute: primary-nav-max-items.",
-              "attribute": "primary-nav-max-items"
-            }
-          ],
-          "events": [
-            {
-              "description": "Fired when a rendered link or button is clicked, with the clicked item in detail.navItem. See {@link NavController}.",
-              "name": "cork-nav-item-click"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "header-component-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Main Menu'",
-              "description": "Label for the menu, used as the nav's aria-label. Default: 'Main Menu'. Attribute: header-component-label.",
-              "fieldName": "headerComponentLabel"
-            },
-            {
-              "name": "copy-from-primary-nav",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Copies the top-level items of the cork-primary-nav in the same cork-header, instead of reading the element's own links. Attribute: copy-from-primary-nav.",
-              "fieldName": "copyFromPrimaryNav"
-            },
-            {
-              "name": "primary-nav-max-items",
-              "type": {
-                "text": "number"
-              },
-              "description": "With copyFromPrimaryNav, the number of items to copy, from the start. Default: all. Attribute: primary-nav-max-items.",
-              "fieldName": "primaryNavMaxItems"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "customElement": true,
-          "tagName": "cork-nav-lite"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "CorkNavLite",
-            "module": "package/elements/cork-nav-lite/cork-nav-lite.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "cork-nav-lite",
-          "declaration": {
-            "name": "CorkNavLite",
-            "module": "package/elements/cork-nav-lite/cork-nav-lite.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "package/elements/cork-nav-sub/cork-nav-sub.js",
       "declarations": [
         {
@@ -884,19 +884,52 @@
     },
     {
       "kind": "javascript-module",
-      "path": "package/elements/cork-nav-tabs/cork-nav-tabs.js",
+      "path": "package/elements/cork-nav-sub-popover/cork-nav-sub-popover.js",
       "declarations": [
         {
           "kind": "class",
-          "description": "A row of navigation tabs, for moving between related pages or views, e.g. the sections of a record.\nThe tab bar only: content below it is up to the page.\nOnly top-level items are shown: sub menus and fields are ignored.\nThe tab bar keeps its own light background on dark and category brand sections, as campus's does.",
-          "name": "CorkNavTabs",
+          "description": "A sub menu in a popover: a full-width button that opens a tray with the title and drill-down of a {@link CorkNavSub }.\nTakes the same light DOM as cork-nav-sub. The drill-down always uses auto height.\n\nThe browser closes the tray when the user clicks outside it or presses Escape (after any open submenus are closed), and returns focus to the button.\nIn a SPA using",
+          "name": "CorkNavSubPopover",
           "slots": [
             {
-              "description": "Tabs: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM by {@link NavController}. See its examples for the markup formats. Mark the current tab with data-active, on its li or its link/button: it's highlighted, and gets aria-current ('page' on links, 'true' on buttons). Move data-active to change tabs, e.g. on a route change.",
-              "name": ""
+              "description": "Title and menu, as in cork-nav-sub. Not an actual slot, but rather parsed and rendered into the shadow DOM by controllers. The title is an h1-h6, or a div/span with the data-heading attribute (optionally a level, e.g. data-heading=\"h2\", for that level's look), optionally wrapping a link or button. See {@link HeadingController}. The menu is a ul/ol of li elements, nested for sub menus. See {@link NavController} for the markup formats.",
+              "name": "",
+              "inheritedFrom": {
+                "name": "CorkNavSub",
+                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
+              }
             }
           ],
           "members": [
+            {
+              "kind": "field",
+              "name": "isOpen",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "readonly": true,
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the tray is open. Read only."
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "description": "Opens the tray."
+            },
+            {
+              "kind": "method",
+              "name": "hide",
+              "description": "Closes the tray. Call it from an SPA's router on navigation, unless the app uses cork-app-state."
+            },
+            {
+              "kind": "method",
+              "name": "toggle",
+              "description": "Opens the tray if it's closed, or closes it if it's open."
+            },
             {
               "kind": "method",
               "name": "define",
@@ -904,14 +937,87 @@
               "parameters": [
                 {
                   "name": "tagName",
-                  "default": "'cork-nav-tabs'",
-                  "description": "Tag name to register. Default: 'cork-nav-tabs'",
+                  "default": "'cork-nav-sub-popover'",
+                  "description": "Tag name to register. Default: 'cork-nav-sub-popover'",
                   "type": {
                     "text": "string"
                   }
                 }
               ],
+              "inheritedFrom": {
+                "name": "CorkNavSub",
+                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
+              },
               "description": "Registers the element as a custom element."
+            },
+            {
+              "kind": "field",
+              "name": "autoHeight",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "description": "On wide screens, makes the drill-down as tall as its first menu level, following changes to that menu's size. On narrow screens its height is auto. Attribute: auto-height.",
+              "attribute": "auto-height",
+              "inheritedFrom": {
+                "name": "CorkNavSub",
+                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "buttonLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Submenu'",
+              "description": "The button's text. Default: 'Submenu'. Attribute: button-label.",
+              "attribute": "button-label"
+            },
+            {
+              "kind": "field",
+              "name": "headingLabel",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Uses the title's text as the button's text, if there is a title. Attribute: heading-label.",
+              "attribute": "heading-label"
+            },
+            {
+              "kind": "field",
+              "name": "hideHeading",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Leaves the title out of the tray. Attribute: hide-heading.",
+              "attribute": "hide-heading"
+            },
+            {
+              "kind": "field",
+              "name": "noAppStateClose",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Stops the tray from closing on cork-app-state location changes. Attribute: no-app-state-close.",
+              "attribute": "no-app-state-close"
+            },
+            {
+              "kind": "field",
+              "name": "popover",
+              "default": "new PopoverController(this)"
+            },
+            {
+              "kind": "field",
+              "name": "appState",
+              "default": "new AppStateController(this, { shouldInit: () => !this.noAppStateClose })"
             },
             {
               "kind": "field",
@@ -920,20 +1026,28 @@
               "type": {
                 "text": "string"
               },
-              "default": "'Tabs'",
-              "description": "Label for the nav. Default: 'Tabs'. Attribute: nav-aria-label.",
-              "attribute": "nav-aria-label"
+              "default": "''",
+              "description": "Label for the nav. Default: the title's text, or 'Submenu' if there's no title. Attribute: nav-aria-label.",
+              "attribute": "nav-aria-label",
+              "inheritedFrom": {
+                "name": "CorkNavSub",
+                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
+              }
             },
             {
               "kind": "field",
-              "name": "secondary",
+              "name": "focusedNavItem",
               "privacy": "public",
               "type": {
-                "text": "boolean"
+                "text": "number[]"
               },
-              "default": "false",
-              "description": "Uses campus's secondary style: a transparent bar with a bottom border and smaller text. Attribute: secondary.",
-              "attribute": "secondary"
+              "default": "[]",
+              "description": "navPosition of the focused item, e.g. [1, 0]. Attribute: focused-nav-item, comma-separated (e.g. \"1,0\").",
+              "attribute": "focused-nav-item",
+              "inheritedFrom": {
+                "name": "CorkNavSub",
+                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
+              }
             },
             {
               "kind": "field",
@@ -941,41 +1055,118 @@
               "type": {
                 "text": "object"
               },
-              "default": "{ nav: new NavController(this) }"
+              "default": "{ nav: new NavController(this, { closeSubmenusOnEscape: true, setChildHeight: true, autoHeightHostProperty: 'autoHeight' }), heading: new HeadingController(this) }",
+              "inheritedFrom": {
+                "name": "CorkNavSub",
+                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
+              }
             }
           ],
           "events": [
             {
-              "description": "Fired when a rendered link or button is clicked, with the clicked item in detail.navItem. See {@link NavController}.",
-              "name": "cork-nav-item-click"
+              "description": "Fired when the tray opens or closes, with detail.open. See {@link PopoverController}.",
+              "name": "cork-popover-toggle"
+            },
+            {
+              "description": "Fired when a rendered menu link or button is clicked, with the clicked item in detail.navItem. See {@link NavController}.",
+              "name": "cork-nav-item-click",
+              "inheritedFrom": {
+                "name": "CorkNavSub",
+                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
+              }
+            },
+            {
+              "description": "Fired when a linked title is clicked, with the title in detail.heading. See {@link HeadingController}.",
+              "name": "cork-heading-click",
+              "inheritedFrom": {
+                "name": "CorkNavSub",
+                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
+              }
             }
           ],
           "attributes": [
+            {
+              "name": "button-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Submenu'",
+              "description": "The button's text. Default: 'Submenu'. Attribute: button-label.",
+              "fieldName": "buttonLabel"
+            },
+            {
+              "name": "heading-label",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Uses the title's text as the button's text, if there is a title. Attribute: heading-label.",
+              "fieldName": "headingLabel"
+            },
+            {
+              "name": "hide-heading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Leaves the title out of the tray. Attribute: hide-heading.",
+              "fieldName": "hideHeading"
+            },
+            {
+              "name": "no-app-state-close",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Stops the tray from closing on cork-app-state location changes. Attribute: no-app-state-close.",
+              "fieldName": "noAppStateClose"
+            },
             {
               "name": "nav-aria-label",
               "type": {
                 "text": "string"
               },
-              "default": "'Tabs'",
-              "description": "Label for the nav. Default: 'Tabs'. Attribute: nav-aria-label.",
-              "fieldName": "navAriaLabel"
+              "default": "''",
+              "description": "Label for the nav. Default: the title's text, or 'Submenu' if there's no title. Attribute: nav-aria-label.",
+              "fieldName": "navAriaLabel",
+              "inheritedFrom": {
+                "name": "CorkNavSub",
+                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
+              }
             },
             {
-              "name": "secondary",
+              "name": "auto-height",
               "type": {
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Uses campus's secondary style: a transparent bar with a bottom border and smaller text. Attribute: secondary.",
-              "fieldName": "secondary"
+              "description": "On wide screens, makes the drill-down as tall as its first menu level, following changes to that menu's size. On narrow screens its height is auto. Attribute: auto-height.",
+              "fieldName": "autoHeight",
+              "inheritedFrom": {
+                "name": "CorkNavSub",
+                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
+              }
+            },
+            {
+              "name": "focused-nav-item",
+              "type": {
+                "text": "number[]"
+              },
+              "default": "[]",
+              "description": "navPosition of the focused item, e.g. [1, 0]. Attribute: focused-nav-item, comma-separated (e.g. \"1,0\").",
+              "fieldName": "focusedNavItem",
+              "inheritedFrom": {
+                "name": "CorkNavSub",
+                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
+              }
             }
           ],
           "superclass": {
-            "name": "LitElement",
-            "package": "lit"
+            "name": "CorkNavSub",
+            "package": "@ucd-lib/cork-theme/elements/cork-nav-sub/cork-nav-sub.js"
           },
           "customElement": true,
-          "tagName": "cork-nav-tabs"
+          "tagName": "cork-nav-sub-popover"
         }
       ],
       "exports": [
@@ -983,16 +1174,16 @@
           "kind": "js",
           "name": "default",
           "declaration": {
-            "name": "CorkNavTabs",
-            "module": "package/elements/cork-nav-tabs/cork-nav-tabs.js"
+            "name": "CorkNavSubPopover",
+            "module": "package/elements/cork-nav-sub-popover/cork-nav-sub-popover.js"
           }
         },
         {
           "kind": "custom-element-definition",
-          "name": "cork-nav-tabs",
+          "name": "cork-nav-sub-popover",
           "declaration": {
-            "name": "CorkNavTabs",
-            "module": "package/elements/cork-nav-tabs/cork-nav-tabs.js"
+            "name": "CorkNavSubPopover",
+            "module": "package/elements/cork-nav-sub-popover/cork-nav-sub-popover.js"
           }
         }
       ]
@@ -1350,312 +1541,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "package/elements/cork-nav-sub-popover/cork-nav-sub-popover.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "A sub menu in a popover: a full-width button that opens a tray with the title and drill-down of a {@link CorkNavSub }.\nTakes the same light DOM as cork-nav-sub. The drill-down always uses auto height.\n\nThe browser closes the tray when the user clicks outside it or presses Escape (after any open submenus are closed), and returns focus to the button.\nIn a SPA using",
-          "name": "CorkNavSubPopover",
-          "slots": [
-            {
-              "description": "Title and menu, as in cork-nav-sub. Not an actual slot, but rather parsed and rendered into the shadow DOM by controllers. The title is an h1-h6, or a div/span with the data-heading attribute (optionally a level, e.g. data-heading=\"h2\", for that level's look), optionally wrapping a link or button. See {@link HeadingController}. The menu is a ul/ol of li elements, nested for sub menus. See {@link NavController} for the markup formats.",
-              "name": "",
-              "inheritedFrom": {
-                "name": "CorkNavSub",
-                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
-              }
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "isOpen",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "readonly": true,
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Whether the tray is open. Read only."
-            },
-            {
-              "kind": "method",
-              "name": "show",
-              "description": "Opens the tray."
-            },
-            {
-              "kind": "method",
-              "name": "hide",
-              "description": "Closes the tray. Call it from an SPA's router on navigation, unless the app uses cork-app-state."
-            },
-            {
-              "kind": "method",
-              "name": "toggle",
-              "description": "Opens the tray if it's closed, or closes it if it's open."
-            },
-            {
-              "kind": "method",
-              "name": "define",
-              "static": true,
-              "parameters": [
-                {
-                  "name": "tagName",
-                  "default": "'cork-nav-sub-popover'",
-                  "description": "Tag name to register. Default: 'cork-nav-sub-popover'",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "CorkNavSub",
-                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
-              },
-              "description": "Registers the element as a custom element."
-            },
-            {
-              "kind": "field",
-              "name": "autoHeight",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "description": "On wide screens, makes the drill-down as tall as its first menu level, following changes to that menu's size. On narrow screens its height is auto. Attribute: auto-height.",
-              "attribute": "auto-height",
-              "inheritedFrom": {
-                "name": "CorkNavSub",
-                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "buttonLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Submenu'",
-              "description": "The button's text. Default: 'Submenu'. Attribute: button-label.",
-              "attribute": "button-label"
-            },
-            {
-              "kind": "field",
-              "name": "headingLabel",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Uses the title's text as the button's text, if there is a title. Attribute: heading-label.",
-              "attribute": "heading-label"
-            },
-            {
-              "kind": "field",
-              "name": "hideHeading",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Leaves the title out of the tray. Attribute: hide-heading.",
-              "attribute": "hide-heading"
-            },
-            {
-              "kind": "field",
-              "name": "noAppStateClose",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Stops the tray from closing on cork-app-state location changes. Attribute: no-app-state-close.",
-              "attribute": "no-app-state-close"
-            },
-            {
-              "kind": "field",
-              "name": "popover",
-              "default": "new PopoverController(this)"
-            },
-            {
-              "kind": "field",
-              "name": "appState",
-              "default": "new AppStateController(this, { shouldInit: () => !this.noAppStateClose })"
-            },
-            {
-              "kind": "field",
-              "name": "navAriaLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Label for the nav. Default: the title's text, or 'Submenu' if there's no title. Attribute: nav-aria-label.",
-              "attribute": "nav-aria-label",
-              "inheritedFrom": {
-                "name": "CorkNavSub",
-                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "focusedNavItem",
-              "privacy": "public",
-              "type": {
-                "text": "number[]"
-              },
-              "default": "[]",
-              "description": "navPosition of the focused item, e.g. [1, 0]. Attribute: focused-nav-item, comma-separated (e.g. \"1,0\").",
-              "attribute": "focused-nav-item",
-              "inheritedFrom": {
-                "name": "CorkNavSub",
-                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "ctl",
-              "type": {
-                "text": "object"
-              },
-              "default": "{ nav: new NavController(this, { closeSubmenusOnEscape: true, setChildHeight: true, autoHeightHostProperty: 'autoHeight' }), heading: new HeadingController(this) }",
-              "inheritedFrom": {
-                "name": "CorkNavSub",
-                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
-              }
-            }
-          ],
-          "events": [
-            {
-              "description": "Fired when the tray opens or closes, with detail.open. See {@link PopoverController}.",
-              "name": "cork-popover-toggle"
-            },
-            {
-              "description": "Fired when a rendered menu link or button is clicked, with the clicked item in detail.navItem. See {@link NavController}.",
-              "name": "cork-nav-item-click",
-              "inheritedFrom": {
-                "name": "CorkNavSub",
-                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
-              }
-            },
-            {
-              "description": "Fired when a linked title is clicked, with the title in detail.heading. See {@link HeadingController}.",
-              "name": "cork-heading-click",
-              "inheritedFrom": {
-                "name": "CorkNavSub",
-                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
-              }
-            }
-          ],
-          "attributes": [
-            {
-              "name": "button-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Submenu'",
-              "description": "The button's text. Default: 'Submenu'. Attribute: button-label.",
-              "fieldName": "buttonLabel"
-            },
-            {
-              "name": "heading-label",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Uses the title's text as the button's text, if there is a title. Attribute: heading-label.",
-              "fieldName": "headingLabel"
-            },
-            {
-              "name": "hide-heading",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Leaves the title out of the tray. Attribute: hide-heading.",
-              "fieldName": "hideHeading"
-            },
-            {
-              "name": "no-app-state-close",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Stops the tray from closing on cork-app-state location changes. Attribute: no-app-state-close.",
-              "fieldName": "noAppStateClose"
-            },
-            {
-              "name": "nav-aria-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Label for the nav. Default: the title's text, or 'Submenu' if there's no title. Attribute: nav-aria-label.",
-              "fieldName": "navAriaLabel",
-              "inheritedFrom": {
-                "name": "CorkNavSub",
-                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
-              }
-            },
-            {
-              "name": "auto-height",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "On wide screens, makes the drill-down as tall as its first menu level, following changes to that menu's size. On narrow screens its height is auto. Attribute: auto-height.",
-              "fieldName": "autoHeight",
-              "inheritedFrom": {
-                "name": "CorkNavSub",
-                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
-              }
-            },
-            {
-              "name": "focused-nav-item",
-              "type": {
-                "text": "number[]"
-              },
-              "default": "[]",
-              "description": "navPosition of the focused item, e.g. [1, 0]. Attribute: focused-nav-item, comma-separated (e.g. \"1,0\").",
-              "fieldName": "focusedNavItem",
-              "inheritedFrom": {
-                "name": "CorkNavSub",
-                "module": "package/elements/cork-nav-sub/cork-nav-sub.js"
-              }
-            }
-          ],
-          "superclass": {
-            "name": "CorkNavSub",
-            "package": "@ucd-lib/cork-theme/elements/cork-nav-sub/cork-nav-sub.js"
-          },
-          "customElement": true,
-          "tagName": "cork-nav-sub-popover"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "CorkNavSubPopover",
-            "module": "package/elements/cork-nav-sub-popover/cork-nav-sub-popover.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "cork-nav-sub-popover",
-          "declaration": {
-            "name": "CorkNavSubPopover",
-            "module": "package/elements/cork-nav-sub-popover/cork-nav-sub-popover.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "package/elements/cork-pages/cork-pages.js",
       "declarations": [
         {
@@ -1839,6 +1724,121 @@
           "declaration": {
             "name": "CorkPages",
             "module": "package/elements/cork-pages/cork-pages.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "package/elements/cork-nav-tabs/cork-nav-tabs.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A row of navigation tabs, for moving between related pages or views, e.g. the sections of a record.\nThe tab bar only: content below it is up to the page.\nOnly top-level items are shown: sub menus and fields are ignored.\nThe tab bar keeps its own light background on dark and category brand sections, as campus's does.",
+          "name": "CorkNavTabs",
+          "slots": [
+            {
+              "description": "Tabs: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM by {@link NavController}. See its examples for the markup formats. Mark the current tab with data-active, on its li or its link/button: it's highlighted, and gets aria-current ('page' on links, 'true' on buttons). Move data-active to change tabs, e.g. on a route change.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tagName",
+                  "default": "'cork-nav-tabs'",
+                  "description": "Tag name to register. Default: 'cork-nav-tabs'",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Registers the element as a custom element."
+            },
+            {
+              "kind": "field",
+              "name": "navAriaLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Tabs'",
+              "description": "Label for the nav. Default: 'Tabs'. Attribute: nav-aria-label.",
+              "attribute": "nav-aria-label"
+            },
+            {
+              "kind": "field",
+              "name": "secondary",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Uses campus's secondary style: a transparent bar with a bottom border and smaller text. Attribute: secondary.",
+              "attribute": "secondary"
+            },
+            {
+              "kind": "field",
+              "name": "ctl",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ nav: new NavController(this) }"
+            }
+          ],
+          "events": [
+            {
+              "description": "Fired when a rendered link or button is clicked, with the clicked item in detail.navItem. See {@link NavController}.",
+              "name": "cork-nav-item-click"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "nav-aria-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Tabs'",
+              "description": "Label for the nav. Default: 'Tabs'. Attribute: nav-aria-label.",
+              "fieldName": "navAriaLabel"
+            },
+            {
+              "name": "secondary",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Uses campus's secondary style: a transparent bar with a bottom border and smaller text. Attribute: secondary.",
+              "fieldName": "secondary"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true,
+          "tagName": "cork-nav-tabs"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "CorkNavTabs",
+            "module": "package/elements/cork-nav-tabs/cork-nav-tabs.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "cork-nav-tabs",
+          "declaration": {
+            "name": "CorkNavTabs",
+            "module": "package/elements/cork-nav-tabs/cork-nav-tabs.js"
           }
         }
       ]
@@ -2215,6 +2215,118 @@
     },
     {
       "kind": "javascript-module",
+      "path": "package/elements/cork-search-tray/cork-search-tray.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Lays out the cork-header's search tray when it has more than just a search form. Add it as a child of the {@link cork-header } element.",
+          "name": "CorkSearchTray",
+          "slots": [
+            {
+              "description": "Search form. A child {@link cork-search-form} is assigned here automatically.",
+              "name": "form"
+            },
+            {
+              "description": "Common searches, shown below the form. A child {@link cork-search-common} is assigned here automatically.",
+              "name": "common"
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "focus",
+              "parameters": [
+                {
+                  "name": "opts",
+                  "description": "Focus options, passed on to the child's focus().",
+                  "type": {
+                    "text": "Object"
+                  }
+                }
+              ],
+              "description": "Focuses the form, or else the common searches. Called by cork-header when it opens the tray.\nThe children are slotted, so delegatesFocus on this element wouldn't reliably reach their controls."
+            },
+            {
+              "kind": "method",
+              "name": "onNavTrayHide",
+              "description": "Called by cork-header when its nav tray hides this element. Passes the call on to each child that has the method,\ne.g. so the form clears its input."
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tagName",
+                  "default": "'cork-search-tray'",
+                  "description": "Tag name to register. Default: 'cork-search-tray'",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Registers the element as a custom element."
+            },
+            {
+              "kind": "field",
+              "name": "headerComponentLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Search'",
+              "description": "Label for the tray, e.g. in the header's nav tray bar. Default: 'Search'. Attribute: header-component-label.",
+              "attribute": "header-component-label"
+            },
+            {
+              "kind": "field",
+              "name": "ctl",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ mutationObserver: new MutationObserverController(this, {childList: true}, this._onChildListMutation) }"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "header-component-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Search'",
+              "description": "Label for the tray, e.g. in the header's nav tray bar. Default: 'Search'. Attribute: header-component-label.",
+              "fieldName": "headerComponentLabel"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true,
+          "tagName": "cork-search-tray"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "CorkSearchTray",
+            "module": "package/elements/cork-search-tray/cork-search-tray.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "cork-search-tray",
+          "declaration": {
+            "name": "CorkSearchTray",
+            "module": "package/elements/cork-search-tray/cork-search-tray.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "package/elements/cork-search-form/cork-search-form.js",
       "declarations": [
         {
@@ -2519,118 +2631,6 @@
           "declaration": {
             "name": "CorkSearchForm",
             "module": "package/elements/cork-search-form/cork-search-form.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "package/elements/cork-search-tray/cork-search-tray.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Lays out the cork-header's search tray when it has more than just a search form. Add it as a child of the {@link cork-header } element.",
-          "name": "CorkSearchTray",
-          "slots": [
-            {
-              "description": "Search form. A child {@link cork-search-form} is assigned here automatically.",
-              "name": "form"
-            },
-            {
-              "description": "Common searches, shown below the form. A child {@link cork-search-common} is assigned here automatically.",
-              "name": "common"
-            }
-          ],
-          "members": [
-            {
-              "kind": "method",
-              "name": "focus",
-              "parameters": [
-                {
-                  "name": "opts",
-                  "description": "Focus options, passed on to the child's focus().",
-                  "type": {
-                    "text": "Object"
-                  }
-                }
-              ],
-              "description": "Focuses the form, or else the common searches. Called by cork-header when it opens the tray.\nThe children are slotted, so delegatesFocus on this element wouldn't reliably reach their controls."
-            },
-            {
-              "kind": "method",
-              "name": "onNavTrayHide",
-              "description": "Called by cork-header when its nav tray hides this element. Passes the call on to each child that has the method,\ne.g. so the form clears its input."
-            },
-            {
-              "kind": "method",
-              "name": "define",
-              "static": true,
-              "parameters": [
-                {
-                  "name": "tagName",
-                  "default": "'cork-search-tray'",
-                  "description": "Tag name to register. Default: 'cork-search-tray'",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "description": "Registers the element as a custom element."
-            },
-            {
-              "kind": "field",
-              "name": "headerComponentLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Search'",
-              "description": "Label for the tray, e.g. in the header's nav tray bar. Default: 'Search'. Attribute: header-component-label.",
-              "attribute": "header-component-label"
-            },
-            {
-              "kind": "field",
-              "name": "ctl",
-              "type": {
-                "text": "object"
-              },
-              "default": "{ mutationObserver: new MutationObserverController(this, {childList: true}, this._onChildListMutation) }"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "header-component-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Search'",
-              "description": "Label for the tray, e.g. in the header's nav tray bar. Default: 'Search'. Attribute: header-component-label.",
-              "fieldName": "headerComponentLabel"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "customElement": true,
-          "tagName": "cork-search-tray"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "CorkSearchTray",
-            "module": "package/elements/cork-search-tray/cork-search-tray.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "cork-search-tray",
-          "declaration": {
-            "name": "CorkSearchTray",
-            "module": "package/elements/cork-search-tray/cork-search-tray.js"
           }
         }
       ]

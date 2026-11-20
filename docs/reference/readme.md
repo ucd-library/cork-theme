@@ -32,5 +32,6 @@ or `docs jsdoc <name>` for one page.
   - [NavController](utils/controllers/NavController.md): Lit controller that parses menu markup in the host's light DOM into navItems, for the host element to render in its shadow DOM.
   - [PageWidthController](utils/controllers/PageWidthController.md): Sets the theme's page width CSS custom property (--page-width), and keeps it current as the window resizes.
   - [PopoverController](utils/controllers/PopoverController.md): Lit controller that wires up a button and a popover, using the native Popover API.
+  - [ScriptPropsController](utils/controllers/ScriptPropsController.md): Lit controller that sets the host's properties from a JSON script tag in its light DOM.
 - [layout](utils/layout.md): `toGridRows`
 - [mixins](utils/mixins.md): `MainDomElementMixin`
