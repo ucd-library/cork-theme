@@ -5,6 +5,7 @@
  * and backgroundMenu, true to show a menu of campus section backgrounds above the demo, for elements that adapt to them. Each module imports its element, and any elements its markup uses, so they're defined before the demo renders.
  */
 import * as corkBrandingBar from './cork-branding-bar.js';
+import * as corkCollapse from './cork-collapse.js';
 import * as corkHeader from './cork-header.js';
 import * as corkMarkdown from './cork-markdown.js';
 import * as corkNavLite from './cork-nav-lite.js';
@@ -21,6 +22,7 @@ import * as corkSearchTray from './cork-search-tray.js';
 
 export default {
   'cork-branding-bar': corkBrandingBar,
+  'cork-collapse': corkCollapse,
   'cork-header': corkHeader,
   'cork-markdown': corkMarkdown,
   'cork-nav-lite': corkNavLite,

@@ -187,7 +187,6 @@ function renderBackgroundMenu() {
  * @returns {TemplateResult}
  */
 function renderMarkupPanel() {
-  const knobs = this.getLayout()?.knobs || {};
   return html`
     <section class="markup" part="markup">
       <div class="markup__toolbar">
@@ -210,7 +209,7 @@ function renderMarkupPanel() {
           .value=${this._draft}
           @input=${e => this._draft = e.target.value}></textarea>
       ` : html`
-        <div part="markup-snippet">${renderSnippet(this._id, this.selected, knobs, [], [])}</div>
+        <div part="markup-snippet">${renderSnippet(this._id, this.selected, this.getSnippetValues(), [], [])}</div>
       `}
     </section>
   `;

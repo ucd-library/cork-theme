@@ -81,7 +81,7 @@ Opening or closing a submenu always moves focus into it (its own link, or its fi
 
 ## HeadingController
 
-New. It reads a heading in an element's light DOM, for the element to render in its shadow DOM, and re-parses when that markup changes. `cork-nav-sub` uses it for its title, in place of `ucd-theme-subnav`'s `nav-title`, `title-href` and `title-click-event` attributes.
+New. It reads a heading in an element's light DOM, for the element to render in its shadow DOM, and re-parses when that markup changes. `cork-nav-sub` and `cork-collapse` use it for their titles. In `cork-nav-sub` it replaces `ucd-theme-subnav`'s `nav-title`, `title-href` and `title-click-event` attributes.
 
 ```js
 import { HeadingController } from '@ucd-lib/cork-theme/utils/controllers';
@@ -92,6 +92,7 @@ this.ctl = { heading: new HeadingController(this) };
 - The heading is the host's first direct child that is an `h1`-`h6`, or that has the `data-heading` attribute (e.g. `<div data-heading>`, for a title that shouldn't be a heading). The attribute can be changed with the `headingAttribute` option. Giving it a level, e.g. `<div data-heading="h2">`, adds the matching `.h1`-`.h6` class, so the element looks like that heading level.
 - It's rendered with the same tag, unless the element passes `tag`. Its text can be wrapped in an `<a>` or `<button>`.
 - `this.ctl.heading.render({ classes, typeClasses, linkClasses, tag })` renders it, or nothing if there's no heading. `typeClasses` adds classes by content (`a`, `button` or `text`), and `linkClasses` goes on the link or button.
+- `button: true` always wraps the text in a `<button>`, even if the light DOM heading has none, and `ariaExpanded` and `ariaControls` set those attributes on it. `cork-collapse` uses these for its toggle.
 - Include `...HeadingController.styles` in the element's styles, for the `h1`-`h6` and `.h1`-`.h6` styles.
 - Clicks work as for `NavController` items: a `cork-heading-click` event (with `detail.heading` and `detail.originalEvent`), then, for buttons, the click is passed through to the light DOM button.
 - When the heading changes (including the first parse on connection, if there is one), `cork-heading-update` fires, with `detail.heading` (null if it was removed). Light DOM changes that leave the heading as it was, such as menu edits in `cork-nav-sub`, don't fire it or re-render the host.

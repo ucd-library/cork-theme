@@ -54,7 +54,8 @@
     "dompurify": "^3.4.18",
     "lit": "^3.3.3",
     "marked": "^18.2.0",
-    "marked-gfm-heading-id": "^4.1.4"
+    "marked-gfm-heading-id": "^4.1.4",
+    "slide-element": "^2.3.1"
   },
   "allowScripts": {
     "@ucd-lib/cork-icon@1.5.0": true

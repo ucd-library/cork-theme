@@ -2,6 +2,12 @@
  * @file Lit reactive controllers for theme elements and your own components.
  *
  * Controllers can manage state and behavior related to specific functionality, making it reusable across multiple components.
+ *
+ * @example
+ * import * as controllers from '@ucd-lib/cork-theme/utils/controllers';
+ *
+ * // in the host element's constructor
+ * this.ctl = { nav: new controllers.NavController(this) };
  */
 
 import AppStateController from './AppStateController.js';

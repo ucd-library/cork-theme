@@ -73,6 +73,9 @@ const HEADING_CLASSES = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
  * <!-- or assign classes by content type, and override the tag -->
  * ${this.ctl.heading.render({ tag: 'h3', typeClasses: { a: 'title-linked', button: 'title-linked', text: 'title' } })}
  *
+ * <!-- or always render a button, e.g. for a disclosure that toggles an element with id="content" -->
+ * ${this.ctl.heading.render({ button: true, ariaExpanded: String(this.open), ariaControls: 'content' })}
+ *
  * @example <caption>Light DOM markup - heading</caption>
  * <my-element>
  *   <h2>Services</h2>
@@ -145,6 +148,10 @@ export default class HeadingController {
    * Keys: a, button, text. Each value is a string or classMap object, e.g. { a: 'nav-sub__title-linked', text: 'nav-sub__title' }
    * @param {String|Object} opts.linkClasses - Classes for the link or button inside the heading.
    * @param {String} opts.tag - Tag to render instead of the light DOM heading's: h1-h6, div, span, or p. Others are ignored.
+   * @param {Boolean} opts.button - Always wraps the heading's text in a button, even if the light DOM heading has no button, or has a link.
+   * Clicks still go through heading.click, which only passes them on to a light DOM button.
+   * @param {String} opts.ariaExpanded - aria-expanded for the rendered button, e.g. for a disclosure. Only set on buttons.
+   * @param {String} opts.ariaControls - aria-controls for the rendered button: the id of an element in the host's shadow DOM. Only set on buttons.
    * @returns {TemplateResult|String}
    */
   render(opts={}){
@@ -229,7 +236,7 @@ export default class HeadingController {
    */
   _renderHeading(heading, opts={}){
     if ( typeof opts === 'string' ) opts = { classes: opts };
-    const contentType = heading.ele?.matches('button') ? 'button' : heading.href ? 'a' : 'text';
+    const contentType = opts.button || heading.ele?.matches('button') ? 'button' : heading.href ? 'a' : 'text';
     const tag = unsafeStatic(TAGS.includes(opts.tag) ? opts.tag : (TAGS.includes(heading.tag) ? heading.tag : 'div'));
 
     const headingClasses = toClassAttribute([heading.headingClass, opts.classes, opts.typeClasses?.[contentType]]);
@@ -245,6 +252,8 @@ export default class HeadingController {
           type="button"
           class=${ifDefined(linkClasses)}
           aria-label=${ariaLabel}
+          aria-expanded=${ifDefined(opts.ariaExpanded)}
+          aria-controls=${ifDefined(opts.ariaControls)}
           ?disabled=${heading.disabled}
           @click=${heading.click}>${heading.title}</button>`;
     } else if ( contentType === 'a' ) {

@@ -49,12 +49,21 @@ function renderHeader(){
               </ul>
             </li>
             <li>
-              <a>Other Navigation</a>
+              Other Navigation
+              <span data-nav='description'>Other navigation components, including tabs, submenus and pagers.</span>
               <ul>
                 <li><a href='/elements/cork-nav-sub'>Submenu</a></li>
                 <li><a href='/elements/cork-nav-sub-popover'>Submenu Popover</a></li>
                 <li><a href='/elements/cork-nav-tabs'>Tabs</a></li>
                 <li><a href='/elements/cork-pager'>Pager</a></li>
+              </ul>
+            </li>
+            <li>
+              Content Visibility
+              <span data-nav='description'>Components for controlling content visibility, including pages and collapses.</span>
+              <ul>
+                <li><a href='/elements/cork-collapse'>Collapse</a></li>
+                <li><a href='/elements/cork-pages'>Pages</a></li>
               </ul>
             </li>
           </ul>

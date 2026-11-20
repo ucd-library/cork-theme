@@ -17,6 +17,8 @@ const SECTION_BACKGROUNDS = [
  * @description Live playground for a theme element on the docs site, built on api-viewer's ApiDemoBase and driven by the package's
  * Custom Elements Manifest. Adds a markup panel in place of api-demo's Source tab, which shows the element's snippet and can be
  * edited as HTML, like a browser's dev tools. Applying an edit rebuilds the element, and the knobs follow its new property values.
+ * Knobs also follow the element's attributes as it changes them itself, e.g. a reflected open property toggled by a click.
+ * Property changes that don't reflect to an attribute can't be followed.
  * Only fields with an attribute get a knob, so Lit state and attribute: false properties have none. Fields with an attribute that
  * aren't a primitive type, e.g. cork-pager's queryParams (query-params), get a text knob under Attributes, which sets the attribute.
  * The theme's CSS is included in the shadow root, so demo markup is styled as it would be on a page.
@@ -65,12 +67,14 @@ export default class CorkThemeElementDemo extends ApiDemoBase {
     this._sectionBackground = '';
     this.sectionBackgrounds = SECTION_BACKGROUNDS;
     this._appliedMarkup = '';
+    this._hostAttributes = [];
 
     // renderSnippet reads this instance's templates on the first render
     this.setTemplates([]);
 
     this._onKnobChange = this._onKnobChange.bind(this);
     this._onRendered = this._onRendered.bind(this);
+    this._attributeObserver = new MutationObserver(this._onComponentAttributeChange.bind(this));
   }
 
   /**
@@ -90,6 +94,7 @@ export default class CorkThemeElementDemo extends ApiDemoBase {
   disconnectedCallback() {
     this.renderRoot.removeEventListener('change', this._onKnobChange);
     this.renderRoot.removeEventListener('rendered', this._onRendered);
+    this._attributeObserver.disconnect();
     super.disconnectedCallback();
   }
 
@@ -142,6 +147,24 @@ export default class CorkThemeElementDemo extends ApiDemoBase {
    */
   getSnippetText() {
     return this.renderRoot.querySelector('[part="markup-snippet"] code')?.textContent || '';
+  }
+
+  /**
+   * @method getSnippetValues
+   * @description Gets the values to render the snippet from: the layout's knobs, plus the attributes in the markup that no knob controls,
+   * e.g. class or id. api-viewer's snippet only shows knobs, so those attributes would otherwise be left out.
+   * @returns {Object} Values keyed by name, in the shape of the layout's knobs: { value, knobType, attribute }.
+   */
+  getSnippetValues() {
+    const layout = this.getLayout();
+    const values = { ...(layout?.knobs || {}) };
+    const knobAttributes = new Set([...(layout?.propKnobs || []), ...(layout?.customKnobs || [])].map(knob => knob.attribute));
+    for ( const { name, value } of this._hostAttributes ) {
+      if ( knobAttributes.has(name) || values[name] ) continue;
+      // an attribute with no value, e.g. hidden, is written bare
+      values[name] = value === '' ? { value: true, knobType: 'boolean', attribute: name } : { value, knobType: 'string', attribute: name };
+    }
+    return values;
   }
 
   /**
@@ -217,6 +240,7 @@ export default class CorkThemeElementDemo extends ApiDemoBase {
     const applied = host.innerHTML + slot.innerHTML;
     if ( applied === this._appliedMarkup ) return true;
     this._appliedMarkup = applied;
+    this._hostAttributes = Array.from(el.attributes).map(attr => ({ name: attr.name, value: attr.value }));
     this.setTemplates([host, slot, ...this._getAttributeKnobTemplates()]);
 
     const layout = this.getLayout();
@@ -249,13 +273,17 @@ export default class CorkThemeElementDemo extends ApiDemoBase {
   /**
    * @method _onRendered
    * @description Called when api-demo has rendered the demo element. Fills the attribute knobs from the element's attributes,
-   * which api-demo only does for property knobs, then hides the Source tab and redraws the snippet.
+   * which api-demo only does for property knobs, and watches the element's attributes to keep the knobs in sync.
+   * Then hides the Source tab and redraws the snippet.
    * @param {CustomEvent} e - api-demo's rendered event. detail.component is the demo element.
    */
   async _onRendered(e) {
     const layout = this.getLayout();
     const component = e.detail?.component;
+    this._attributeObserver.disconnect();
     if ( layout && component ) {
+      this._attributeObserver.observe(component, { attributes: true });
+      this._addLayoutController(layout);
       layout.customKnobs = layout.customKnobs.map(knob => {
         const value = component.getAttribute(knob.attribute);
         if ( value === null ) return knob;
@@ -267,6 +295,70 @@ export default class CorkThemeElementDemo extends ApiDemoBase {
     this._applySectionBackground();
     this._hideSourceTab();
     this.requestUpdate();
+  }
+
+  /**
+   * @method _addLayoutController
+   * @description Adds a controller to api-demo's layout, once per layout, that syncs the knobs with the demo element's pending
+   * attribute changes before each layout render. The layout's renderer sets every knob's value on the element when it renders,
+   * and an event from the element (logged by the layout) can make it render before the attribute observer's callback runs,
+   * which would put back the element's old value.
+   * @param {HTMLElement} layout - api-demo's layout element.
+   */
+  _addLayoutController(layout) {
+    if ( this._controlledLayout === layout ) return;
+    this._controlledLayout = layout;
+    layout.addController({
+      hostUpdate: () => {
+        const records = this._attributeObserver.takeRecords();
+        if ( records.length ) this._onComponentAttributeChange(records);
+      }
+    });
+  }
+
+  /**
+   * @method _onComponentAttributeChange
+   * @description Called when the demo element's attributes change, e.g. when it reflects a property it changed itself.
+   * Updates the matching property or attribute knobs, which api-demo never reads back from the element, then redraws the snippet.
+   * @param {MutationRecord[]} records - The attribute mutations.
+   */
+  _onComponentAttributeChange(records) {
+    const layout = this.getLayout();
+    const component = records[0]?.target;
+    if ( !layout || !component ) return;
+    const attributes = new Set(records.map(r => r.attributeName));
+    let changed = false;
+
+    for ( const knob of layout.propKnobs ) {
+      if ( !attributes.has(knob.attribute) ) continue;
+      layout.syncKnob(component, knob);
+      this._setKnobInput(knob.name, component[knob.name]);
+      changed = true;
+    }
+    layout.customKnobs = layout.customKnobs.map(knob => {
+      if ( !attributes.has(knob.attribute) ) return knob;
+      const value = component.getAttribute(knob.attribute) ?? '';
+      layout.setKnobs(knob.name, knob.knobType, value, knob.attribute, true);
+      this._setKnobInput(knob.name, value);
+      changed = true;
+      return { ...knob, value };
+    });
+
+    if ( changed ) this._onKnobChange();
+  }
+
+  /**
+   * @method _setKnobInput
+   * @description Sets a knob's input to a value. api-demo binds knob inputs with Lit's .checked and .value, which skip values
+   * equal to the last ones rendered, so an input the user has since changed by hand would otherwise keep its stale value.
+   * @param {String} name - The knob's name: its data-name.
+   * @param {*} value - The value. Booleans set a checkbox; anything else sets a text or number input.
+   */
+  _setKnobInput(name, value) {
+    const input = this.getLayout()?.querySelector(`[part="knobs-column"] [data-name="${CSS.escape(name)}"]`);
+    if ( !input ) return;
+    if ( input.type === 'checkbox' ) input.checked = Boolean(value);
+    else input.value = value == null ? '' : String(value);
   }
 
   /**

@@ -68,6 +68,9 @@ The heading's text is wrapped in a link or button if it has one, with clicks wir
 | `opts.typeClasses` | `Object` | Classes for the heading element by content type, added to opts.classes. Keys: a, button, text. Each value is a string or classMap object, e.g. { a: 'nav-sub__title-linked', text: 'nav-sub__title' } |
 | `opts.linkClasses` | `String\|Object` | Classes for the link or button inside the heading. |
 | `opts.tag` | `String` | Tag to render instead of the light DOM heading's: h1-h6, div, span, or p. Others are ignored. |
+| `opts.button` | `Boolean` | Always wraps the heading's text in a button, even if the light DOM heading has no button, or has a link. Clicks still go through heading.click, which only passes them on to a light DOM button. |
+| `opts.ariaExpanded` | `String` | aria-expanded for the rendered button, e.g. for a disclosure. Only set on buttons. |
+| `opts.ariaControls` | `String` | aria-controls for the rendered button: the id of an element in the host's shadow DOM. Only set on buttons. |
 
 **Returns:** `TemplateResult\|String`
 
@@ -98,6 +101,9 @@ ${this.ctl.heading.render({ classes: 'panel__title' })}
 
 <!-- or assign classes by content type, and override the tag -->
 ${this.ctl.heading.render({ tag: 'h3', typeClasses: { a: 'title-linked', button: 'title-linked', text: 'title' } })}
+
+<!-- or always render a button, e.g. for a disclosure that toggles an element with id="content" -->
+${this.ctl.heading.render({ button: true, ariaExpanded: String(this.open), ariaControls: 'content' })}
 ```
 
 **Light DOM markup - heading**

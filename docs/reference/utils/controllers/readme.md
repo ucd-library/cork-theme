@@ -7,7 +7,10 @@ Lit reactive controllers for theme elements and your own components.
 Controllers can manage state and behavior related to specific functionality, making it reusable across multiple components.
 
 ```js
-import { AppStateController, HeadingController, MutationObserverController, NavController, PageWidthController, PopoverController, ScriptPropsController } from '@ucd-lib/cork-theme/utils/controllers';
+import * as controllers from '@ucd-lib/cork-theme/utils/controllers';
+
+// in the host element's constructor
+this.ctl = { nav: new controllers.NavController(this) };
 ```
 
 - [AppStateController](AppStateController.md): Lit controller that calls back on @ucd-lib/cork-app-state's app-state-update event, if it exists.

@@ -1,0 +1,59 @@
+//------------------------------------
+//  Collapse
+//------------------------------------
+
+// fixes a bug in campus's collapse styles when in force-contrast sections:
+// Keeps links and headings readable in collapse content inside force-contrast layout sections.
+// Campus's collapse content (sass/4_component/_collapse.scss) is always a white box with dark text, but in a
+// .layout-section--force-contrast section the section's light text colors still reach the content:
+// links through :where(.layout-section--force-contrast) a, and headings through --forced-contrast-heading-*.
+// On dark sections (e.g. primary, wonder-blue, light-on-dark), that's white text on the white box.
+//
+// Resetting the section's variables gives the content its normal light-background colors.
+// It targets cork-collapse as well as .collapse__content, because cork-collapse's content box is in its shadow DOM,
+// so its slotted content isn't inside a light DOM .collapse__content.
+// :where() keeps these rules as weak as a bare `a`: class-styled links (e.g. .btn) still win,
+// and the link rules only beat the section's link rule by coming after it.
+
+:where(.collapse__content, cork-collapse) {
+  --forced-contrast: initial;
+  --forced-contrast-heading-primary: initial;
+  --forced-contrast-heading-secondary: initial;
+  --forced-scheme: initial;
+  --forced-scheme-contrast: initial;
+}
+
+// Without --forced-contrast, the section's link rule falls back to inheriting the content's black text,
+// so restore the base link colors
+:where(.collapse__content, cork-collapse) a {
+  color: var(--brand-primary-80);
+}
+
+:where(.collapse__content, cork-collapse) a:hover {
+  color: var(--tahoe);
+}
+
+// Campus's list styles for collapse content (.collapse__content li), which can't reach cork-collapse's slotted content.
+// Without a class, these are weaker than campus's, so class-styled lists (e.g. .list--bordered) keep their own spacing
+
+cork-collapse li {
+  margin-bottom: 0.5rem;
+}
+
+cork-collapse li a {
+  font-weight: normal;
+}
+
+// Hides a closed cork-collapse's content until the element is registered, so it doesn't show expanded and then jump shut.
+// The heading stays visible. Visually hidden rather than display: none, so screen readers can still reach the content
+// if the element's JS never loads.
+
+cork-collapse:not(:defined):not([open]) > :not(h1, h2, h3, h4, h5, h6, [data-heading]) {
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px) !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+}

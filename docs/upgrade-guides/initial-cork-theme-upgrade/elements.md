@@ -34,6 +34,7 @@ Menu elements read their links with a new markup format: see [Nav Markup](nav-ma
 | `ucd-theme-subnav` | `cork-nav-sub`. See [cork-nav-sub](#cork-nav-sub). |
 | (new) | `cork-nav-tabs`. See [cork-nav-tabs](#cork-nav-tabs). |
 | `ucd-theme-pagination` | `cork-pager`. See [cork-pager](#cork-pager). |
+| `ucd-theme-collapse` | `cork-collapse`. See [cork-collapse](#cork-collapse). |
 | `ucdlib-pages` | `cork-pages`. See [cork-pages](#cork-pages). |
 | `ucdlib-md`, `ucdlib-md-content` | `cork-markdown`. See [cork-markdown](#cork-markdown). |
 
@@ -212,6 +213,61 @@ See the [reference](../../reference/elements/cork-nav-tabs.md) for every propert
 With no link options set, page items were `<a>` elements with no `href`. They're now `<button>` elements, styled like the links, so they're reachable by keyboard without a `tabindex`. The button styles are in `@ucd-lib/cork-theme/styles/js/ucdlib-sass/_pager-buttons.css.js` and `style-ucdlib.css`, for use outside the element.
 
 See the [reference](../../reference/elements/cork-pager.md) for every property.
+
+## cork-collapse
+
+`ucd-theme-collapse` is replaced by `cork-collapse`. It's still campus's collapse: a title bar that slides its content open and closed. The title moves from an attribute into the light DOM, as a heading with a real button in it.
+
+### Steps
+
+1. Find the old element:
+
+   ```
+   grep -rn "ucd-theme-collapse" src
+   ```
+
+2. Change the import:
+
+   ```js
+   // Before
+   import '@ucd-lib/theme-elements/brand/ucd-theme-collapse/ucd-theme-collapse.js';
+
+   // After
+   import '@ucd-lib/cork-theme/elements/cork-collapse';
+   ```
+
+3. Move the title into a heading. The old element always rendered `title` as an `h2`, so write `<h2>` to keep the same heading level, or pick the level that suits the page. Every level looks the same. For a title that shouldn't be a heading, use `<div data-heading>`. Move `brand-class` to the element's `class`, and rename `opened` to `open`:
+
+   ```html
+   <!-- Before -->
+   <ucd-theme-collapse title="How do I renew a book?" brand-class="category-brand--rec-pool" opened>
+     <p>Sign in to your library account.</p>
+   </ucd-theme-collapse>
+
+   <!-- After -->
+   <cork-collapse class="category-brand--rec-pool" open>
+     <h2>How do I renew a book?</h2>
+     <p>Sign in to your library account.</p>
+   </cork-collapse>
+   ```
+
+4. Replace calls to `open()`, `close()` and `toggle()` by setting `open`, and listen for `cork-collapse-toggle` instead of `accordion-toggle`.
+
+5. Make sure the app loads `style-ucdlib.css` (see [Stylesheets](stylesheets.md)). The element needs it for brand classes, for link colors in its content inside force-contrast layout sections, and to hide closed content before the element is registered.
+
+### Changes
+
+| Old | New |
+| --- | --- |
+| `title` | Removed. The title is the first `h1`-`h6` child, or a child with `data-heading`. It's rendered with the same tag, with a `<button>` in it that has `aria-expanded` and `aria-controls`. Before, it was always an `h2` with `tabindex="0"`. |
+| `opened` | `open`. Still reflected. Starting open no longer animates. |
+| `brand-class` | Removed. Put the brand class on the element itself. |
+| `open()`, `close()`, `toggle()` | Removed. Set `open`. Changes from code animate too. |
+| `accordion-toggle` (`detail.isOpen`) | `cork-collapse-toggle` (`detail.open`). Fired on title clicks only, as before. |
+| Content in force-contrast layout sections | Links and headings in the content keep their normal colors. Campus's own collapse turns them white on its white box in dark sections; `style-ucdlib.css` now fixes that for campus's markup and `cork-collapse` alike. |
+| Animation | Uses campus's `slide-element` library, which respects `prefers-reduced-motion`. |
+
+See the [reference](../../reference/elements/cork-collapse.md) for every property.
 
 ## cork-pages
 

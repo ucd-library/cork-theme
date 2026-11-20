@@ -8,6 +8,7 @@ or `docs jsdoc <name>` for one page.
 ## Elements
 
 - [cork-branding-bar](elements/cork-branding-bar.md): The site's masthead: a logo and the site name, with an optional slogan, both linking to the site's homepage.
+- [cork-collapse](elements/cork-collapse.md): A box with a title bar that shows and hides its content.
 - [cork-header](elements/cork-header.md): The primary site header component that accepts various slotted header components and controls their visibility in the nav tray.
 - [cork-markdown](elements/cork-markdown.md): Renders markdown as sanitized HTML in the light DOM (no shadow root), so it inherits styles.
 - [cork-nav-lite](elements/cork-nav-lite.md): A single-level main menu, shown inline in the cork-header bar.
