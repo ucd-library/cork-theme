@@ -42,9 +42,9 @@ this.ctl = { nav: new NavController(this) };
 
 The markup it reads is described in [Nav Markup](nav-markup.md). The field attribute (default `data-nav`) can be changed with the `fieldAttribute` option: `new NavController(this, { fieldAttribute: 'data-my-nav' })`.
 
-Each item has `title`, `href`, `target`, `disabled`, `ariaLabel`, `fields` (e.g. `fields.description`), `subItems`, `navPosition` (e.g. `[0, 2]`, for `getNavItem()`), `ele`, the light DOM link/button, and `click`.
+Each item has `title`, `href`, `target`, `disabled`, `active` (marked with `data-active`), `ariaLabel`, `fields` (e.g. `fields.description`), `subItems`, `navPosition` (e.g. `[0, 2]`, for `getNavItem()`), `ele`, the light DOM link/button, and `click`.
 
-- `item.render({ classes })` renders the item's own button, link, or (with no href) span, with click handling done. `classes` is a string or a `classMap` object, and a plain string works as shorthand: `item.render('menu__link')`.
+- `item.render({ classes })` renders the item's own button, link, or (with no href) span, with click handling done. `classes` is a string or a `classMap` object, and a plain string works as shorthand: `item.render('menu__link')`. `activeClass` (a string or `classMap` object) is added if the item is active, and active items get `aria-current` (`page` on links, `true` on buttons).
 - Elements that render items themselves use `item.click` as a button's or link's click listener (e.g. `@click=${item.click}`). `item.render()` does this already.
 - `item.click` fires `cork-nav-item-click` from the host (bubbling and composed), with `detail.navItem` and `detail.originalEvent` (the click). For a copied item (see `copyNavItems` below), `detail.navItem` is the copy.
 - For buttons, it then passes the click through to `ele`, so click handlers on the user's buttons still run.

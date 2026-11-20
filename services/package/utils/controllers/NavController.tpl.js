@@ -41,12 +41,14 @@ export function drillDownStyles() {
 /**
  * @description Renders an item's own element for the host's shadow DOM: a button, anchor, or span.
  * Automatically wires up button and link clicks (to item.click) and relevant attributes, and records the element as item.renderedEles.item. Does not render sub items.
+ * Active items (see NavItem's active) get aria-current: 'page' on links, 'true' on buttons.
  * Called by item.render.
  * @param {NavItem} item - The item.
  * @param {Object|String} opts - Options. A string is treated as opts.classes.
  * @param {String|Object} opts.classes - Classes to apply: a space-separated string, or a classMap object.
  * @param {Object} opts.typeClasses - Classes to apply by rendered element type, added to opts.classes.
  * Keys: button, a, span. Each value is a string or classMap object, e.g. { button: 'nav-drill__button', span: 'nav-drill__nolink' }
+ * @param {String|Object} opts.activeClass - Classes to add if the item is active: a space-separated string, or a classMap object, e.g. 'tabs__item--active'.
  * @param {TemplateResult} opts.suffixTemplate - An optional template to add directly after the item text
  * @returns {TemplateResult}
  */
@@ -55,11 +57,12 @@ export function renderItem(item, opts={}){
   const eleType = item.ele?.matches('button') ? 'button' : item.href ? 'a' : 'span';
 
   // ifDefined can't be combined with Lit's native classMap, so convert objects to strings here
-  const classes = [opts.classes, opts.typeClasses?.[eleType]]
+  const classes = [opts.classes, opts.typeClasses?.[eleType], item.active ? opts.activeClass : null]
     .map(c => c && typeof c === 'object' ? Object.entries(c).filter(([, on]) => on).map(([name]) => name).join(' ') : (c || ''))
     .join(' ');
 
   const ariaLabel = ifDefined(item.ariaLabel ?? undefined);
+  const ariaCurrent = ifDefined(item.active ? (eleType === 'a' ? 'page' : 'true') : undefined);
   const classAtr = ifDefined(classes.trim().replace(/\s+/g, ' ') || undefined);
   const eleRef = ref(ele => { item.renderedEles.item = ele; });
 
@@ -70,6 +73,7 @@ export function renderItem(item, opts={}){
         type="button"
         class=${classAtr}
         aria-label=${ariaLabel}
+        aria-current=${ariaCurrent}
         ?disabled=${item.disabled}
         @click=${item.click}>${item.title}${opts.suffixTemplate ? opts.suffixTemplate : html``}</button>`;
   }
@@ -81,6 +85,7 @@ export function renderItem(item, opts={}){
         target=${ifDefined(item.target ?? undefined)}
         class=${classAtr}
         aria-label=${ariaLabel}
+        aria-current=${ariaCurrent}
         @click=${item.click}>${item.title}${opts.suffixTemplate ? opts.suffixTemplate : html``}</a>`;
   }
   return html`<span ${eleRef} class=${classAtr}>${item.title}${opts.suffixTemplate ? opts.suffixTemplate : html``}</span>`;

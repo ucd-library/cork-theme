@@ -33,14 +33,22 @@ export function styles() {
       --ave-button-color: var(--white);
       --ave-monospace-font: var(--font-family-monospace);
     }
+    /* api-viewer borders the host. The border goes on .demo-frame instead, so the Background menu sits outside it */
+    :host {
+      border: none;
+    }
+    .demo-frame {
+      border: 1px solid var(--ave-border-color);
+      border-radius: var(--ave-border-radius);
+    }
     [part='demo-tabs'] [part='tab-panel'] {
       background: var(--white);
     }
     [part="knobs"] {
       padding: 1rem;
     }
-    /* set from the background property */
-    [part='demo-output'] {
+    /* set from the background property, unless a campus section background is chosen */
+    [part='demo-output']:not(.layout-section--force-contrast) {
       background: var(--cork-demo-output-background, var(--white));
     }
     /* the slots column is always hidden (each demo has a slot template), so the properties column gets the full width */
@@ -109,6 +117,15 @@ export function styles() {
       display: flex;
       gap: .5rem;
     }
+    .background-menu {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: .5rem;
+    }
+    .background-menu select {
+      width: auto;
+      margin: 0;
+    }
     [part='markup-snippet'] {
       background: var(--black-10);
       padding: .75rem 1rem;
@@ -137,8 +154,31 @@ export function styles() {
 
 export function render() {
   return html`
-    ${ApiDemoBase.prototype.render.call(this)}
-    ${this.selected ? renderMarkupPanel.call(this) : ''}
+    ${this.backgroundMenu ? renderBackgroundMenu.call(this) : ''}
+    <div class="demo-frame">
+      ${ApiDemoBase.prototype.render.call(this)}
+      ${this.selected ? renderMarkupPanel.call(this) : ''}
+    </div>
+  `;
+}
+
+/**
+ * @description Renders the Background menu of campus section backgrounds, shown above the demo with backgroundMenu.
+ * @returns {TemplateResult}
+ */
+function renderBackgroundMenu() {
+  return html`
+    <div class="background-menu">
+      <select
+        aria-label="Demo background"
+        .value=${this._sectionBackground}
+        @change=${this._onSectionBackgroundChange}>
+        <option value="">Default background</option>
+        ${this.sectionBackgrounds.map(name => html`
+          <option value=${name} ?selected=${name === this._sectionBackground}>${name.replace(/-/g, ' ')}</option>
+        `)}
+      </select>
+    </div>
   `;
 }
 

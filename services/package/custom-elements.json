@@ -272,137 +272,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "package/elements/cork-nav-lite/cork-nav-lite.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "A single-level main menu, shown inline in the cork-header bar. For sites with only a few top-level links. Add it as a child of the {@link cork-header } element.\n\nThe header shows it on larger screens, in place of the menu tray toggle.\nSmaller screens use the menu tray, so the site still also needs a cork-primary-nav.\n\nThe links can be written in the element, or copied from the header's cork-primary-nav with copyFromPrimaryNav, so they're only written once.\nOnly top-level items are shown: sub menus and fields are ignored.",
-          "name": "CorkNavLite",
-          "slots": [
-            {
-              "description": "Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM by {@link NavController}. See its examples for the markup formats. Ignored with copyFromPrimaryNav.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "method",
-              "name": "define",
-              "static": true,
-              "parameters": [
-                {
-                  "name": "tagName",
-                  "default": "'cork-nav-lite'",
-                  "description": "Tag name to register. Default: 'cork-nav-lite'",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "description": "Registers the element as a custom element."
-            },
-            {
-              "kind": "field",
-              "name": "headerComponentLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Main Menu'",
-              "description": "Label for the menu, used as the nav's aria-label. Default: 'Main Menu'. Attribute: header-component-label.",
-              "attribute": "header-component-label"
-            },
-            {
-              "kind": "field",
-              "name": "ctl",
-              "type": {
-                "text": "object"
-              },
-              "default": "{ nav: new NavController(this, { noParseHostProperty: 'copyFromPrimaryNav' }) }"
-            },
-            {
-              "kind": "field",
-              "name": "copyFromPrimaryNav",
-              "privacy": "public",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Copies the top-level items of the cork-primary-nav in the same cork-header, instead of reading the element's own links. Attribute: copy-from-primary-nav.",
-              "attribute": "copy-from-primary-nav"
-            },
-            {
-              "kind": "field",
-              "name": "primaryNavMaxItems",
-              "privacy": "public",
-              "type": {
-                "text": "number"
-              },
-              "description": "With copyFromPrimaryNav, the number of items to copy, from the start. Default: all. Attribute: primary-nav-max-items.",
-              "attribute": "primary-nav-max-items"
-            }
-          ],
-          "events": [
-            {
-              "description": "Fired when a rendered link or button is clicked, with the clicked item in detail.navItem. See {@link NavController}.",
-              "name": "cork-nav-item-click"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "header-component-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Main Menu'",
-              "description": "Label for the menu, used as the nav's aria-label. Default: 'Main Menu'. Attribute: header-component-label.",
-              "fieldName": "headerComponentLabel"
-            },
-            {
-              "name": "copy-from-primary-nav",
-              "type": {
-                "text": "boolean"
-              },
-              "description": "Copies the top-level items of the cork-primary-nav in the same cork-header, instead of reading the element's own links. Attribute: copy-from-primary-nav.",
-              "fieldName": "copyFromPrimaryNav"
-            },
-            {
-              "name": "primary-nav-max-items",
-              "type": {
-                "text": "number"
-              },
-              "description": "With copyFromPrimaryNav, the number of items to copy, from the start. Default: all. Attribute: primary-nav-max-items.",
-              "fieldName": "primaryNavMaxItems"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "customElement": true,
-          "tagName": "cork-nav-lite"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "CorkNavLite",
-            "module": "package/elements/cork-nav-lite/cork-nav-lite.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "cork-nav-lite",
-          "declaration": {
-            "name": "CorkNavLite",
-            "module": "package/elements/cork-nav-lite/cork-nav-lite.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "package/elements/cork-header/cork-header.js",
       "declarations": [
         {
@@ -745,6 +614,137 @@
     },
     {
       "kind": "javascript-module",
+      "path": "package/elements/cork-nav-lite/cork-nav-lite.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A single-level main menu, shown inline in the cork-header bar. For sites with only a few top-level links. Add it as a child of the {@link cork-header } element.\n\nThe header shows it on larger screens, in place of the menu tray toggle.\nSmaller screens use the menu tray, so the site still also needs a cork-primary-nav.\n\nThe links can be written in the element, or copied from the header's cork-primary-nav with copyFromPrimaryNav, so they're only written once.\nOnly top-level items are shown: sub menus and fields are ignored.",
+          "name": "CorkNavLite",
+          "slots": [
+            {
+              "description": "Links: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM by {@link NavController}. See its examples for the markup formats. Ignored with copyFromPrimaryNav.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tagName",
+                  "default": "'cork-nav-lite'",
+                  "description": "Tag name to register. Default: 'cork-nav-lite'",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Registers the element as a custom element."
+            },
+            {
+              "kind": "field",
+              "name": "headerComponentLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Main Menu'",
+              "description": "Label for the menu, used as the nav's aria-label. Default: 'Main Menu'. Attribute: header-component-label.",
+              "attribute": "header-component-label"
+            },
+            {
+              "kind": "field",
+              "name": "ctl",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ nav: new NavController(this, { noParseHostProperty: 'copyFromPrimaryNav' }) }"
+            },
+            {
+              "kind": "field",
+              "name": "copyFromPrimaryNav",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Copies the top-level items of the cork-primary-nav in the same cork-header, instead of reading the element's own links. Attribute: copy-from-primary-nav.",
+              "attribute": "copy-from-primary-nav"
+            },
+            {
+              "kind": "field",
+              "name": "primaryNavMaxItems",
+              "privacy": "public",
+              "type": {
+                "text": "number"
+              },
+              "description": "With copyFromPrimaryNav, the number of items to copy, from the start. Default: all. Attribute: primary-nav-max-items.",
+              "attribute": "primary-nav-max-items"
+            }
+          ],
+          "events": [
+            {
+              "description": "Fired when a rendered link or button is clicked, with the clicked item in detail.navItem. See {@link NavController}.",
+              "name": "cork-nav-item-click"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "header-component-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Main Menu'",
+              "description": "Label for the menu, used as the nav's aria-label. Default: 'Main Menu'. Attribute: header-component-label.",
+              "fieldName": "headerComponentLabel"
+            },
+            {
+              "name": "copy-from-primary-nav",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Copies the top-level items of the cork-primary-nav in the same cork-header, instead of reading the element's own links. Attribute: copy-from-primary-nav.",
+              "fieldName": "copyFromPrimaryNav"
+            },
+            {
+              "name": "primary-nav-max-items",
+              "type": {
+                "text": "number"
+              },
+              "description": "With copyFromPrimaryNav, the number of items to copy, from the start. Default: all. Attribute: primary-nav-max-items.",
+              "fieldName": "primaryNavMaxItems"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true,
+          "tagName": "cork-nav-lite"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "CorkNavLite",
+            "module": "package/elements/cork-nav-lite/cork-nav-lite.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "cork-nav-lite",
+          "declaration": {
+            "name": "CorkNavLite",
+            "module": "package/elements/cork-nav-lite/cork-nav-lite.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "package/elements/cork-nav-sub/cork-nav-sub.js",
       "declarations": [
         {
@@ -884,29 +884,134 @@
     },
     {
       "kind": "javascript-module",
-      "path": "package/elements/cork-pager/cork-pager.js",
+      "path": "package/elements/cork-nav-tabs/cork-nav-tabs.js",
       "declarations": [
         {
           "kind": "class",
-          "description": "A pager for navigating through pages of results: prev, a window of page numbers, and next.\n\n- The page numbers shown are centered on the current page where they can be. With ellipses (the default), the first and last pages are always shown,\nand an ellipses stands in for each run of hidden pages, linking to the hidden page next to the shown ones. A run of just one page shows that page instead.\n- Items are links if the pager can make them (see below), or else buttons that fire cork-pager-item-click. Prev and next are disabled at either end.\n- Below 768px wide (the element's own width, not the window's), the pager switches to a mini view: prev, \"Page X of Y\", and next.\n- Colors follow campus's --forced-contrast custom property, so the pager adapts on dark backgrounds, such as a campus section with force contrast.\n\nLinks come from the first of these that's set:\n\n1. The linkFunction property: a function called with (page, pager) that returns the link.\n2. A child script tag with type=\"text/link-function\", holding a function expression called the same way. It's read with new Function,\nso it needs a Content Security Policy that allows unsafe-eval (or no CSP). Otherwise, use the property.\n3. base-path, use-hash, query-params and page-param, e.g. /search/2, #/search/2, /search/2?q=cats, or /search?q=cats&page=2.\n\nWith none of them, the items are buttons.",
-          "name": "CorkPager",
+          "description": "A row of navigation tabs, for moving between related pages or views, e.g. the sections of a record.\nThe tab bar only: content below it is up to the page.\nOnly top-level items are shown: sub menus and fields are ignored.\nThe tab bar keeps its own light background on dark and category brand sections, as campus's does.",
+          "name": "CorkNavTabs",
           "slots": [
             {
-              "description": "Not an actual slot. An optional script tag with type=\"text/link-function\", holding a link function (see linkFunction). Reread when its text changes.",
+              "description": "Tabs: a/button elements, or a ul/ol of li elements. Not an actual slot, but rather parsed and rendered into the shadow DOM by {@link NavController}. See its examples for the markup formats. Mark the current tab with data-active, on its li or its link/button: it's highlighted, and gets aria-current ('page' on links, 'true' on buttons). Move data-active to change tabs, e.g. on a route change.",
               "name": ""
             }
           ],
           "members": [
             {
               "kind": "method",
-              "name": "makePagerItems",
-              "return": {
-                "type": {
-                  "text": "PagerItem[]"
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tagName",
+                  "default": "'cork-nav-tabs'",
+                  "description": "Tag name to register. Default: 'cork-nav-tabs'",
+                  "type": {
+                    "text": "string"
+                  }
                 }
-              },
-              "description": "Builds pagerItems array to be rendered based on element properties."
+              ],
+              "description": "Registers the element as a custom element."
             },
+            {
+              "kind": "field",
+              "name": "navAriaLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Tabs'",
+              "description": "Label for the nav. Default: 'Tabs'. Attribute: nav-aria-label.",
+              "attribute": "nav-aria-label"
+            },
+            {
+              "kind": "field",
+              "name": "secondary",
+              "privacy": "public",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Uses campus's secondary style: a transparent bar with a bottom border and smaller text. Attribute: secondary.",
+              "attribute": "secondary"
+            },
+            {
+              "kind": "field",
+              "name": "ctl",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ nav: new NavController(this) }"
+            }
+          ],
+          "events": [
+            {
+              "description": "Fired when a rendered link or button is clicked, with the clicked item in detail.navItem. See {@link NavController}.",
+              "name": "cork-nav-item-click"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "nav-aria-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Tabs'",
+              "description": "Label for the nav. Default: 'Tabs'. Attribute: nav-aria-label.",
+              "fieldName": "navAriaLabel"
+            },
+            {
+              "name": "secondary",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Uses campus's secondary style: a transparent bar with a bottom border and smaller text. Attribute: secondary.",
+              "fieldName": "secondary"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true,
+          "tagName": "cork-nav-tabs"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "CorkNavTabs",
+            "module": "package/elements/cork-nav-tabs/cork-nav-tabs.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "cork-nav-tabs",
+          "declaration": {
+            "name": "CorkNavTabs",
+            "module": "package/elements/cork-nav-tabs/cork-nav-tabs.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "package/elements/cork-pager/cork-pager.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A pager for navigating through pages of results. Contains:\n- A previous button\n- A window of page numbers centered on the current page. Window size is determined by element attributes.\n- A next button\n\nItems are links if the pager is configured to make an href, or else buttons that fire cork-pager-item-click.\n\nColors follow campus's --forced-contrast custom property, so the pager adapts on dark backgrounds where appropriate classes are applied, such as 'layout-section--force-contrast'.",
+          "name": "CorkPager",
+          "slots": [
+            {
+              "description": "Not an actual slot. An optional script tag with type=\"text/link-function\", holding a link function expression (see linkFunction). Overrides the link attributes. It's read with new Function, so it needs a Content Security Policy that allows unsafe-eval (or no CSP); otherwise, use linkFunction. Reread when its text changes. See example below.",
+              "name": ""
+            }
+          ],
+          "members": [
             {
               "kind": "method",
               "name": "getLink",
@@ -950,7 +1055,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Path that page links start with, e.g. '/search' makes '/search/2'. Attribute: base-path.",
+              "description": "For link construction. Path that page links start with, e.g. '/search' makes '/search/2'. Used when neither linkFunction nor the script tag is set. Combines with useHash, queryParams and pageParam, e.g. '#/search/2', '/search/2?q=cats', or '/search?q=cats&page=2'. Attribute: base-path.",
               "attribute": "base-path"
             },
             {
@@ -958,10 +1063,10 @@
               "name": "queryParams",
               "privacy": "public",
               "type": {
-                "text": "string"
+                "text": "Object|URLSearchParams"
               },
-              "default": "''",
-              "description": "Query string added to page links, e.g. 'q=cats'. Attribute: query-params.",
+              "default": "{}",
+              "description": "For link construction. Query parameters added to page links, as a plain object, e.g. { q: 'cats' }, or a URLSearchParams instance. Set a new value to update the links: changing a URLSearchParams in place won't. Attribute: query-params, a query string, e.g. 'q=cats' (a leading '?' is ignored), converted to a URLSearchParams.",
               "attribute": "query-params"
             },
             {
@@ -972,7 +1077,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Makes page links hash links, e.g. '#/search/2'. Attribute: use-hash.",
+              "description": "For link construction. Makes page links hash links, e.g. '#/search/2'. Attribute: use-hash.",
               "attribute": "use-hash"
             },
             {
@@ -983,7 +1088,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Puts the page in this query parameter, rather than at the end of the path, e.g. 'page' makes '/search?page=2'. Replaces the parameter if queryParams has it. Attribute: page-param.",
+              "description": "For link construction. Puts the page in this query parameter, rather than at the end of the path, e.g. 'page' makes '/search?page=2'. Replaces the parameter if queryParams has it. Attribute: page-param.",
               "attribute": "page-param"
             },
             {
@@ -1005,7 +1110,7 @@
                 "text": "Function"
               },
               "default": "null",
-              "description": "Makes page links: called with (page, pager), returns the link, or nothing for no link. Overrides the link attributes and the script tag. Property only."
+              "description": "For link construction. Called with (page, pager), returns the link, or nothing for no link. Overrides the script tag and the link attributes. Property only."
             },
             {
               "kind": "field",
@@ -1052,7 +1157,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Shows only a window of visibleLinkCount pages, without the first and last pages and ellipses. Attribute: no-ellipses.",
+              "description": "By default, the first and last pages are always shown, and an ellipses stands in for each run of hidden pages (a run of just one page shows that page instead). This shows only a window of visibleLinkCount pages, without the first and last pages and ellipses. Attribute: no-ellipses.",
               "attribute": "no-ellipses"
             },
             {
@@ -1062,7 +1167,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Makes ellipses plain text, rather than links to the next hidden page. Attribute: static-ellipses.",
+              "description": "Makes ellipses plain text, rather than links to the hidden page next to the shown ones. Attribute: static-ellipses.",
               "attribute": "static-ellipses"
             },
             {
@@ -1072,7 +1177,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Always shows the mini view. Attribute: only-mini.",
+              "description": "Always shows the mini view: prev, \"Page X of Y\", and next. Attribute: only-mini.",
               "attribute": "only-mini"
             },
             {
@@ -1082,7 +1187,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Never switches to the mini view on narrow widths. Attribute: no-mini.",
+              "description": "By default, the pager switches to the mini view below 768px wide (the element's own width, not the window's). This turns that off. Attribute: no-mini.",
               "attribute": "no-mini"
             },
             {
@@ -1094,16 +1199,6 @@
               },
               "description": "Leaves \"of Y\" out of the mini view's \"Page X of Y\". Attribute: no-max-on-mini.",
               "attribute": "no-max-on-mini"
-            },
-            {
-              "kind": "field",
-              "name": "pagerItems",
-              "privacy": "public",
-              "type": {
-                "text": "PagerItem[]"
-              },
-              "description": "The items the pager renders, built by makePagerItems. Read only.",
-              "attribute": "pagerItems"
             }
           ],
           "events": [
@@ -1145,7 +1240,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Shows only a window of visibleLinkCount pages, without the first and last pages and ellipses. Attribute: no-ellipses.",
+              "description": "By default, the first and last pages are always shown, and an ellipses stands in for each run of hidden pages (a run of just one page shows that page instead). This shows only a window of visibleLinkCount pages, without the first and last pages and ellipses. Attribute: no-ellipses.",
               "fieldName": "noEllipses"
             },
             {
@@ -1153,7 +1248,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Makes ellipses plain text, rather than links to the next hidden page. Attribute: static-ellipses.",
+              "description": "Makes ellipses plain text, rather than links to the hidden page next to the shown ones. Attribute: static-ellipses.",
               "fieldName": "staticEllipses"
             },
             {
@@ -1161,7 +1256,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Always shows the mini view. Attribute: only-mini.",
+              "description": "Always shows the mini view: prev, \"Page X of Y\", and next. Attribute: only-mini.",
               "fieldName": "onlyMini"
             },
             {
@@ -1169,7 +1264,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Never switches to the mini view on narrow widths. Attribute: no-mini.",
+              "description": "By default, the pager switches to the mini view below 768px wide (the element's own width, not the window's). This turns that off. Attribute: no-mini.",
               "fieldName": "noMini"
             },
             {
@@ -1186,16 +1281,16 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Path that page links start with, e.g. '/search' makes '/search/2'. Attribute: base-path.",
+              "description": "For link construction. Path that page links start with, e.g. '/search' makes '/search/2'. Used when neither linkFunction nor the script tag is set. Combines with useHash, queryParams and pageParam, e.g. '#/search/2', '/search/2?q=cats', or '/search?q=cats&page=2'. Attribute: base-path.",
               "fieldName": "basePath"
             },
             {
               "name": "query-params",
               "type": {
-                "text": "string"
+                "text": "Object|URLSearchParams"
               },
-              "default": "''",
-              "description": "Query string added to page links, e.g. 'q=cats'. Attribute: query-params.",
+              "default": "{}",
+              "description": "For link construction. Query parameters added to page links, as a plain object, e.g. { q: 'cats' }, or a URLSearchParams instance. Set a new value to update the links: changing a URLSearchParams in place won't. Attribute: query-params, a query string, e.g. 'q=cats' (a leading '?' is ignored), converted to a URLSearchParams.",
               "fieldName": "queryParams"
             },
             {
@@ -1204,7 +1299,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Makes page links hash links, e.g. '#/search/2'. Attribute: use-hash.",
+              "description": "For link construction. Makes page links hash links, e.g. '#/search/2'. Attribute: use-hash.",
               "fieldName": "useHash"
             },
             {
@@ -1213,7 +1308,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Puts the page in this query parameter, rather than at the end of the path, e.g. 'page' makes '/search?page=2'. Replaces the parameter if queryParams has it. Attribute: page-param.",
+              "description": "For link construction. Puts the page in this query parameter, rather than at the end of the path, e.g. 'page' makes '/search?page=2'. Replaces the parameter if queryParams has it. Attribute: page-param.",
               "fieldName": "pageParam"
             },
             {
@@ -1224,14 +1319,6 @@
               "default": "'Pagination'",
               "description": "Label for the nav. Default: 'Pagination'. Attribute: nav-aria-label.",
               "fieldName": "navAriaLabel"
-            },
-            {
-              "name": "pagerItems",
-              "type": {
-                "text": "PagerItem[]"
-              },
-              "description": "The items the pager renders, built by makePagerItems. Read only.",
-              "fieldName": "pagerItems"
             }
           ],
           "superclass": {
@@ -2128,118 +2215,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "package/elements/cork-search-tray/cork-search-tray.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "Lays out the cork-header's search tray when it has more than just a search form. Add it as a child of the {@link cork-header } element.",
-          "name": "CorkSearchTray",
-          "slots": [
-            {
-              "description": "Search form. A child {@link cork-search-form} is assigned here automatically.",
-              "name": "form"
-            },
-            {
-              "description": "Common searches, shown below the form. A child {@link cork-search-common} is assigned here automatically.",
-              "name": "common"
-            }
-          ],
-          "members": [
-            {
-              "kind": "method",
-              "name": "focus",
-              "parameters": [
-                {
-                  "name": "opts",
-                  "description": "Focus options, passed on to the child's focus().",
-                  "type": {
-                    "text": "Object"
-                  }
-                }
-              ],
-              "description": "Focuses the form, or else the common searches. Called by cork-header when it opens the tray.\nThe children are slotted, so delegatesFocus on this element wouldn't reliably reach their controls."
-            },
-            {
-              "kind": "method",
-              "name": "onNavTrayHide",
-              "description": "Called by cork-header when its nav tray hides this element. Passes the call on to each child that has the method,\ne.g. so the form clears its input."
-            },
-            {
-              "kind": "method",
-              "name": "define",
-              "static": true,
-              "parameters": [
-                {
-                  "name": "tagName",
-                  "default": "'cork-search-tray'",
-                  "description": "Tag name to register. Default: 'cork-search-tray'",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "description": "Registers the element as a custom element."
-            },
-            {
-              "kind": "field",
-              "name": "headerComponentLabel",
-              "privacy": "public",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Search'",
-              "description": "Label for the tray, e.g. in the header's nav tray bar. Default: 'Search'. Attribute: header-component-label.",
-              "attribute": "header-component-label"
-            },
-            {
-              "kind": "field",
-              "name": "ctl",
-              "type": {
-                "text": "object"
-              },
-              "default": "{ mutationObserver: new MutationObserverController(this, {childList: true}, this._onChildListMutation) }"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "header-component-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Search'",
-              "description": "Label for the tray, e.g. in the header's nav tray bar. Default: 'Search'. Attribute: header-component-label.",
-              "fieldName": "headerComponentLabel"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "customElement": true,
-          "tagName": "cork-search-tray"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "CorkSearchTray",
-            "module": "package/elements/cork-search-tray/cork-search-tray.js"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "cork-search-tray",
-          "declaration": {
-            "name": "CorkSearchTray",
-            "module": "package/elements/cork-search-tray/cork-search-tray.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "package/elements/cork-search-form/cork-search-form.js",
       "declarations": [
         {
@@ -2544,6 +2519,118 @@
           "declaration": {
             "name": "CorkSearchForm",
             "module": "package/elements/cork-search-form/cork-search-form.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "package/elements/cork-search-tray/cork-search-tray.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Lays out the cork-header's search tray when it has more than just a search form. Add it as a child of the {@link cork-header } element.",
+          "name": "CorkSearchTray",
+          "slots": [
+            {
+              "description": "Search form. A child {@link cork-search-form} is assigned here automatically.",
+              "name": "form"
+            },
+            {
+              "description": "Common searches, shown below the form. A child {@link cork-search-common} is assigned here automatically.",
+              "name": "common"
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "focus",
+              "parameters": [
+                {
+                  "name": "opts",
+                  "description": "Focus options, passed on to the child's focus().",
+                  "type": {
+                    "text": "Object"
+                  }
+                }
+              ],
+              "description": "Focuses the form, or else the common searches. Called by cork-header when it opens the tray.\nThe children are slotted, so delegatesFocus on this element wouldn't reliably reach their controls."
+            },
+            {
+              "kind": "method",
+              "name": "onNavTrayHide",
+              "description": "Called by cork-header when its nav tray hides this element. Passes the call on to each child that has the method,\ne.g. so the form clears its input."
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tagName",
+                  "default": "'cork-search-tray'",
+                  "description": "Tag name to register. Default: 'cork-search-tray'",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Registers the element as a custom element."
+            },
+            {
+              "kind": "field",
+              "name": "headerComponentLabel",
+              "privacy": "public",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Search'",
+              "description": "Label for the tray, e.g. in the header's nav tray bar. Default: 'Search'. Attribute: header-component-label.",
+              "attribute": "header-component-label"
+            },
+            {
+              "kind": "field",
+              "name": "ctl",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ mutationObserver: new MutationObserverController(this, {childList: true}, this._onChildListMutation) }"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "header-component-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Search'",
+              "description": "Label for the tray, e.g. in the header's nav tray bar. Default: 'Search'. Attribute: header-component-label.",
+              "fieldName": "headerComponentLabel"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "customElement": true,
+          "tagName": "cork-search-tray"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "CorkSearchTray",
+            "module": "package/elements/cork-search-tray/cork-search-tray.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "cork-search-tray",
+          "declaration": {
+            "name": "CorkSearchTray",
+            "module": "package/elements/cork-search-tray/cork-search-tray.js"
           }
         }
       ]

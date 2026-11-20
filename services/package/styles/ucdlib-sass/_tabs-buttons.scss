@@ -1,0 +1,12 @@
+//------------------------------------
+//  Tabs buttons
+//------------------------------------
+
+// Sizes button tabs (.tabs button.tabs__item), e.g. cork-nav-tabs items without a link, like link tabs.
+// Campus's tabs__item mixin (sass/4_component/_tabs.scss) sizes tabs in em, but buttons don't inherit the font size
+// (browsers default to 13.33px) and use border-box sizing, so button tabs came out shorter than link tabs.
+
+.tabs button.tabs__item {
+  box-sizing: content-box;
+  font-size: inherit;
+}

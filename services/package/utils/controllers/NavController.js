@@ -2,6 +2,9 @@ import MutationObserverController from './MutationObserverController.js';
 
 import { renderItem, renderDrillDown, drillDownStyles } from './NavController.tpl.js';
 
+// Marks the active item, on its li or its link/button
+const ACTIVE_ATTRIBUTE = 'data-active';
+
 /**
  * @typedef {Object} NavItem
  * @description Used by the NavController to represent a navigation item, which may be a link, button, or title-only item, and may have sub items.
@@ -9,6 +12,7 @@ import { renderItem, renderDrillDown, drillDownStyles } from './NavController.tp
  * @property {String|null} href - The href as written in the markup, or null.
  * @property {String|null} target - The target attribute, or null.
  * @property {Boolean} disabled - Whether the link/button has the disabled attribute.
+ * @property {Boolean} active - Whether the item is marked with data-active, on its li or its link/button (or the deprecated list).
  * @property {String|null} ariaLabel - The aria-label attribute of the element that supplied the title (the link/button, li, or deprecated list), or null.
  * @property {Object} fields - Text of each child element marked with the field attribute, keyed by its value (e.g. description).
  * @property {NavItem[]} subItems - Child items.
@@ -22,6 +26,7 @@ import { renderItem, renderDrillDown, drillDownStyles } from './NavController.tp
  * @property {Function} render - Renders the item's own link/button (not its sub items) for the host's shadow DOM, e.g. ${item.render({classes: 'menu__link'})}.
  *
  * Takes an opts object, where opts.classes is a class string or a classMap object, or just a class string, e.g. ${item.render('menu__link')}.
+ * opts.activeClass is added if the item is active, e.g. ${item.render({ classes: 'tabs__item', activeClass: 'tabs__item--active' })}. See renderItem for all options.
  * @property {Function} matchesCoordinates - Takes a navPosition (e.g. [1, 0, 2]). Returns true if the item is at exactly that position.
  * @property {Function} containsCoordinates - Takes a navPosition. Returns true if the item is at that position or is one of its ancestors, e.g. [1] and [1, 0] contain [1, 0, 2].
  * @property {Object} renderedEles - The item's elements in the host's shadow DOM, set when they render. Empty until then.
@@ -90,6 +95,15 @@ import { renderItem, renderDrillDown, drillDownStyles } from './NavController.tp
  *     </li>
  *   </ul>
  * </my-nav>
+ *
+ * @example <caption>Light DOM markup - marking the active item</caption>
+ * <!-- data-active goes on the li or on its link/button. Active items get aria-current and opts.activeClass when rendered -->
+ * <my-nav>
+ *   <ul>
+ *     <li data-active><a href="/overview">Overview</a></li>
+ *     <li><a href="/details" data-active>Details</a></li>
+ *   </ul>
+ * </my-nav>
  */
 export default class NavController {
 
@@ -125,7 +139,7 @@ export default class NavController {
         subtree: true,
         characterData: true,
         attributes: true,
-        attributeFilter: [this.fieldAttribute, 'href', 'target', 'disabled', 'link-text', 'aria-label']
+        attributeFilter: [this.fieldAttribute, 'href', 'target', 'disabled', 'link-text', 'aria-label', ACTIVE_ATTRIBUTE]
       },
       this._onMutation.bind(this)
     );
@@ -362,11 +376,13 @@ export default class NavController {
       }
     }
 
+    const liActive = li.hasAttribute(ACTIVE_ATTRIBUTE);
     const titleEle = this._getTitleElement(li);
     if ( titleEle ) {
-      return this._makeItem({ ...this._getLinkProperties(titleEle), fields, subItems });
+      const linkProps = this._getLinkProperties(titleEle);
+      return this._makeItem({ ...linkProps, active: liActive || linkProps.active, fields, subItems });
     }
-    return this._makeItem({ title: this._getOwnText(li), ariaLabel: li.getAttribute('aria-label'), fields, subItems });
+    return this._makeItem({ title: this._getOwnText(li), ariaLabel: li.getAttribute('aria-label'), active: liActive, fields, subItems });
   }
 
   /**
@@ -379,6 +395,7 @@ export default class NavController {
       title: this._cleanText(list.getAttribute('link-text')),
       href: list.getAttribute('href'),
       ariaLabel: list.getAttribute('aria-label'),
+      active: list.hasAttribute(ACTIVE_ATTRIBUTE),
       subItems: this._parseListChildren(list)
     });
   }
@@ -395,7 +412,7 @@ export default class NavController {
   /**
    * @description Reads the item properties that come from a link/button.
    * @param {HTMLElement} ele - An a/button element.
-   * @returns {Object} title, href, target, disabled, ariaLabel and ele.
+   * @returns {Object} title, href, target, disabled, active, ariaLabel and ele.
    */
   _getLinkProperties(ele){
     return {
@@ -403,6 +420,7 @@ export default class NavController {
       href: ele.getAttribute('href'),
       target: ele.getAttribute('target'),
       disabled: ele.hasAttribute('disabled'),
+      active: ele.hasAttribute(ACTIVE_ATTRIBUTE),
       ariaLabel: ele.getAttribute('aria-label'),
       ele
     };
@@ -457,6 +475,7 @@ export default class NavController {
       href: null,
       target: null,
       disabled: false,
+      active: false,
       ariaLabel: null,
       fields: {},
       subItems: [],
@@ -496,6 +515,7 @@ export default class NavController {
       href: navItem.href,
       target: navItem.target,
       disabled: navItem.disabled,
+      active: navItem.active,
       ariaLabel: navItem.ariaLabel,
       fields: { ...navItem.fields },
       subItems: opts.copySubItems ? navItem.subItems.map(subItem => this._copyNavItem(subItem, opts)) : [],

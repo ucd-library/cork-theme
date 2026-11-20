@@ -1,13 +1,15 @@
 /**
  * @file Demo modules for the element demos on each element's page, keyed by tag name.
  * Each module's default export is the demo's starting markup. It can also export hiddenKnobs, an array of property names
- * to leave out of the demo's knobs, and background, a CSS background for the demo area, e.g. 'var(--ucd-blue)'. Each module imports its element, and any elements its markup uses, so they're defined before the demo renders.
+ * to leave out of the demo's knobs, background, a CSS background for the demo area, e.g. 'var(--ucd-blue)',
+ * and backgroundMenu, true to show a menu of campus section backgrounds above the demo, for elements that adapt to them. Each module imports its element, and any elements its markup uses, so they're defined before the demo renders.
  */
 import * as corkBrandingBar from './cork-branding-bar.js';
 import * as corkHeader from './cork-header.js';
 import * as corkMarkdown from './cork-markdown.js';
 import * as corkNavLite from './cork-nav-lite.js';
 import * as corkNavSub from './cork-nav-sub.js';
+import * as corkNavTabs from './cork-nav-tabs.js';
 import * as corkPager from './cork-pager.js';
 import * as corkNavSubPopover from './cork-nav-sub-popover.js';
 import * as corkPages from './cork-pages.js';
@@ -23,6 +25,7 @@ export default {
   'cork-markdown': corkMarkdown,
   'cork-nav-lite': corkNavLite,
   'cork-nav-sub': corkNavSub,
+  'cork-nav-tabs': corkNavTabs,
   'cork-pager': corkPager,
   'cork-nav-sub-popover': corkNavSubPopover,
   'cork-pages': corkPages,

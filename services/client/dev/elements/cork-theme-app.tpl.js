@@ -53,6 +53,7 @@ function renderHeader(){
               <ul>
                 <li><a href='/elements/cork-nav-sub'>Submenu</a></li>
                 <li><a href='/elements/cork-nav-sub-popover'>Submenu Popover</a></li>
+                <li><a href='/elements/cork-nav-tabs'>Tabs</a></li>
                 <li><a href='/elements/cork-pager'>Pager</a></li>
               </ul>
             </li>

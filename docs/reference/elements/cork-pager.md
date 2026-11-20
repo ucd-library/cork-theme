@@ -2,22 +2,14 @@
 
 # cork-pager
 
-A pager for navigating through pages of results: prev, a window of page numbers, and next.
+A pager for navigating through pages of results. Contains:
+- A previous button
+- A window of page numbers centered on the current page. Window size is determined by element attributes.
+- A next button
 
-- The page numbers shown are centered on the current page where they can be. With ellipses (the default), the first and last pages are always shown,
-and an ellipses stands in for each run of hidden pages, linking to the hidden page next to the shown ones. A run of just one page shows that page instead.
-- Items are links if the pager can make them (see below), or else buttons that fire cork-pager-item-click. Prev and next are disabled at either end.
-- Below 768px wide (the element's own width, not the window's), the pager switches to a mini view: prev, "Page X of Y", and next.
-- Colors follow campus's --forced-contrast custom property, so the pager adapts on dark backgrounds, such as a campus section with force contrast.
+Items are links if the pager is configured to make an href, or else buttons that fire cork-pager-item-click.
 
-Links come from the first of these that's set:
-
-1. The linkFunction property: a function called with (page, pager) that returns the link.
-2. A child script tag with type="text/link-function", holding a function expression called the same way. It's read with new Function,
-so it needs a Content Security Policy that allows unsafe-eval (or no CSP). Otherwise, use the property.
-3. base-path, use-hash, query-params and page-param, e.g. /search/2, #/search/2, /search/2?q=cats, or /search?q=cats&page=2.
-
-With none of them, the items are buttons.
+Colors follow campus's --forced-contrast custom property, so the pager adapts on dark backgrounds where appropriate classes are applied, such as 'layout-section--force-contrast'.
 
 ## Properties
 
@@ -26,24 +18,24 @@ With none of them, the items are buttons.
 | `currentPage` | `Number` | The current page. Default: 1. Attribute: current-page. |
 | `maxPage` | `Number` | The number of pages. Default: 1. Attribute: max-page. |
 | `visibleLinkCount` | `Number` | How many page numbers to show, including the first and last. Default: 7. Attribute: visible-link-count. |
-| `noEllipses` | `Boolean` | Shows only a window of visibleLinkCount pages, without the first and last pages and ellipses. Attribute: no-ellipses. |
-| `staticEllipses` | `Boolean` | Makes ellipses plain text, rather than links to the next hidden page. Attribute: static-ellipses. |
-| `onlyMini` | `Boolean` | Always shows the mini view. Attribute: only-mini. |
-| `noMini` | `Boolean` | Never switches to the mini view on narrow widths. Attribute: no-mini. |
+| `noEllipses` | `Boolean` | By default, the first and last pages are always shown, and an ellipses stands in for each run of hidden pages (a run of just one page shows that page instead). This shows only a window of visibleLinkCount pages, without the first and last pages and ellipses. Attribute: no-ellipses. |
+| `staticEllipses` | `Boolean` | Makes ellipses plain text, rather than links to the hidden page next to the shown ones. Attribute: static-ellipses. |
+| `onlyMini` | `Boolean` | Always shows the mini view: prev, "Page X of Y", and next. Attribute: only-mini. |
+| `noMini` | `Boolean` | By default, the pager switches to the mini view below 768px wide (the element's own width, not the window's). This turns that off. Attribute: no-mini. |
 | `noMaxOnMini` | `Boolean` | Leaves "of Y" out of the mini view's "Page X of Y". Attribute: no-max-on-mini. |
-| `basePath` | `String` | Path that page links start with, e.g. '/search' makes '/search/2'. Attribute: base-path. |
-| `queryParams` | `String` | Query string added to page links, e.g. 'q=cats'. Attribute: query-params. |
-| `useHash` | `Boolean` | Makes page links hash links, e.g. '#/search/2'. Attribute: use-hash. |
-| `pageParam` | `String` | Puts the page in this query parameter, rather than at the end of the path, e.g. 'page' makes '/search?page=2'. Replaces the parameter if queryParams has it. Attribute: page-param. |
-| `linkFunction` | `Function` | Makes page links: called with (page, pager), returns the link, or nothing for no link. Overrides the link attributes and the script tag. Property only. |
+| `basePath` | `String` | For link construction. Path that page links start with, e.g. '/search' makes '/search/2'. Used when neither linkFunction nor the script tag is set. Combines with useHash, queryParams and pageParam, e.g. '#/search/2', '/search/2?q=cats', or '/search?q=cats&page=2'. Attribute: base-path. |
+| `queryParams` | `Object\|URLSearchParams` | For link construction. Query parameters added to page links, as a plain object, e.g. { q: 'cats' }, or a URLSearchParams instance. Set a new value to update the links: changing a URLSearchParams in place won't. Attribute: query-params, a query string, e.g. 'q=cats' (a leading '?' is ignored), converted to a URLSearchParams. |
+| `useHash` | `Boolean` | For link construction. Makes page links hash links, e.g. '#/search/2'. Attribute: use-hash. |
+| `pageParam` | `String` | For link construction. Puts the page in this query parameter, rather than at the end of the path, e.g. 'page' makes '/search?page=2'. Replaces the parameter if queryParams has it. Attribute: page-param. |
+| `linkFunction` | `Function` | For link construction. Called with (page, pager), returns the link, or nothing for no link. Overrides the script tag and the link attributes. Property only. |
 | `navAriaLabel` | `String` | Label for the nav. Default: 'Pagination'. Attribute: nav-aria-label. |
-| `pagerItems` | `PagerItem[]` | The items the pager renders, built by makePagerItems. Read only. |
+| `pagerItems` | `PagerItem[]` | The items the pager renders, built by _makePagerItems. Read only. |
 
 ## Slots
 
 | Name | Description |
 | --- | --- |
-| (default) | Not an actual slot. An optional script tag with type="text/link-function", holding a link function (see linkFunction). Reread when its text changes. |
+| (default) | Not an actual slot. An optional script tag with type="text/link-function", holding a link function expression (see linkFunction). Overrides the link attributes. It's read with new Function, so it needs a Content Security Policy that allows unsafe-eval (or no CSP); otherwise, use linkFunction. Reread when its text changes. See example below. |
 
 ## Events
 
@@ -52,12 +44,6 @@ With none of them, the items are buttons.
 | `cork-pager-item-click` | Fired when a page, ellipses, prev or next link or button is clicked, whether or not the pager has links. Bubbles and is composed. Not fired for disabled buttons, or for link clicks with a modifier key or a non-primary button (e.g. ctrl/cmd-click to open a new tab), which are left to the browser.<br><br>• detail.item: the clicked PagerItem (see below).<br>• detail.page: the page it goes to. The pager doesn't change currentPage itself: set it in response, or from your router.<br>• detail.originalEvent: the click event, e.g. to call preventDefault() on a link for an SPA router. |
 
 ## Methods
-
-### makePagerItems()
-
-Builds pagerItems array to be rendered based on element properties.
-
-**Returns:** `PagerItem[]` - The items, also set as pagerItems.
 
 ### getLink(page)
 
@@ -92,10 +78,10 @@ import CorkPager from '@ucd-lib/cork-theme/elements/cork-pager/cork-pager.js';
 
 ```html
 <!-- /search/1, /search/2, ... -->
-<cork-pager current-page="3" max-page="20" base-path="/search"></cork-pager>
+<cork-pager base-path="/search"></cork-pager>
 
 <!-- /search?q=cats&page=1, ... -->
-<cork-pager current-page="3" max-page="20" base-path="/search" query-params="q=cats" page-param="page"></cork-pager>
+<cork-pager base-path="/search" query-params="q=cats" page-param="page"></cork-pager>
 ```
 
 **Link function property**
@@ -131,13 +117,54 @@ pager.addEventListener('cork-pager-item-click', e => {
 });
 ```
 
-**Links in an SPA**
+**In a Lit SPA with cork-app-state**
 
 ```js
-pager.addEventListener('cork-pager-item-click', e => {
-  e.detail.originalEvent.preventDefault();
-  router.go(e.detail.item.link);
-});
+// cork-app-state handles the link clicks, so the page comes from the URL: back/forward, reloads and shared links all work.
+// No cork-pager-item-click handler is needed.
+import { LitElement, html } from 'lit';
+import { LitCorkUtils, Mixin } from '@ucd-lib/cork-app-utils';
+import '@ucd-lib/cork-theme/elements/cork-pager';
+
+class AppPageSearch extends Mixin(LitElement).with(LitCorkUtils) {
+
+  static get properties() {
+    return {
+      query: { state: true },
+      page: { state: true },
+      maxPage: { state: true }
+    };
+  }
+
+  constructor() {
+    super();
+    this.query = '';
+    this.page = 1;
+    this.maxPage = 1;
+    this._injectModel('AppStateModel', 'SearchModel');
+  }
+
+  async _onAppStateUpdate(e) {
+    if ( e.page !== 'search' ) return;
+    this.query = e.location.query.q || '';
+    this.page = parseInt(e.location.query.page) || 1;
+    const res = await this.SearchModel.search(this.query, { page: this.page });
+    if ( res.state === 'loaded' ) this.maxPage = res.payload.maxPage;
+  }
+
+  render() {
+    // links like /search?q=cats&page=2
+    return html`
+      <cork-pager
+        current-page=${this.page}
+        max-page=${this.maxPage}
+        base-path="/search"
+        .queryParams=${{ q: this.query }}
+        page-param="page">
+      </cork-pager>
+    `;
+  }
+}
 ```
 
 **Mini view**
@@ -156,7 +183,7 @@ pager.addEventListener('cork-pager-item-click', e => {
 
 Typedef: `Object`
 
-An item in a cork-pager, from makePagerItems.
+An item in a cork-pager, from _makePagerItems.
 
 #### Properties
 

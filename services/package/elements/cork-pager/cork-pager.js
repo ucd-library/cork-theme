@@ -4,39 +4,38 @@ import { render, styles } from "./cork-pager.tpl.js";
 import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controllers';
 
 /**
- * @description A pager for navigating through pages of results: prev, a window of page numbers, and next.
- *
- * - The page numbers shown are centered on the current page where they can be. With ellipses (the default), the first and last pages are always shown,
- * and an ellipses stands in for each run of hidden pages, linking to the hidden page next to the shown ones. A run of just one page shows that page instead.
- * - Items are links if the pager can make them (see below), or else buttons that fire cork-pager-item-click. Prev and next are disabled at either end.
- * - Below 768px wide (the element's own width, not the window's), the pager switches to a mini view: prev, "Page X of Y", and next.
- * - Colors follow campus's --forced-contrast custom property, so the pager adapts on dark backgrounds, such as a campus section with force contrast.
- *
- * Links come from the first of these that's set:
- *
- * 1. The linkFunction property: a function called with (page, pager) that returns the link.
- * 2. A child script tag with type="text/link-function", holding a function expression called the same way. It's read with new Function,
- * so it needs a Content Security Policy that allows unsafe-eval (or no CSP). Otherwise, use the property.
- * 3. base-path, use-hash, query-params and page-param, e.g. /search/2, #/search/2, /search/2?q=cats, or /search?q=cats&page=2.
- *
- * With none of them, the items are buttons.
+ * @description A pager for navigating through pages of results. Contains:
+ * - A previous button
+ * - A window of page numbers centered on the current page. Window size is determined by element attributes.
+ * - A next button
+ * 
+ * Items are links if the pager is configured to make an href, or else buttons that fire cork-pager-item-click.
+ * 
+ * Colors follow campus's --forced-contrast custom property, so the pager adapts on dark backgrounds where appropriate classes are applied, such as 'layout-section--force-contrast'.
  * @property {Number} currentPage - The current page. Default: 1. Attribute: current-page.
  * @property {Number} maxPage - The number of pages. Default: 1. Attribute: max-page.
  * @property {Number} visibleLinkCount - How many page numbers to show, including the first and last. Default: 7. Attribute: visible-link-count.
- * @property {Boolean} noEllipses - Shows only a window of visibleLinkCount pages, without the first and last pages and ellipses. Attribute: no-ellipses.
- * @property {Boolean} staticEllipses - Makes ellipses plain text, rather than links to the next hidden page. Attribute: static-ellipses.
- * @property {Boolean} onlyMini - Always shows the mini view. Attribute: only-mini.
- * @property {Boolean} noMini - Never switches to the mini view on narrow widths. Attribute: no-mini.
+ * @property {Boolean} noEllipses - By default, the first and last pages are always shown, and an ellipses stands in for each run of hidden pages
+ * (a run of just one page shows that page instead). This shows only a window of visibleLinkCount pages, without the first and last pages and ellipses. Attribute: no-ellipses.
+ * @property {Boolean} staticEllipses - Makes ellipses plain text, rather than links to the hidden page next to the shown ones. Attribute: static-ellipses.
+ * @property {Boolean} onlyMini - Always shows the mini view: prev, "Page X of Y", and next. Attribute: only-mini.
+ * @property {Boolean} noMini - By default, the pager switches to the mini view below 768px wide (the element's own width, not the window's).
+ * This turns that off. Attribute: no-mini.
  * @property {Boolean} noMaxOnMini - Leaves "of Y" out of the mini view's "Page X of Y". Attribute: no-max-on-mini.
- * @property {String} basePath - Path that page links start with, e.g. '/search' makes '/search/2'. Attribute: base-path.
- * @property {String} queryParams - Query string added to page links, e.g. 'q=cats'. Attribute: query-params.
- * @property {Boolean} useHash - Makes page links hash links, e.g. '#/search/2'. Attribute: use-hash.
- * @property {String} pageParam - Puts the page in this query parameter, rather than at the end of the path, e.g. 'page' makes '/search?page=2'.
+ * @property {String} basePath - For link construction. Path that page links start with, e.g. '/search' makes '/search/2'. Used when neither linkFunction nor the script tag is set.
+ * Combines with useHash, queryParams and pageParam, e.g. '#/search/2', '/search/2?q=cats', or '/search?q=cats&page=2'. Attribute: base-path.
+ * @property {Object|URLSearchParams} queryParams - For link construction. Query parameters added to page links, as a plain object, e.g. { q: 'cats' },
+ * or a URLSearchParams instance. Set a new value to update the links: changing a URLSearchParams in place won't.
+ * Attribute: query-params, a query string, e.g. 'q=cats' (a leading '?' is ignored), converted to a URLSearchParams.
+ * @property {Boolean} useHash - For link construction. Makes page links hash links, e.g. '#/search/2'. Attribute: use-hash.
+ * @property {String} pageParam - For link construction. Puts the page in this query parameter, rather than at the end of the path, e.g. 'page' makes '/search?page=2'.
  * Replaces the parameter if queryParams has it. Attribute: page-param.
- * @property {Function} linkFunction - Makes page links: called with (page, pager), returns the link, or nothing for no link. Overrides the link attributes and the script tag. Property only.
+ * @property {Function} linkFunction - For link construction. Called with (page, pager), returns the link, or nothing for no link. Overrides the script tag and the link attributes. Property only.
  * @property {String} navAriaLabel - Label for the nav. Default: 'Pagination'. Attribute: nav-aria-label.
- * @property {PagerItem[]} pagerItems - The items the pager renders, built by makePagerItems. Read only.
- * @slot - Not an actual slot. An optional script tag with type="text/link-function", holding a link function (see linkFunction). Reread when its text changes.
+ * @property {PagerItem[]} pagerItems - The items the pager renders, built by _makePagerItems. Read only.
+ * @slot - Not an actual slot. An optional script tag with type="text/link-function", holding a link function expression (see linkFunction).
+ * Overrides the link attributes. It's read with new Function, so it needs a Content Security Policy that allows unsafe-eval (or no CSP); otherwise, use linkFunction.
+ * Reread when its text changes. See example below.
  * @event cork-pager-item-click - Fired when a page, ellipses, prev or next link or button is clicked, whether or not the pager has links. Bubbles and is composed.
  * Not fired for disabled buttons, or for link clicks with a modifier key or a non-primary button (e.g. ctrl/cmd-click to open a new tab), which are left to the browser.
  *
@@ -51,10 +50,10 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
  *
  * @example <caption>Links</caption>
  * <!-- /search/1, /search/2, ... -->
- * <cork-pager current-page="3" max-page="20" base-path="/search"></cork-pager>
+ * <cork-pager base-path="/search"></cork-pager>
  *
  * <!-- /search?q=cats&page=1, ... -->
- * <cork-pager current-page="3" max-page="20" base-path="/search" query-params="q=cats" page-param="page"></cork-pager>
+ * <cork-pager base-path="/search" query-params="q=cats" page-param="page"></cork-pager>
  *
  * @example <caption>Link function property</caption>
  * pager.linkFunction = (page, pager) => `/search?page=${page}`;
@@ -77,11 +76,52 @@ import { MutationObserverController } from '@ucd-lib/cork-theme/utils/controller
  *   loadResults(e.detail.page);
  * });
  *
- * @example <caption>Links in an SPA</caption>
- * pager.addEventListener('cork-pager-item-click', e => {
- *   e.detail.originalEvent.preventDefault();
- *   router.go(e.detail.item.link);
- * });
+ * @example <caption>In a Lit SPA with cork-app-state</caption>
+ * // cork-app-state handles the link clicks, so the page comes from the URL: back/forward, reloads and shared links all work.
+ * // No cork-pager-item-click handler is needed.
+ * import { LitElement, html } from 'lit';
+ * import { LitCorkUtils, Mixin } from '@ucd-lib/cork-app-utils';
+ * import '@ucd-lib/cork-theme/elements/cork-pager';
+ *
+ * class AppPageSearch extends Mixin(LitElement).with(LitCorkUtils) {
+ *
+ *   static get properties() {
+ *     return {
+ *       query: { state: true },
+ *       page: { state: true },
+ *       maxPage: { state: true }
+ *     };
+ *   }
+ *
+ *   constructor() {
+ *     super();
+ *     this.query = '';
+ *     this.page = 1;
+ *     this.maxPage = 1;
+ *     this._injectModel('AppStateModel', 'SearchModel');
+ *   }
+ *
+ *   async _onAppStateUpdate(e) {
+ *     if ( e.page !== 'search' ) return;
+ *     this.query = e.location.query.q || '';
+ *     this.page = parseInt(e.location.query.page) || 1;
+ *     const res = await this.SearchModel.search(this.query, { page: this.page });
+ *     if ( res.state === 'loaded' ) this.maxPage = res.payload.maxPage;
+ *   }
+ *
+ *   render() {
+ *     // links like /search?q=cats&page=2
+ *     return html`
+ *       <cork-pager
+ *         current-page=${this.page}
+ *         max-page=${this.maxPage}
+ *         base-path="/search"
+ *         .queryParams=${{ q: this.query }}
+ *         page-param="page">
+ *       </cork-pager>
+ *     `;
+ *   }
+ * }
  *
  * @example <caption>Mini view</caption>
  * <!-- always mini, showing "Page 3" -->
@@ -103,7 +143,13 @@ export default class CorkPager extends LitElement {
       noMini: { type: Boolean, attribute: 'no-mini' },
       noMaxOnMini: { type: Boolean, attribute: 'no-max-on-mini' },
       basePath: { type: String, attribute: 'base-path' },
-      queryParams: { type: String, attribute: 'query-params' },
+      queryParams: {
+        attribute: 'query-params',
+        converter: {
+          fromAttribute: (value) => new URLSearchParams(value || ''),
+          toAttribute: (value) => new URLSearchParams(value || {}).toString()
+        }
+      },
       useHash: { type: Boolean, attribute: 'use-hash' },
       pageParam: { type: String, attribute: 'page-param' },
       navAriaLabel: { type: String, attribute: 'nav-aria-label' },
@@ -121,7 +167,7 @@ export default class CorkPager extends LitElement {
     super();
     this.render = render.bind(this);
     this.basePath = '';
-    this.queryParams = '';
+    this.queryParams = {};
     this.useHash = false;
     this.pageParam = '';
     this.navAriaLabel = 'Pagination';
@@ -150,7 +196,7 @@ export default class CorkPager extends LitElement {
     this.currentPage = this._toPositiveInteger(this.currentPage, 1);
     this.maxPage = this._toPositiveInteger(this.maxPage, 1);
     this.visibleLinkCount = this._toPositiveInteger(this.visibleLinkCount, 7);
-    this.makePagerItems();
+    this._makePagerItems();
   }
 
   /**
@@ -167,7 +213,7 @@ export default class CorkPager extends LitElement {
    * @description Builds pagerItems array to be rendered based on element properties.
    * @returns {PagerItem[]} The items, also set as pagerItems.
    */
-  makePagerItems(){
+  _makePagerItems(){
     const maxPage = this.maxPage;
     const count = this.visibleLinkCount;
     // clamped here rather than in willUpdate, so a currentPage set before maxPage isn't lost
@@ -246,15 +292,14 @@ export default class CorkPager extends LitElement {
     if ( !this.basePath && !this.useHash && !this.pageParam ) return null;
 
     const hash = this.useHash ? '#' : '';
-    let query = (this.queryParams || '').replace(/^\?/, '');
+    const params = new URLSearchParams(this.queryParams || {});
 
     if ( this.pageParam ) {
-      const params = new URLSearchParams(query);
       params.set(this.pageParam, page);
-      query = params.toString();
-      return `${hash}${this.basePath || ''}?${query}`;
+      return `${hash}${this.basePath || ''}?${params.toString()}`;
     }
 
+    const query = params.toString();
     let path = this.basePath || '/';
     if ( !path.endsWith('/') ) path += '/';
     return `${hash}${path}${page}${query ? `?${query}` : ''}`;
@@ -316,7 +361,7 @@ export default class CorkPager extends LitElement {
 
 /**
  * @typedef {Object} PagerItem
- * @description An item in a cork-pager, from makePagerItems.
+ * @description An item in a cork-pager, from _makePagerItems.
  * @property {String} type - 'page', 'ellipses', 'prev' or 'next'.
  * @property {Number|null} page - The page the item goes to. For ellipses, the hidden page next to the shown ones, or null with staticEllipses.
  * @property {Boolean} current - Whether it's the current page's item. Only ever true for a 'page' item.

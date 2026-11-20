@@ -109,6 +109,10 @@ Each element decides which fields it shows. `cork-primary-nav` shows `descriptio
 
 An element can use a different attribute name, with NavController's `fieldAttribute` option. Its docs say if it does.
 
+### Active item
+
+Mark the current item with `data-active`, on its `li` or its `a`/`button`. Elements that show a current item, such as `cork-nav-tabs`, highlight it and give it `aria-current`. Move the attribute to change the current item, e.g. on a route change.
+
 ### Links and buttons
 
 - **Links:** the element renders its own link with the same `href`. Click listeners on your `a` don't run. Routers that watch document clicks, such as cork-app-state, still work.

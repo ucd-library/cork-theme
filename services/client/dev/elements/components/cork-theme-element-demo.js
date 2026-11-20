@@ -1,22 +1,34 @@
 import { ApiDemoBase } from '@api-viewer/demo/lib/base.js';
 import { setTemplates } from '@api-viewer/common/lib/templates.js';
-import { getKnobs } from '@api-viewer/demo/lib/ui/knobs.js';
+import { getKnobs, getCustomKnobs } from '@api-viewer/demo/lib/ui/knobs.js';
 import { render, styles } from "./cork-theme-element-demo.tpl.js";
 
-// Field types that get a knob. Fields of any other type (objects, arrays, controllers) are passed to api-demo's exclude-knobs.
+// Field types that get a property knob. Fields of any other type (objects, arrays) that have an attribute get an attribute knob instead.
 const KNOB_TYPES = ['boolean', 'string', 'number'];
+
+// Campus section backgrounds the demo can be shown on: the layout-section--<name> classes, with layout-section--force-contrast
+const SECTION_BACKGROUNDS = [
+  'primary', 'secondary', 'light-gray', 'dark-gray', 'arboretum', 'bodega', 'cabernet', 'delta', 'double-decker',
+  'farmers-market', 'golden-state', 'gunrock', 'merlot', 'pinot', 'rain', 'rec-pool', 'rose', 'sage', 'thiebaud-icing', 'wonder-blue'
+];
 
 /**
  * @class CorkThemeElementDemo
  * @description Live playground for a theme element on the docs site, built on api-viewer's ApiDemoBase and driven by the package's
  * Custom Elements Manifest. Adds a markup panel in place of api-demo's Source tab, which shows the element's snippet and can be
  * edited as HTML, like a browser's dev tools. Applying an edit rebuilds the element, and the knobs follow its new property values.
+ * Only fields with an attribute get a knob, so Lit state and attribute: false properties have none. Fields with an attribute that
+ * aren't a primitive type, e.g. cork-pager's queryParams (query-params), get a text knob under Attributes, which sets the attribute.
  * The theme's CSS is included in the shadow root, so demo markup is styled as it would be on a page.
+ * With backgroundMenu, a Background menu above the demo shows the element inside a campus section background (layout-section--<name>
+ * with layout-section--force-contrast), which passes --forced-contrast and related custom properties down to it, as a real section would.
  *
  * @property {String} markup - Starting markup for the demo: the element itself, with its attributes and children.
- * @property {String[]} hiddenKnobs - Names of properties to leave out of the knobs, on top of those that aren't a primitive type.
+ * @property {String[]} hiddenKnobs - Names of properties to leave out of the knobs, on top of those without an attribute.
+ * Also hides a property's attribute knob.
  * @property {String} background - CSS background of the area the demo element is rendered in, e.g. 'var(--ucd-blue)' for an element
  * that sits on a blue header. Default: '', the theme's white.
+ * @property {Boolean} backgroundMenu - Shows the Background menu of campus section backgrounds above the demo. Default: false
  * @property {Object} manifest - The Custom Elements Manifest. From api-viewer's ManifestMixin.
  * @property {Array} only - Tag names to include from the manifest. From api-viewer's ManifestMixin.
  * @property {String} selected - Tag name of the element to demo. From api-viewer's ManifestMixin.
@@ -28,9 +40,11 @@ export default class CorkThemeElementDemo extends ApiDemoBase {
       markup: {type: String},
       hiddenKnobs: {type: Array, attribute: false},
       background: {type: String},
+      backgroundMenu: {type: Boolean},
       _editing: {state: true},
       _draft: {state: true},
-      _error: {state: true}
+      _error: {state: true},
+      _sectionBackground: {state: true}
     }
   }
 
@@ -47,6 +61,9 @@ export default class CorkThemeElementDemo extends ApiDemoBase {
     this._editing = false;
     this._draft = '';
     this._error = '';
+    this.backgroundMenu = false;
+    this._sectionBackground = '';
+    this.sectionBackgrounds = SECTION_BACKGROUNDS;
     this._appliedMarkup = '';
 
     // renderSnippet reads this instance's templates on the first render
@@ -89,6 +106,10 @@ export default class CorkThemeElementDemo extends ApiDemoBase {
       if ( this.background ) this.style.setProperty('--cork-demo-output-background', this.background);
       else this.style.removeProperty('--cork-demo-output-background');
     }
+    if ( props.has('backgroundMenu') && !this.backgroundMenu ) {
+      this._sectionBackground = '';
+      this._applySectionBackground();
+    }
     if ( props.has('markup') ) {
       this._editing = false;
       this._applyMarkup(this.markup);
@@ -125,17 +146,44 @@ export default class CorkThemeElementDemo extends ApiDemoBase {
 
   /**
    * @method _getExcludedKnobs
-   * @description Gets the names of the selected element's fields to leave out of the knobs: those that can't be set from a knob,
-   * i.e. whose type isn't a primitive, and those in hiddenKnobs.
+   * @description Gets the names of the selected element's fields to leave out of the property knobs: those without an attribute
+   * (Lit state and attribute: false properties), those whose type isn't a primitive (see _getAttributeKnobTemplates), and those in hiddenKnobs.
    * @returns {String[]}
    */
   _getExcludedKnobs() {
-    const decl = (this.manifest?.modules || [])
+    return (this._getDeclaration()?.members || [])
+      .filter(m => m.kind === 'field' && (!m.attribute || !KNOB_TYPES.includes(m.type?.text) || this.hiddenKnobs.includes(m.name)))
+      .map(m => m.name);
+  }
+
+  /**
+   * @method _getDeclaration
+   * @description Gets the selected element's declaration from the manifest.
+   * @returns {Object|undefined}
+   */
+  _getDeclaration() {
+    return (this.manifest?.modules || [])
       .flatMap(mod => mod.declarations || [])
       .find(d => d.customElement && d.tagName === this.selected);
-    return (decl?.members || [])
-      .filter(m => m.kind === 'field' && (!KNOB_TYPES.includes(m.type?.text) || this.hiddenKnobs.includes(m.name)))
-      .map(m => m.name);
+  }
+
+  /**
+   * @method _getAttributeKnobTemplates
+   * @description Gets api-viewer custom knob templates for the selected element's fields that aren't a primitive type but have an attribute,
+   * so they can be set as a string attribute, e.g. cork-pager's query-params. Leaves out fields in hiddenKnobs.
+   * @returns {HTMLTemplateElement[]}
+   */
+  _getAttributeKnobTemplates() {
+    return (this._getDeclaration()?.members || [])
+      .filter(m => m.kind === 'field' && m.attribute && !KNOB_TYPES.includes(m.type?.text) && !this.hiddenKnobs.includes(m.name))
+      .map(m => {
+        const knob = document.createElement('template');
+        knob.dataset.element = this.selected;
+        knob.dataset.target = 'knob';
+        knob.dataset.attr = m.attribute;
+        knob.dataset.type = 'string';
+        return knob;
+      });
   }
 
   /**
@@ -169,7 +217,7 @@ export default class CorkThemeElementDemo extends ApiDemoBase {
     const applied = host.innerHTML + slot.innerHTML;
     if ( applied === this._appliedMarkup ) return true;
     this._appliedMarkup = applied;
-    this.setTemplates([host, slot]);
+    this.setTemplates([host, slot, ...this._getAttributeKnobTemplates()]);
 
     const layout = this.getLayout();
     if ( !layout || layout.tag !== this.selected ) return true;
@@ -177,6 +225,7 @@ export default class CorkThemeElementDemo extends ApiDemoBase {
     // reset the knobs, so ones for removed attributes don't keep their old values, then let api-demo build the element again
     layout.knobs = {};
     layout.propKnobs = getKnobs(layout.props, layout.exclude);
+    layout.customKnobs = getCustomKnobs(layout.tag, layout.vid);
     layout.querySelector(`[part="demo-output"] > ${this.selected}`)?.remove();
     layout.requestUpdate();
     return true;
@@ -199,12 +248,50 @@ export default class CorkThemeElementDemo extends ApiDemoBase {
 
   /**
    * @method _onRendered
-   * @description Called when api-demo has rendered the demo element. Hides the Source tab and redraws the snippet.
+   * @description Called when api-demo has rendered the demo element. Fills the attribute knobs from the element's attributes,
+   * which api-demo only does for property knobs, then hides the Source tab and redraws the snippet.
+   * @param {CustomEvent} e - api-demo's rendered event. detail.component is the demo element.
    */
-  async _onRendered() {
-    await this.getLayout()?.updateComplete;
+  async _onRendered(e) {
+    const layout = this.getLayout();
+    const component = e.detail?.component;
+    if ( layout && component ) {
+      layout.customKnobs = layout.customKnobs.map(knob => {
+        const value = component.getAttribute(knob.attribute);
+        if ( value === null ) return knob;
+        layout.setKnobs(knob.name, knob.knobType, value, knob.attribute, true);
+        return { ...knob, value };
+      });
+    }
+    await layout?.updateComplete;
+    this._applySectionBackground();
     this._hideSourceTab();
     this.requestUpdate();
+  }
+
+  /**
+   * @method _applySectionBackground
+   * @description Puts the chosen campus section background classes on api-demo's output area, the demo element's parent,
+   * replacing any from before. With none chosen, the output area uses the background property.
+   */
+  _applySectionBackground() {
+    const output = this.getLayout()?.querySelector('[part="demo-output"]');
+    if ( !output ) return;
+    output.classList.remove(...Array.from(output.classList).filter(c => c.startsWith('layout-section--')));
+    if ( this._sectionBackground ) {
+      output.classList.add(`layout-section--${this._sectionBackground}`, 'layout-section--force-contrast');
+    }
+  }
+
+  /**
+   * @method _onSectionBackgroundChange
+   * @description Called when the Background menu changes. Applies the chosen section background.
+   * @param {Event} e - The select's change event.
+   */
+  _onSectionBackgroundChange(e) {
+    e.stopPropagation();
+    this._sectionBackground = e.target.value;
+    this._applySectionBackground();
   }
 
   /**

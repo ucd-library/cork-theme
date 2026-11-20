@@ -11559,6 +11559,11 @@ layout-columns:not(:defined) {
   align-items: baseline;
 }
 
+.tabs button.tabs__item {
+  box-sizing: content-box;
+  font-size: inherit;
+}
+
 .focal-link__icon {
   --cork-icon-size: 2rem;
 }

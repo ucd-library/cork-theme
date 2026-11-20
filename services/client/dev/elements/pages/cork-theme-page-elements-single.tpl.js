@@ -55,7 +55,8 @@ function renderDemo(){
       selected=${this.elementTag}
       .markup=${demo.default}
       .hiddenKnobs=${demo.hiddenKnobs || []}
-      background=${demo.background || ''}>
+      background=${demo.background || ''}
+      .backgroundMenu=${!!demo.backgroundMenu}>
     </cork-theme-element-demo>
   `;
 }

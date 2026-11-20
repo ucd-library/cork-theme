@@ -32,6 +32,7 @@ Menu elements read their links with a new markup format: see [Nav Markup](nav-ma
 | `ucd-theme-quick-links` | `cork-quick-links`. See [Header](header.md#quick-links). |
 | `ucdlib-branding-bar` | `cork-branding-bar`. See [Header](header.md#branding-bar). |
 | `ucd-theme-subnav` | `cork-nav-sub`. See [cork-nav-sub](#cork-nav-sub). |
+| (new) | `cork-nav-tabs`. See [cork-nav-tabs](#cork-nav-tabs). |
 | `ucd-theme-pagination` | `cork-pager`. See [cork-pager](#cork-pager). |
 | `ucdlib-pages` | `cork-pages`. See [cork-pages](#cork-pages). |
 | `ucdlib-md`, `ucdlib-md-content` | `cork-markdown`. See [cork-markdown](#cork-markdown). |
@@ -135,6 +136,24 @@ New, with no old equivalent. It's `cork-nav-sub` in campus's popover: a full-wid
 
 See the [reference](../../reference/elements/cork-nav-sub-popover.md) for every property.
 
+## cork-nav-tabs
+
+New, with no old equivalent. It renders campus's navigation tabs (the `tabs` component): the tab bar only, not `tabs__content`. It takes the same light DOM as the other menu elements (see [Nav Markup](nav-markup.md)), shows top-level items only, and highlights the item marked with `data-active`.
+
+```html
+<cork-nav-tabs>
+  <ul>
+    <li data-active><a href="/record/1">Overview</a></li>
+    <li><a href="/record/1/holdings">Holdings</a></li>
+  </ul>
+</cork-nav-tabs>
+```
+
+- `secondary` switches to campus's `tabs--secondary` style.
+- The tabs are a `<nav>` of links or buttons, not an ARIA tablist, since they don't switch panels on the page. The active one gets `aria-current`. Label the nav with `nav-aria-label` (default 'Tabs').
+
+See the [reference](../../reference/elements/cork-nav-tabs.md) for every property.
+
 ## cork-pager
 
 `ucd-theme-pagination` is replaced by `cork-pager`. It still builds its links from a base path, or leaves them to the app, but it can also take a page query parameter or a link function, shows ellipses by default, and switches to a mini view on its own when it's narrow.
@@ -177,7 +196,7 @@ See the [reference](../../reference/elements/cork-nav-sub-popover.md) for every 
 | --- | --- |
 | `current-page` | Unchanged, but no longer reflected back to the attribute. |
 | `max-pages` | `max-page` (`maxPage`). |
-| `base-path`, `query-params`, `use-hash` | Unchanged. A `base-path` without a trailing slash now gets one (`/search` makes `/search/2`, not `/search2`), and a leading `?` on `query-params` is dropped. |
+| `base-path`, `query-params`, `use-hash` | Unchanged. A `base-path` without a trailing slash now gets one (`/search` makes `/search/2`, not `/search2`), and a leading `?` on `query-params` is dropped. The `queryParams` property is now a plain object or a `URLSearchParams` instance, rather than a string, e.g. `.queryParams=${{ q: 'cats' }}`. |
 | (new) `page-param` | Puts the page in a query parameter instead of the path: `base-path="/search" page-param="page"` makes `/search?page=2`. |
 | (new) `linkFunction`, or a `<script type="text/link-function">` child | Makes each page's link yourself, e.g. `` pager.linkFunction = page => `/search?page=${page}` ``. The script tag needs a CSP that allows `unsafe-eval`. |
 | `visible-link-count` | Unchanged, default 7. It now sets the number of page numbers in the ellipses layout too, counting the first and last pages. |

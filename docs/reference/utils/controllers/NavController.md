@@ -118,6 +118,7 @@ Styles for a drill-down navigation.
 
 Renders an item's own element for the host's shadow DOM: a button, anchor, or span.
 Automatically wires up button and link clicks (to item.click) and relevant attributes, and records the element as item.renderedEles.item. Does not render sub items.
+Active items (see NavItem's active) get aria-current: 'page' on links, 'true' on buttons.
 Called by item.render.
 
 | Param | Type | Description |
@@ -126,6 +127,7 @@ Called by item.render.
 | `opts` | `Object\|String` | Options. A string is treated as opts.classes. |
 | `opts.classes` | `String\|Object` | Classes to apply: a space-separated string, or a classMap object. |
 | `opts.typeClasses` | `Object` | Classes to apply by rendered element type, added to opts.classes. Keys: button, a, span. Each value is a string or classMap object, e.g. { button: 'nav-drill__button', span: 'nav-drill__nolink' } |
+| `opts.activeClass` | `String\|Object` | Classes to add if the item is active: a space-separated string, or a classMap object, e.g. 'tabs__item--active'. |
 | `opts.suffixTemplate` | `TemplateResult` | An optional template to add directly after the item text |
 
 **Returns:** `TemplateResult`
@@ -188,6 +190,18 @@ ${this.ctl.nav.renderDrillDown()}
 </my-nav>
 ```
 
+**Light DOM markup - marking the active item**
+
+```html
+<!-- data-active goes on the li or on its link/button. Active items get aria-current and opts.activeClass when rendered -->
+<my-nav>
+  <ul>
+    <li data-active><a href="/overview">Overview</a></li>
+    <li><a href="/details" data-active>Details</a></li>
+  </ul>
+</my-nav>
+```
+
 ## Typedefs
 
 ### NavItem
@@ -204,13 +218,14 @@ Used by the NavController to represent a navigation item, which may be a link, b
 | `href` | `String\|null` | The href as written in the markup, or null. |
 | `target` | `String\|null` | The target attribute, or null. |
 | `disabled` | `Boolean` | Whether the link/button has the disabled attribute. |
+| `active` | `Boolean` | Whether the item is marked with data-active, on its li or its link/button (or the deprecated list). |
 | `ariaLabel` | `String\|null` | The aria-label attribute of the element that supplied the title (the link/button, li, or deprecated list), or null. |
 | `fields` | `Object` | Text of each child element marked with the field attribute, keyed by its value (e.g. description). |
 | `subItems` | `NavItem[]` | Child items. |
 | `navPosition` | `Number[]` | Index at each level of the tree, from the top. e.g. [0, 2] is the third sub item of the first item. |
 | `ele` | `HTMLElement\|null` | The light DOM link/button that supplied the title, or null. |
 | `click` | `Function` | Click listener for the item's shadow DOM button or link, e.g. @click=\${item.click}. Wired up by item.render. Takes the click event.<br><br>• Fires cork-nav-item-click from the host, with the item and the click event.<br>• For button items, then passes the click through to the light DOM button, so its listeners run.<br>• Links aren't passed through: they rely on their shadow DOM href, so listeners on a light DOM link don't run. Use cork-nav-item-click instead. |
-| `render` | `Function` | Renders the item's own link/button (not its sub items) for the host's shadow DOM, e.g. \${item.render({classes: 'menu__link'})}.<br><br>Takes an opts object, where opts.classes is a class string or a classMap object, or just a class string, e.g. \${item.render('menu__link')}. |
+| `render` | `Function` | Renders the item's own link/button (not its sub items) for the host's shadow DOM, e.g. \${item.render({classes: 'menu__link'})}.<br><br>Takes an opts object, where opts.classes is a class string or a classMap object, or just a class string, e.g. \${item.render('menu__link')}. opts.activeClass is added if the item is active, e.g. \${item.render({ classes: 'tabs__item', activeClass: 'tabs__item--active' })}. See renderItem for all options. |
 | `matchesCoordinates` | `Function` | Takes a navPosition (e.g. [1, 0, 2]). Returns true if the item is at exactly that position. |
 | `containsCoordinates` | `Function` | Takes a navPosition. Returns true if the item is at that position or is one of its ancestors, e.g. [1] and [1, 0] contain [1, 0, 2]. |
 | `renderedEles` | `Object` | The item's elements in the host's shadow DOM, set when they render. Empty until then. |

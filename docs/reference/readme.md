@@ -13,7 +13,8 @@ or `docs jsdoc <name>` for one page.
 - [cork-nav-lite](elements/cork-nav-lite.md): A single-level main menu, shown inline in the cork-header bar.
 - [cork-nav-sub](elements/cork-nav-sub.md): A sub menu, rendered as a drill-down, with an optional title above it.
 - [cork-nav-sub-popover](elements/cork-nav-sub-popover.md): A sub menu in a popover: a full-width button that opens a tray with the title and drill-down of a [`CorkNavSub`](elements/cork-nav-sub.md).
-- [cork-pager](elements/cork-pager.md): A pager for navigating through pages of results: prev, a window of page numbers, and next.
+- [cork-nav-tabs](elements/cork-nav-tabs.md): A row of navigation tabs, for moving between related pages or views, e.g.
+- [cork-pager](elements/cork-pager.md): A pager for navigating through pages of results.
 - [cork-pages](elements/cork-pages.md): Shows one of its children at a time, and hides the rest.
 - [cork-primary-nav](elements/cork-primary-nav.md): The site's main menu.
 - [cork-quick-links](elements/cork-quick-links.md): A quick links menu component: a short list of links/buttons outside of the main navigation.

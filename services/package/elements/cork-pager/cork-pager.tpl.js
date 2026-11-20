@@ -17,6 +17,12 @@ export function styles() {
       display: none !important;
     }
 
+    /* Sizes items to their link or button. Campus also gives the current li a background, and as a line box the li was
+    taller than its link in Firefox (Proxima Nova's metrics), leaving a blue sliver below it */
+    .pager__item:not(.pager__item--static) {
+      display: flex;
+    }
+
     /* the "Page X of Y" text only shows in the mini view */
     .pager__item--mini-label {
       display: none;
